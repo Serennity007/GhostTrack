@@ -26,3 +26,11 @@ python -m venv .venv
 ```
 
 构建输出在 `dist/GhostTrack/`，分发时需保留整个文件夹。此版本为未签名的便携程序。
+
+## 1.1.0 International / 国际版
+
+- 简体中文、English、日本語、Español 即时切换；工具、状态、错误提示、字段、复制及导出随界面语言变化。
+- 深色工作台、侧边导航、青绿色操作按钮、结构化结果表格；选中一行可查看完整字段值。
+- 查询期间可继续切换语言。电话号码地域描述按发起查询时的语言生成；若需更换该内容语言，请重新查询。外部服务返回的国家/城市名称保留原始数据。
+- 新包名 `GhostTrack-International-Windows-x64.zip`，解压后运行 `GhostTrack-International.exe`。
+- 构建命令使用 `--name GhostTrack-International`；测试命令：`.\.venv\Scripts\python.exe -m unittest test_desktop -v`。

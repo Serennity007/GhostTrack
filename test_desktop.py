@@ -6,9 +6,40 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 from desktop import App, query
+from i18n import UI, KEYS, LANGUAGES, localize
 
 
 class DesktopTests(unittest.TestCase):
+    def test_translations(self):
+        for lang, strings in UI.items():
+            self.assertEqual(set(strings), set(KEYS))
+            self.assertTrue(all(strings.values()))
+            self.assertIsInstance(localize(True, lang), str)
+            self.assertEqual(localize(1.25, lang), 1.25)
+
+    def test_language_switch(self):
+        root = tk.Tk()
+        root.withdraw()
+        try:
+            app = App(root)
+            app.result = {'国家': 'Japan', '有效号码': True}
+            for name, code in LANGUAGES.items():
+                app.language.set(name)
+                app.change_language()
+                self.assertEqual(app.button['text'], UI[code]['run'])
+                self.assertIn(localize('国家', code), app.localized_result())
+                app.copy()
+                self.assertIn(localize('国家', code), root.clipboard_get())
+                for mode in range(4):
+                    app.select(mode)
+                    root.update_idletasks()
+                    self.assertEqual(app.entry['state'], 'disabled' if mode == 1 else 'normal')
+            app.events.put((False, 'input_error'))
+            app.poll()
+            self.assertEqual(app.status.get(), UI['es']['failed'])
+        finally:
+            root.destroy()
+
     def test_phone(self):
         self.assertEqual(query('号码归属地', '+12025550123')['地区代码'], 'US')
 
