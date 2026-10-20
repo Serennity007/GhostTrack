@@ -10,6 +10,27 @@ from i18n import UI, KEYS, LANGUAGES, localize
 
 
 class DesktopTests(unittest.TestCase):
+    def test_actions_visible_at_minimum_window_size(self):
+        root = tk.Tk()
+        try:
+            app = App(root)
+            root.geometry('1000x700')
+            root.update()
+            for name in LANGUAGES:
+                app.language.set(name)
+                app.change_language()
+                app.select(4)
+                root.update()
+                for widget, key in app.bindings:
+                    if key in ('copy_selected', 'copy', 'open_profile', 'export'):
+                        self.assertGreater(widget.winfo_width(), 20)
+                        self.assertLessEqual(widget.winfo_rootx() + widget.winfo_width(),
+                                             root.winfo_rootx() + root.winfo_width())
+                        self.assertLessEqual(widget.winfo_rooty() + widget.winfo_height(),
+                                             root.winfo_rooty() + root.winfo_height())
+        finally:
+            root.destroy()
+
     def test_translations(self):
         for lang, strings in UI.items():
             self.assertEqual(set(strings), set(KEYS))
@@ -30,10 +51,19 @@ class DesktopTests(unittest.TestCase):
                 self.assertIn(localize('国家', code), app.localized_result())
                 app.copy()
                 self.assertIn(localize('国家', code), root.clipboard_get())
-                for mode in range(4):
+                for mode in range(len(app.MODES)):
                     app.select(mode)
                     root.update_idletasks()
                     self.assertEqual(app.entry['state'], 'disabled' if mode == 1 else 'normal')
+                app.show_result()
+                app.tree.selection_set(app.tree.get_children()[0])
+                app.copy_selected()
+                self.assertEqual(root.clipboard_get(), 'Japan')
+                app.result = {'主页链接': 'https://space.bilibili.com/123'}
+                with patch('desktop.webbrowser.open') as open_page:
+                    app.open_profile()
+                    open_page.assert_called_once_with('https://space.bilibili.com/123')
+                app.result = {'国家': 'Japan', '有效号码': True}
             app.events.put((False, 'input_error'))
             app.poll()
             self.assertEqual(app.status.get(), UI['es']['failed'])

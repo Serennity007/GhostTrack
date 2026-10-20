@@ -4,6 +4,7 @@ import ipaddress
 import json
 import queue
 import threading
+import webbrowser
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from urllib.parse import quote
@@ -11,12 +12,15 @@ from urllib.parse import quote
 import phonenumbers
 from phonenumbers import carrier, geocoder, timezone
 import requests
+from platforms import PLATFORMS, lookup_profile
 
-VERSION = '1.1.0'
+VERSION = '1.2.0'
 
 
-def query(kind, value, region='CN', language='zh'):
+def query(kind, value, region='CN', language='zh', platform='Bilibili'):
     value = value.strip()
+    if kind == '国内平台':
+        return lookup_profile(platform, value)
     if kind == '号码归属地':
         number = phonenumbers.parse(value, region)
         return {'国际格式': phonenumbers.format_number(number, phonenumbers.PhoneNumberFormat.INTERNATIONAL),
@@ -58,8 +62,8 @@ from i18n import LANGUAGES, UI, localize
 class App:
     BG, PANEL, CARD = '#0b1020', '#11192d', '#18233b'
     FG, MUTED, ACCENT = '#edf3ff', '#a6b5d2', '#5ee0bc'
-    MODES = ['IP 归属地', '本机公网 IP', '号码归属地', '用户名链接']
-    MODE_KEYS = ['ip', 'self', 'phone', 'username']
+    MODES = ['IP 归属地', '本机公网 IP', '号码归属地', '用户名链接', '国内平台']
+    MODE_KEYS = ['ip', 'self', 'phone', 'username', 'domestic']
 
     def __init__(self, root):
         self.root, self.result = root, {}
@@ -68,6 +72,7 @@ class App:
         self.state = 'ready'
         self.value = tk.StringVar()
         self.region = tk.StringVar(value='CN')
+        self.platform = tk.StringVar(value='Bilibili')
         self.language = tk.StringVar(value='简体中文')
         self.status = tk.StringVar()
         self.bindings = []
@@ -106,17 +111,19 @@ class App:
                  fg=self.MUTED, font=('Segoe UI', 8)).pack(anchor='w')
         main = tk.Frame(root, bg=self.BG)
         main.pack(side='left', fill='both', expand=True, padx=30, pady=28)
+        main.columnconfigure(0, weight=1)
+        main.rowconfigure(4, weight=1)
         top = tk.Frame(main, bg=self.BG)
-        top.pack(fill='x')
+        top.grid(row=0, column=0, sticky='ew')
         self.label(top, 'workspace', size=11).pack(side='left')
         language = ttk.Combobox(top, textvariable=self.language, values=list(LANGUAGES),
                                 state='readonly', width=15)
         language.pack(side='right')
         language.bind('<<ComboboxSelected>>', self.change_language)
         self.heading = self.label(main, 'tagline', size=23, color=self.FG, wraplength=730)
-        self.heading.pack(anchor='w', pady=(20, 24))
+        self.heading.grid(row=1, column=0, sticky='w', pady=(20, 24))
         form = tk.Frame(main, bg=self.PANEL, padx=22, pady=18)
-        form.pack(fill='x')
+        form.grid(row=2, column=0, sticky='ew')
         self.label(form, 'parameters', bg=self.PANEL, color=self.ACCENT).pack(anchor='w')
         self.label(form, 'input', bg=self.PANEL).pack(anchor='w', pady=(14, 6))
         self.entry = tk.Entry(form, textvariable=self.value, bg=self.CARD, fg=self.FG,
@@ -133,15 +140,19 @@ class App:
         self.region_box = ttk.Combobox(row, textvariable=self.region, state='readonly',
                                        values=sorted(phonenumbers.SUPPORTED_REGIONS), width=5)
         self.region_box.pack(side='left')
+        self.platform_label = self.label(row, 'platform', bg=self.PANEL)
+        self.platform_box = ttk.Combobox(row, textvariable=self.platform, state='readonly',
+                                         values=list(PLATFORMS), width=11)
+        self.platform_box.bind('<<ComboboxSelected>>', lambda _: self.select(self.mode))
         self.button = self.button_widget(row, 'run', self.start, primary=True)
         self.button.pack(side='right')
         results_header = tk.Frame(main, bg=self.BG)
-        results_header.pack(fill='x', pady=(24, 12))
+        results_header.grid(row=3, column=0, sticky='ew', pady=(24, 12))
         self.label(results_header, 'results', color=self.FG, size=12).pack(side='left')
         tk.Label(results_header, textvariable=self.status, bg=self.BG, fg=self.ACCENT,
                  font=('Microsoft YaHei UI', 10)).pack(side='right')
         results = tk.Frame(main, bg=self.PANEL)
-        results.pack(fill='both', expand=True)
+        results.grid(row=4, column=0, sticky='nsew')
         self.empty = tk.Frame(results, bg=self.PANEL)
         self.empty.pack(fill='both', expand=True)
         tk.Label(self.empty, text='◎', font=('Segoe UI', 36), bg=self.PANEL,
@@ -157,14 +168,25 @@ class App:
         self.scroll = ttk.Scrollbar(results, command=self.tree.yview)
         self.tree.configure(yscrollcommand=self.scroll.set)
         self.tree.bind('<<TreeviewSelect>>', self.select_result)
+        self.tree.bind('<Control-c>', self.copy_selected)
+        self.tree.bind('<Control-C>', self.copy_selected)
+        self.tree.bind('<Double-1>', self.copy_selected)
         self.detail = tk.Label(main, bg=self.BG, fg=self.MUTED, wraplength=740,
                                justify='left', anchor='w', font=('Microsoft YaHei UI', 9))
-        self.detail.pack(fill='x', pady=(8, 0))
+        self.detail.grid(row=5, column=0, sticky='ew', pady=(8, 0))
         actions = tk.Frame(main, bg=self.BG)
-        actions.pack(fill='x', pady=(14, 10))
+        actions.grid(row=6, column=0, sticky='ew', pady=(14, 10))
+        self.button_widget(actions, 'copy_selected', self.copy_selected).pack(side='left', padx=(0, 8))
         self.button_widget(actions, 'copy', self.copy).pack(side='left')
+        self.button_widget(actions, 'open_profile', self.open_profile).pack(side='left', padx=8)
         self.button_widget(actions, 'export', self.export).pack(side='right')
-        self.label(main, 'notice', wraplength=740).pack(anchor='w')
+        self.notice = self.label(main, 'notice', wraplength=740)
+        self.notice.grid(row=7, column=0, sticky='w')
+        def resize(event):
+            width = max(200, event.width - 44)
+            for widget in (self.heading, self.hint, self.detail, self.notice, self.empty_help):
+                widget.config(wraplength=width)
+        main.bind('<Configure>', resize)
         self.refresh_language()
         root.after(100, self.poll)
 
@@ -210,6 +232,18 @@ class App:
         self.hint.config(text=UI[self.lang]['hint_' + self.MODE_KEYS[index]])
         self.entry.config(state='disabled' if index == 1 else 'normal')
         self.region_box.config(state='readonly' if index == 2 else 'disabled')
+        if index == 4:
+            self.region_label.pack_forget()
+            self.region_box.pack_forget()
+            self.platform_label.pack(side='left', padx=(0, 8))
+            self.platform_box.pack(side='left')
+            hint = 'hint_uid' if self.platform.get() in ('Bilibili', 'Weibo') else 'hint_slug'
+            self.hint.config(text=UI[self.lang][hint])
+        else:
+            self.platform_label.pack_forget()
+            self.platform_box.pack_forget()
+            self.region_label.pack(side='left', padx=(0, 8))
+            self.region_box.pack(side='left')
 
     def set_state(self, key):
         self.state = key
@@ -218,7 +252,7 @@ class App:
     def start(self):
         if self.busy:
             return
-        args = self.MODES[self.mode], self.value.get(), self.region.get(), self.lang
+        args = self.MODES[self.mode], self.value.get(), self.region.get(), self.lang, self.platform.get()
         self.busy = True
         self.button.config(state='disabled')
         self.set_state('busy')
@@ -278,10 +312,29 @@ class App:
 
     def copy(self):
         if not self.result:
+            self.status.set(UI[self.lang]['first'])
             return
         self.root.clipboard_clear()
         self.root.clipboard_append('\n'.join(f'{k}: {v}' for k, v in self.localized_result().items()))
         self.set_state('copied')
+
+    def copy_selected(self, _=None):
+        selected = self.tree.selection()
+        if not selected or not self.result:
+            self.status.set(UI[self.lang]['select_row'])
+            return 'break'
+        value = self.tree.item(selected[0], 'values')[1]
+        self.root.clipboard_clear()
+        self.root.clipboard_append(value)
+        self.set_state('copied')
+        return 'break'
+
+    def open_profile(self):
+        url = self.result.get('主页链接')
+        if not url:
+            self.status.set(UI[self.lang]['no_profile'])
+            return
+        webbrowser.open(url)
 
     def export(self):
         if not self.result:

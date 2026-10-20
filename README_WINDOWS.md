@@ -34,3 +34,14 @@ python -m venv .venv
 - 查询期间可继续切换语言。电话号码地域描述按发起查询时的语言生成；若需更换该内容语言，请重新查询。外部服务返回的国家/城市名称保留原始数据。
 - 新包名 `GhostTrack-International-Windows-x64.zip`，解压后运行 `GhostTrack-International.exe`。
 - 构建命令使用 `--name GhostTrack-International`；测试命令：`.\.venv\Scripts\python.exe -m unittest test_desktop -v`。
+
+## 1.2.0 国内公开主页与快捷复制
+
+- 国内平台：B站（Bilibili）、微博（Weibo）、知乎（Zhihu）、豆瓣（Douban）。B站/微博输入数字 UID，知乎/豆瓣输入主页标识；也可粘贴平台的标准 HTTPS 主页链接。不是按昵称跨平台匹配身份。
+- 查询公开 HTML 的标题和简介，附带来源链接、UTC 查询时间和 HTTP 状态。登录、验证、跳转、访问限制、缺少元信息时显示账号状态未知，并保留可打开/复制的主页链接。
+- 不登录、不读取浏览器 Cookie、不绕过验证；不依据 HTTP 200 推断账号存在。平台是否提供公开内容由网站决定。
+- 复制全部；选中一行后复制该值，支持双击和 Ctrl+C。主页结果可直接在默认浏览器中打开。
+- 四语言提示与导出继续支持；修复小窗口中底部按钮被结果区域挤出的布局问题。
+- 新包 `GhostTrack-v1.2.0-Windows-x64.zip`，解压整个目录运行 `GhostTrack-v1.2.0.exe`。
+- 测试：`.\.venv\Scripts\python.exe -m unittest test_desktop test_platforms -v`
+- 构建：`.\.venv\Scripts\python.exe -m PyInstaller --noconfirm --clean --onedir --windowed --name GhostTrack-v1.2.0 --collect-all phonenumbers desktop.py`
