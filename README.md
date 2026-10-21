@@ -2,7 +2,13 @@
 
 **简体中文** · [English](README.en.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
 
-面向 Windows 与 Android 的公开信息查询控制台。12 个 Windows 工具与 11 个 Android 模块共享查询服务，以深色控制台、清晰的来源状态和可导出的结果，集中查看域名、DNS、网站证书、网络注册与公开主页信息。
+**Windows / Android 跨平台 OSINT 公开信息研究工作台。**
+
+在桌面与手机上，把分散的公开信息整理成结构化结果。GhostTrack Console 将域名注册、DNS、TLS 证书、IP/ASN 网络信息、GitHub 与国内公开主页查询集中到同一套工作台，Windows 集成 12 个工具，Android 提供 11 个查询模块。
+
+- **一键域名综合报告**：并行汇总 RDAP、8 类 DNS、HTTPS 与 TLS，逐来源显示状态，保留已取得的部分结果。
+- **从查询到报告**：按字段筛选、复制单项或全部，保留查询时间与来源信息，导出 JSON、CSV、HTML 报告。
+- **桌面与移动端**：Windows 双栏控制台、Android 原生触屏界面，四语言界面、五语言文档，无需自行安装 Python。
 
 > 文档提供中、英、日、西、法五种语言；应用界面支持简体中文、English、日本語、Español 四种语言。
 

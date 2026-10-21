@@ -2,7 +2,13 @@
 
 [简体中文](README.md) · **English** · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
 
-A public information console for Windows and Android. Twelve Windows tools and eleven Android modules share the same query services, bringing domain records, DNS, website certificates, network registrations and public profiles into a dark interface with source status and exportable results.
+**A cross-platform OSINT workbench for researching public information on Windows and Android.**
+
+Bring domain registration, DNS, TLS certificates, IP / ASN records and public profiles into one console. GhostTrack connects twelve Windows tools and eleven Android modules to a shared query engine, then turns returned data into results you can filter, copy and export.
+
+- **Build a domain report in one query.** Fetch RDAP, eight DNS record types and HTTPS / TLS information in parallel, with a separate status for each source.
+- **Keep the context with the result.** Review available source URLs and UTC query context, filter fields, copy values and export JSON, CSV or standalone HTML reports.
+- **Work across desktop and mobile.** Use the two-column Windows workspace or native Android interface, with four interface languages and ready-to-run packages that require no separate Python installation.
 
 > Documentation is available in Chinese, English, Japanese, Spanish and French. The app interface supports four languages: Simplified Chinese, English, Japanese and Spanish.
 
