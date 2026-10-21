@@ -8,10 +8,10 @@ Consola de información pública para Windows y Android. Doce herramientas de Wi
 
 ## Descarga e instalación
 
-| Plataforma | Descargar v1.7.0 | Instalación |
+| Plataforma | Descarga actual | Instalación |
 |---|---|---|
-| Windows 10/11 x64 | [ZIP portátil](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | Extrae todo el archivo y ejecuta `GhostTrack/GhostTrack.exe` |
-| Android 7.0 o posterior | [APK universal](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Abre el APK desde el gestor de archivos del teléfono |
+| Windows 10/11 x64 · v1.8.0 | [ZIP portátil](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | Extrae todo el archivo y ejecuta `GhostTrack/GhostTrack.exe` |
+| Android 7.0 o posterior · v1.6.0 | [APK universal](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Abre el APK desde el gestor de archivos del teléfono |
 
 Windows no requiere instalar Python. Mantén el ejecutable junto a todas sus dependencias. El APK incluye ARM64, ARMv7 y x86_64; el primer inicio extrae el entorno incorporado. Autoriza la instalación solo a la aplicación que utilices para abrir el APK. Para actualizar, utiliza APK de este repositorio firmados con el mismo certificado.
 
@@ -23,7 +23,13 @@ Windows no requiere instalar Python. Mantén el ejecutable junto a todas sus dep
 
 <img src="docs/android.png" width="320" alt="Consola de información pública de Android" />
 
-La navegación numerada, las fuentes, el tiempo transcurrido y el número de campos reflejan la consulta actual. Los gráficos decorativos no indican un escaneo del objetivo.
+Windows v1.8.0 utiliza un espacio de trabajo de dos columnas:
+
+- Entradas, ejemplos y contexto de las fuentes a la izquierda; tabla de resultados y detalle del valor completo a la derecha.
+- La navegación numerada y compacta reúne las doce herramientas. Las tarjetas muestran el número real de campos, el tiempo transcurrido y el estado de la consulta.
+- La barra de acciones se adapta al ancho de la ventana, con filtros, copia y exportación junto a los resultados.
+
+Los gráficos decorativos no indican un escaneo del objetivo. Los resultados y estados reflejan los datos recibidos. La última versión de Android sigue siendo v1.6.0.
 
 ## Doce herramientas de consulta
 

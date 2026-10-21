@@ -8,10 +8,10 @@ A public information console for Windows and Android. Twelve Windows tools and e
 
 ## Download and install
 
-| Platform | Download v1.7.0 | Installation |
+| Platform | Current download | Installation |
 |---|---|---|
-| Windows 10/11 x64 | [Portable ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [Release and SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | Extract the entire archive; run `GhostTrack/GhostTrack.exe` |
-| Android 7.0+ | [Universal APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Release and SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Open the APK in your phone's file manager |
+| Windows 10/11 x64 · v1.8.0 | [Portable ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [Release and SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | Extract the entire archive; run `GhostTrack/GhostTrack.exe` |
+| Android 7.0+ · v1.6.0 | [Universal APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Release and SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Open the APK in your phone's file manager |
 
 Windows requires no Python installation. Keep the executable with its bundled dependencies. The Android APK includes ARM64, ARMv7 and x86_64; first launch extracts the bundled runtime. Allow installation only for the app you use to open the APK. Use APKs from this repository signed with the same certificate for future updates.
 
@@ -23,7 +23,13 @@ Windows requires no Python installation. Keep the executable with its bundled de
 
 <img src="docs/android.png" width="320" alt="Android public information console" />
 
-Numbered navigation, source labels, elapsed time and field counts reflect the current query. Decorative graphics do not indicate that a target is being scanned.
+Windows v1.8.0 uses a two-column workspace:
+
+- Inputs, examples and source context stay on the left; the results table and full-value detail pane stay on the right.
+- Compact numbered navigation holds all twelve tools. Metric cards show actual field counts, elapsed time and query status.
+- The action toolbar adapts to the window width, keeping filtering, copying and export beside the results.
+
+Decorative graphics do not indicate that a target is being scanned. Results and status reflect returned data. The latest Android version remains v1.6.0.
 
 ## Twelve query tools
 

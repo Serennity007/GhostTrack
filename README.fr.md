@@ -8,10 +8,10 @@ Console de recherche d'informations publiques pour Windows et Android. Douze out
 
 ## Télécharger et installer
 
-| Plateforme | Télécharger la v1.7.0 | Installation |
+| Plateforme | Téléchargement actuel | Installation |
 |---|---|---|
-| Windows 10/11 x64 | [ZIP portable](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [Version et SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | Extraire toute l'archive puis lancer `GhostTrack/GhostTrack.exe` |
-| Android 7.0 ou ultérieur | [APK universel](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Version et SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Ouvrir l'APK dans le gestionnaire de fichiers du téléphone |
+| Windows 10/11 x64 · v1.8.0 | [ZIP portable](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [Version et SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | Extraire toute l'archive puis lancer `GhostTrack/GhostTrack.exe` |
+| Android 7.0 ou ultérieur · v1.6.0 | [APK universel](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Version et SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Ouvrir l'APK dans le gestionnaire de fichiers du téléphone |
 
 Windows ne nécessite pas d'installation de Python. Conservez l'exécutable avec toutes ses dépendances. L'APK contient ARM64, ARMv7 et x86_64 ; le premier démarrage extrait l'environnement intégré. N'autorisez l'installation que pour l'application utilisée pour ouvrir l'APK. Pour les mises à jour, utilisez les APK de ce dépôt signés avec le même certificat.
 
@@ -23,7 +23,13 @@ Windows ne nécessite pas d'installation de Python. Conservez l'exécutable avec
 
 <img src="docs/android.png" width="320" alt="Console d'informations publiques pour Android" />
 
-La navigation numérotée, les sources, la durée et le nombre de champs correspondent à la requête en cours. Les éléments graphiques décoratifs n'indiquent pas qu'une cible est analysée par un scanner.
+Windows v1.8.0 adopte un espace de travail à deux colonnes :
+
+- Saisie, exemples et contexte des sources à gauche ; tableau des résultats et détail de la valeur complète à droite.
+- La navigation numérotée et compacte regroupe les douze outils. Les cartes affichent le nombre réel de champs, la durée et l'état de la requête.
+- La barre d'actions s'adapte à la largeur de la fenêtre, avec filtrage, copie et export à côté des résultats.
+
+Les éléments graphiques décoratifs n'indiquent pas qu'une cible est analysée par un scanner. Les résultats et états reflètent les données reçues. La dernière version Android reste la v1.6.0.
 
 ## Douze outils de recherche
 

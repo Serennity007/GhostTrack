@@ -8,10 +8,10 @@ Windows と Android 向けの公開情報検索コンソールです。12 種類
 
 ## ダウンロードとインストール
 
-| 対応環境 | v1.7.0 のダウンロード | インストール |
+| 対応環境 | 最新版のダウンロード | インストール |
 |---|---|---|
-| Windows 10/11 x64 | [ポータブル ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [リリース・SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | 全体を展開し、`GhostTrack/GhostTrack.exe` を実行 |
-| Android 7.0 以降 | [ユニバーサル APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [リリース・SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | スマートフォンのファイル管理アプリで APK を開く |
+| Windows 10/11 x64 · v1.8.0 | [ポータブル ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [リリース・SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | 全体を展開し、`GhostTrack/GhostTrack.exe` を実行 |
+| Android 7.0 以降 · v1.6.0 | [ユニバーサル APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [リリース・SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | スマートフォンのファイル管理アプリで APK を開く |
 
 Windows 版に Python のインストールは不要です。EXE だけを移動せず、付属ファイルを同じフォルダーに残してください。Android 版は ARM64・ARMv7・x86_64 を含み、初回起動時に内蔵ランタイムを展開します。APK を開くアプリにのみインストールを許可してください。更新には本リポジトリの同じ証明書で署名された APK を使用します。
 
@@ -23,7 +23,13 @@ Windows 版に Python のインストールは不要です。EXE だけを移動
 
 <img src="docs/android.png" width="320" alt="Android 公開情報コンソール" />
 
-番号付きナビゲーション、取得元、処理時間、項目数を表示します。装飾の図形は対象へのスキャン実行を示すものではありません。
+Windows v1.8.0 は左右 2 列のワークスペースを採用しています。
+
+- 左側に入力・サンプル・取得元の説明、右側に結果一覧と値の全文表示を配置。
+- コンパクトな番号付きナビゲーションに 12 ツールを集約し、実際の項目数・経過時間・検索状態をカードに表示。
+- ウィンドウ幅に合わせて操作バーが調整され、絞り込み・コピー・出力を結果の近くで操作可能。
+
+装飾の図形は対象へのスキャン実行を示しません。結果と状態は実際に取得したデータに基づきます。Android の最新版は引き続き v1.6.0 です。
 
 ## 12 種類の検索ツール
 

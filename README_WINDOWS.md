@@ -1,10 +1,17 @@
-# GhostTrack Console 1.6.0 使用说明
+# GhostTrack Console 1.8.0 使用说明
 
 ## 安装与启动
 
-下载 `GhostTrack-v1.6.0-Windows-x64.zip`，完整解压，运行 `GhostTrack/GhostTrack.exe`。Windows 10/11 x64，无需 Python、管理员权限或账号登录。不要单独复制 EXE，`_internal` 和 `assets` 是运行依赖。
+下载 [GhostTrack-v1.8.0-Windows-x64.zip](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip)，完整解压，运行 `GhostTrack/GhostTrack.exe`。Windows 10/11 x64，无需 Python、管理员权限或账号登录。不要单独复制 EXE，`_internal` 和 `assets` 是运行依赖。
 
-## 公开资源查询（新增）
+## 工作台布局
+
+- 左侧紧凑导航可选择全部 12 个工具；查询面板集中显示输入、示例和来源说明。
+- 右侧结果表格保留筛选和完整值详情，复制、打开来源与导出工具栏随窗口宽度调整。
+- 指标卡显示真实字段数、耗时和查询状态；查询中显示实际来源进度，部分来源失败时保留其余结果。
+- 应用界面支持简体中文、English、日本語、Español；仓库另提供这四种语言和法文的完整 README。
+
+## 公开资源查询
 
 - **域名综合报告**：输入域名，一次并行获取 RDAP、DNS、HTTPS 三类结果。每个来源保留独立字段、状态和来源链接；一个来源失败不影响其余结果。进度来自实际返回的来源。
 - **域名档案**：输入已注册的域名，如 `example.com`，获取 RDAP 公开注册元数据。子域名通常没有独立注册档案。
@@ -78,7 +85,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe build_windows.py
 ```
 
-输出 `dist/v1.6.0/GhostTrack/`、`dist/GhostTrack-v1.6.0-Windows-x64.zip`、`dist/SHA256SUMS-v1.6.0.txt`。用 PowerShell `Get-FileHash` 对照 SHA256 校验文件。
+输出 `dist/v1.8.0/GhostTrack/`、`dist/GhostTrack-v1.8.0-Windows-x64.zip`、`dist/SHA256SUMS-v1.8.0.txt`。用 PowerShell `Get-FileHash` 对照 SHA256 校验文件。
 
 ## Languages
 

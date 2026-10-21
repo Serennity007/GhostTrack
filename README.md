@@ -8,10 +8,10 @@
 
 ## 下载与安装
 
-| 平台 | 下载 v1.7.0 | 安装方法 |
+| 平台 | 当前下载 | 安装方法 |
 |---|---|---|
-| Windows 10/11 x64 | [便携 ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | 完整解压，运行 `GhostTrack/GhostTrack.exe` |
-| Android 7.0+ | [通用 APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | 在手机文件管理器中打开 APK 安装 |
+| Windows 10/11 x64 · v1.8.0 | [便携 ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | 完整解压，运行 `GhostTrack/GhostTrack.exe` |
+| Android 7.0+ · v1.6.0 | [通用 APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | 在手机文件管理器中打开 APK 安装 |
 
 Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要单独移动 EXE。Android 包支持 ARM64、ARMv7 和 x86_64，首次启动会解压内置运行环境；只给实际用于打开 APK 的应用授予安装来源权限。后续更新请使用本仓库以同一证书签名的 APK。
 
@@ -23,7 +23,13 @@ Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要
 
 <img src="docs/android.png" width="320" alt="Android 公开信息控制台" />
 
-界面提供编号导航、来源标识、查询耗时和字段数量。装饰图形不表示正在扫描目标；查询状态与结果来自实际返回的数据。
+Windows v1.8.0 采用左右分栏工作台：
+
+- 左侧集中输入、示例和来源说明，右侧保留结果表格与完整值详情。
+- 紧凑编号导航容纳 12 个工具，指标卡显示真实字段数量、查询耗时和当前状态。
+- 操作工具栏随窗口宽度调整，筛选、复制和导出靠近结果区。
+
+装饰图形不表示正在扫描目标；查询状态与结果来自实际返回的数据。Android 最新版本仍为 v1.6.0。
 
 ## 12 个查询工具
 
