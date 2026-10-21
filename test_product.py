@@ -1,4 +1,6 @@
 import json
+import errno
+import os
 from pathlib import Path
 import tempfile
 import threading
@@ -13,6 +15,82 @@ from storage import Store
 
 
 class PersistenceTests(unittest.TestCase):
+    def test_transient_windows_replace_denial_preserves_new_state(self):
+        original_replace = Path.replace
+        for code in (5, 32, 33):
+            with self.subTest(winerror=code), tempfile.TemporaryDirectory() as folder:
+                store = Store(folder)
+                store.settings['remember'] = True
+                self.assertTrue(store.record('test', 'old', 'CN', 'Auto', {}))
+                error = PermissionError(errno.EACCES, 'Temporary Windows file lock')
+                error.winerror = code
+                attempts = []
+
+                def replace(source, target):
+                    attempts.append(source)
+                    if len(attempts) == 1:
+                        raise error
+                    return original_replace(source, target)
+
+                with patch.object(Path, 'replace', replace), patch('storage.time.sleep'):
+                    self.assertTrue(store.record('test', 'new', 'CN', 'Auto', {}))
+                self.assertGreaterEqual(len(attempts), 2)
+                self.assertEqual(Store(folder).history[0]['input'], 'new')
+                self.assertEqual(list(Path(folder).glob('state-*.tmp')), [])
+
+    def test_persistent_windows_denial_is_bounded_and_keeps_old_state(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store = Store(folder)
+            store.settings['remember'] = True
+            self.assertTrue(store.record('test', 'old', 'CN', 'Auto', {}))
+            error = PermissionError(errno.EACCES, 'Persistent Windows access denial')
+            error.winerror = 5
+            with patch.object(Path, 'replace', side_effect=error) as replace, patch('storage.time.sleep'):
+                self.assertFalse(store.record('test', 'new', 'CN', 'Auto', {}))
+            self.assertEqual(replace.call_count, 4)
+            self.assertEqual(Store(folder).history[0]['input'], 'old')
+            self.assertEqual(list(Path(folder).glob('state-*.tmp')), [])
+
+    def test_unrelated_replace_error_fails_without_retry(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store = Store(folder)
+            store.settings['remember'] = True
+            self.assertTrue(store.record('test', 'old', 'CN', 'Auto', {}))
+            with patch.object(Path, 'replace', side_effect=OSError(errno.ENOSPC, 'Disk full')) as replace, \
+                    patch('storage.time.sleep') as sleep:
+                self.assertFalse(store.record('test', 'new', 'CN', 'Auto', {}))
+            replace.assert_called_once()
+            sleep.assert_not_called()
+            self.assertEqual(Store(folder).history[0]['input'], 'old')
+            self.assertEqual(list(Path(folder).glob('state-*.tmp')), [])
+
+    @unittest.skipUnless(os.name == 'nt', 'Windows sharing semantics')
+    def test_windows_reader_lock_released_during_atomic_save(self):
+        import ctypes
+        from ctypes import wintypes
+
+        kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        kernel.CreateFileW.argtypes = (wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD,
+                                      wintypes.LPVOID, wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE)
+        kernel.CreateFileW.restype = wintypes.HANDLE
+        kernel.CloseHandle.argtypes = (wintypes.HANDLE,)
+        kernel.CloseHandle.restype = wintypes.BOOL
+        with tempfile.TemporaryDirectory() as folder:
+            store = Store(folder)
+            store.settings['remember'] = True
+            self.assertTrue(store.record('test', 'old', 'CN', 'Auto', {}))
+            # A real reader permits reads/writes but withholds FILE_SHARE_DELETE.
+            handle = kernel.CreateFileW(str(store.path), 0x80000000, 3, None, 3, 0, None)
+            if handle == ctypes.c_void_p(-1).value:
+                raise ctypes.WinError(ctypes.get_last_error())
+            release = threading.Timer(.05, lambda: kernel.CloseHandle(handle))
+            release.start()
+            try:
+                self.assertTrue(store.record('test', 'new', 'CN', 'Auto', {}))
+            finally:
+                release.join()
+            self.assertEqual(Store(folder).history[0]['input'], 'new')
+
     def test_large_results_keep_persisted_state_readable(self):
         with tempfile.TemporaryDirectory() as folder:
             store = Store(folder)

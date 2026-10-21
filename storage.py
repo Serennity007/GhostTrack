@@ -1,6 +1,7 @@
 """Small bounded local state store. Query history is persisted only on opt-in."""
 import json
 import os
+import time
 from pathlib import Path
 from uuid import uuid4
 
@@ -50,8 +51,15 @@ class Store:
                     break
                 history = history[:-1]
             temporary.write_text(encoded, encoding='utf-8')
-            temporary.replace(self.path)
-            return True
+            # Windows scanners/readers can briefly deny an otherwise valid atomic replacement.
+            for retry_delay in (.02, .04, .08, None):
+                try:
+                    temporary.replace(self.path)
+                    return True
+                except OSError as error:
+                    if retry_delay is None or getattr(error, 'winerror', None) not in (5, 32, 33):
+                        raise
+                    time.sleep(retry_delay)
         except (OSError, TypeError, ValueError):
             return False
         finally:
