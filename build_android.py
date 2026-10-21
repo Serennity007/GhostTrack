@@ -4,17 +4,30 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import secrets
 import shutil
 import subprocess
 import sys
 
-from version import VERSION
+
+def parse_apk_version(badging):
+    """Read a safe numeric release version from aapt's actual APK metadata."""
+    packages = [line for line in badging.splitlines() if line.startswith('package:')]
+    if len(packages) != 1:
+        raise ValueError('Expected one package entry in APK metadata.')
+    versions = re.findall(r"(?:^|\s)versionName='([^']*)'", packages[0])
+    if len(versions) != 1 or len(versions[0]) > 32 or not re.fullmatch(
+            r'(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)', versions[0]):
+        raise ValueError('APK versionName must be a numeric major.minor.patch release version.')
+    return versions[0]
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--gradle', default='gradle.bat' if os.name == 'nt' else 'gradle')
+    parser.add_argument('--output-dir', type=Path, default=Path('dist'),
+                        help='Artifact directory, relative to the repository or absolute (default: dist).')
     args = parser.parse_args()
     root = Path(__file__).resolve().parent
     env = os.environ.copy()
@@ -55,13 +68,17 @@ def main():
     verifier = sdk / 'build-tools/36.0.0' / ('apksigner.bat' if os.name == 'nt' else 'apksigner')
     verification = subprocess.check_output([str(verifier), 'verify', '--verbose', '--print-certs', str(apk)],
                                             env=env, text=True, stderr=subprocess.STDOUT)
-    dist = root / 'dist'
-    dist.mkdir(exist_ok=True)
-    target = dist / f'GhostTrack-v{VERSION}-Android-universal.apk'
+    aapt = sdk / 'build-tools/36.0.0' / ('aapt.exe' if os.name == 'nt' else 'aapt')
+    badging = subprocess.check_output([str(aapt), 'dump', 'badging', str(apk)],
+                                     env=env, text=True, stderr=subprocess.STDOUT)
+    version = parse_apk_version(badging)
+    dist = args.output_dir if args.output_dir.is_absolute() else root / args.output_dir
+    dist.mkdir(parents=True, exist_ok=True)
+    target = dist / f'GhostTrack-v{version}-Android-universal.apk'
     shutil.copyfile(apk, target)
     digest = hashlib.sha256(target.read_bytes()).hexdigest()
-    (dist / f'SHA256SUMS-Android-v{VERSION}.txt').write_text(f'{digest}  {target.name}\n', encoding='utf-8')
-    (dist / f'Android-signature-v{VERSION}.txt').write_text(verification, encoding='utf-8')
+    (dist / f'SHA256SUMS-Android-v{version}.txt').write_text(f'{digest}  {target.name}\n', encoding='utf-8')
+    (dist / f'Android-signature-v{version}.txt').write_text(verification, encoding='utf-8')
     print(f'Built and verified: {target.name} ({target.stat().st_size:,} bytes)')
     print(f'Signing backup directory: {signing_dir}')
 

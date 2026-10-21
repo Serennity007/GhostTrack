@@ -36,7 +36,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    // Only the service modules are shared. Tkinter and desktop persistence stay out of the APK.
+    // Share service dependencies, without importing Tkinter or desktop UI state.
     sourceSets { main { assets.srcDir '../../docs/android-assets' } }
 }
 
@@ -54,10 +54,20 @@ chaquopy {
 }
 
 tasks.register('syncSharedPython', Sync) {
+    def releaseVersion = android.defaultConfig.versionName
+    inputs.property('androidVersionName', releaseVersion)
     from('../..') {
-        include 'queries.py', 'platforms.py', 'public_data.py', 'i18n.py', 'reports.py', 'version.py'
+        include 'queries.py', 'platforms.py', 'public_data.py', 'i18n.py', 'reports.py', 'archive.py'
     }
     into layout.buildDirectory.dir('generated/shared-python')
+    doLast {
+        if (releaseVersion.length() > 32 ||
+                !(releaseVersion ==~ /(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)/)) {
+            throw new GradleException('Android versionName must be numeric major.minor.patch.')
+        }
+        // Windows and Android releases have independent versions.
+        new File(destinationDir, 'version.py').setText("VERSION = '${releaseVersion}'\n", 'UTF-8')
+    }
 }
 tasks.configureEach {
     if (name.endsWith('PythonSources') && (name.startsWith('merge') || name.startsWith('generate'))) {
