@@ -1,0 +1,12 @@
+<resources>
+    <style name="GhostTrackTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorAccent">#A3FF6F</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">#070D0B</item>
+        <item name="android:navigationBarColor">#070D0B</item>
+        <item name="android:windowBackground">#070D0B</item>
+        <item name="android:colorBackground">#070D0B</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+</resources>

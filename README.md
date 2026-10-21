@@ -1,8 +1,8 @@
 # GhostTrack Console
 
-四语言 Windows 公开信息控制台：11 个查询模块，黑绿终端风格、编号导航、等宽结果区和真实查询耗时，基于 [HunxByts/GhostTrack](https://github.com/HunxByts/GhostTrack) 扩展。
+四语言 Windows / Android 公开信息控制台：11 个查询模块，黑绿终端风格、编号导航、等宽结果区和真实查询耗时，基于 [HunxByts/GhostTrack](https://github.com/HunxByts/GhostTrack) 扩展。
 
-[下载 Windows 版](https://github.com/Serennity007/GhostTrack/releases/latest) · [使用说明](README_WINDOWS.md) · [更新记录](CHANGELOG.md) · [原项目说明](UPSTREAM_README.md)
+[Android 安装与使用](README_ANDROID.md) · [下载 Windows 版](https://github.com/Serennity007/GhostTrack/releases/latest) · [使用说明](README_WINDOWS.md) · [更新记录](CHANGELOG.md) · [原项目说明](UPSTREAM_README.md)
 
 ## 快速开始
 
