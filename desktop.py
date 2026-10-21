@@ -11,6 +11,7 @@ from platforms import PLATFORMS, lookup_profile
 from version import VERSION
 from queries import query
 from storage import Store
+from archive import Archive, ArchiveError, flatten
 from reports import write_report
 from platforms import detect_platform, ProfileInputError, QueryCancelled
 from datetime import datetime, timezone
@@ -30,12 +31,13 @@ class App:
     BG, PANEL, CARD = '#080e17', '#101b2a', '#172638'
     FG, MUTED, ACCENT = '#e7f4f1', '#8da9b5', '#5cf0b7'
     MODES = ['IP 归属地', '本机公网 IP', '号码归属地', '用户名链接', '国内平台',
-             '域名档案', 'DNS 记录', '网站与证书', 'IP 注册网络', 'GitHub 公开资料', '域名综合报告']
-    MODE_KEYS = ['ip', 'self', 'phone', 'username', 'domestic', 'domain', 'dns', 'website', 'network', 'github', 'overview']
+             '域名档案', 'DNS 记录', '网站与证书', 'IP 注册网络', 'GitHub 公开资料', '域名综合报告', '授权账号档案']
+    MODE_KEYS = ['ip', 'self', 'phone', 'username', 'domestic', 'domain', 'dns', 'website', 'network', 'github', 'overview', 'archive']
 
     def __init__(self, root, data_dir=None):
         self.root, self.result = root, {}
         self.store = Store(data_dir)
+        self.archive = Archive(self.store.directory)
         self.events = queue.Queue()
         self.lang, self.mode, self.busy = self.store.settings['language'], 10, False
         self.job_id, self.closed = 0, False
@@ -108,14 +110,19 @@ class App:
         self.nav = []
         for index, key in enumerate(self.MODE_KEYS):
             button = self.button_widget(side, key, lambda n=index: self.select(n))
-            button.config(font=('Microsoft YaHei UI', 10), pady=5, anchor='w', padx=12)
+            button.config(font=('Microsoft YaHei UI', 10), pady=3, anchor='w', padx=12)
             button.pack(fill='x', padx=14, pady=2)
             self.nav.append(button)
-        tk.Frame(side, height=1, bg='#263d50').pack(fill='x', padx=22, pady=10)
-        for key, command in (('history', self.history_dialog), ('settings', self.settings_dialog), ('help', self.help_dialog)):
-            utility = self.button_widget(side, key, command)
-            utility.config(font=('Microsoft YaHei UI', 9), pady=6)
-            utility.pack(fill='x', padx=14, pady=2)
+        tk.Frame(side, height=1, bg='#263d50').pack(fill='x', padx=22, pady=6)
+        utilities = tk.Frame(side, bg=self.PANEL)
+        utilities.pack(fill='x', padx=14, pady=2)
+        utilities.columnconfigure(0, weight=1)
+        utilities.columnconfigure(1, weight=1)
+        for index, (key, command) in enumerate((('history', self.history_dialog), ('archive_manage', self.archive_dialog),
+                                                ('settings', self.settings_dialog), ('help', self.help_dialog))):
+            utility = self.button_widget(utilities, key, command)
+            utility.config(font=('Microsoft YaHei UI', 9), pady=6, padx=6)
+            utility.grid(row=index // 2, column=index % 2, sticky='ew', padx=2, pady=2)
         footer = tk.Frame(side, bg=self.PANEL)
         footer.pack(side='bottom', fill='x', padx=22, pady=14)
         self.label(footer, 'privacy', bg=self.PANEL, wraplength=200).pack(anchor='w', pady=8)
@@ -256,7 +263,8 @@ class App:
         actions.grid(row=7, column=0, sticky='ew', pady=(10, 10))
         self.action_buttons = []
         for key, command in (('copy_selected', self.copy_selected), ('copy', self.copy),
-                             ('open_profile', self.open_profile), ('export', self.export)):
+                             ('open_profile', self.open_profile), ('export', self.export),
+                             ('save_archive', self.save_archive)):
             widget = self.button_widget(actions, key, command)
             widget.pack(side='left', padx=(0, 8))
             self.action_buttons.append(widget)
@@ -319,7 +327,7 @@ class App:
             return
         examples = ['8.8.8.8', '', '+12025550123', 'octocat',
                     'https://space.bilibili.com/2', 'example.com', 'example.com',
-                    'https://www.python.org/', 'AS15169', 'octocat', 'python.org']
+                    'https://www.python.org/', 'AS15169', 'octocat', 'python.org', '+8613800138000']
         self.value.set(examples[self.mode])
         if self.mode == 4:
             self.platform.set('Bilibili')
@@ -343,7 +351,7 @@ class App:
             self.update_telemetry()
         sources = ['IPWHO.IS', 'IPIFY + IPWHO.IS', 'LOCAL METADATA', 'PUBLIC LINKS',
                    'PUBLIC PROFILE HTML', 'RDAP', 'DNS OVER HTTPS', 'HTTPS / TLS',
-                   'RDAP / IP / ASN', 'GITHUB REST', 'RDAP + DNS + HTTPS']
+                   'RDAP / IP / ASN', 'GITHUB REST', 'RDAP + DNS + HTTPS', 'LOCAL AUTHORIZED ARCHIVE']
         self.source_badge.config(text=sources[index])
         self.example_button.config(state='disabled' if self.busy or index == 1 else 'normal')
         self.platform_choice.set(platform_name(self.platform.get(), self.lang))
@@ -437,7 +445,8 @@ class App:
         self.show_empty('busy', 'empty_help')
         def work():
             try:
-                data = query(*args, cancel=cancel, progress=lambda data: self.events.put((job_id, 'progress', data, args)))
+                data = query(*args, cancel=cancel, archive=self.archive,
+                             progress=lambda data: self.events.put((job_id, 'progress', data, args)))
                 data.setdefault('查询时间 UTC', datetime.now(timezone.utc).isoformat(timespec='seconds'))
                 data['查询工具'] = args[0]
                 data['查询输入'] = args[1] if args[0] != '本机公网 IP' else '—'
@@ -518,6 +527,8 @@ class App:
         for button in self.action_buttons:
             button.config(state='normal' if self.result else 'disabled')
         self.action_buttons[2].config(state='normal' if self.result.get('主页链接') or self.result.get('来源链接') else 'disabled')
+        archivable = self.result.get('平台') in PLATFORMS and bool(self.result.get('主页链接'))
+        self.action_buttons[4].config(state='normal' if archivable else 'disabled')
 
     def show_empty(self, title, help_key):
         self.set_detail('')
@@ -696,6 +707,104 @@ class App:
         tk.Button(window, text=UI[self.lang]['releases'], bg=self.CARD, fg=self.FG, relief='flat',
                   padx=20, pady=12, command=lambda: webbrowser.open(
                       'https://github.com/Serennity007/GhostTrack/releases')).pack(anchor='e', padx=24, pady=20)
+
+    def save_archive(self):
+        platform = self.result.get('平台')
+        url = self.result.get('主页链接')
+        if platform not in PLATFORMS or not url:
+            self.status.set(UI[self.lang]['no_profile'])
+            return
+        window = self.dialog('save_archive', '640x560')
+        tk.Label(window, text=UI[self.lang]['save_archive'], bg=self.BG, fg=self.FG,
+                 font=('Microsoft YaHei UI', 16)).pack(anchor='w', padx=24, pady=(20, 4))
+        tk.Label(window, text=UI[self.lang]['archive_consent'], bg=self.BG, fg=self.MUTED,
+                 wraplength=590, justify='left', font=('Microsoft YaHei UI', 9)).pack(anchor='w', padx=24, pady=(0, 12))
+        tk.Label(window, text=f"{localize('平台', self.lang)}: {platform_name(platform, self.lang)}",
+                 bg=self.BG, fg=self.FG, font=('Microsoft YaHei UI', 10)).pack(anchor='w', padx=24, pady=2)
+        tk.Label(window, text=url, bg=self.BG, fg=self.MUTED, wraplength=590, justify='left',
+                 font=('Consolas', 9)).pack(anchor='w', padx=24, pady=(0, 12))
+        phone = tk.StringVar()
+        note = tk.StringVar()
+        source = tk.StringVar(value=UI[self.lang]['source_self'])
+        for key, variable in (('phone_number', phone), ('note', note)):
+            tk.Label(window, text=UI[self.lang][key], bg=self.BG, fg=self.FG,
+                     font=('Microsoft YaHei UI', 10)).pack(anchor='w', padx=24, pady=(8, 2))
+            tk.Entry(window, textvariable=variable, bg=self.CARD, fg=self.FG, relief='flat',
+                     insertbackground=self.ACCENT, font=('Microsoft YaHei UI', 11)).pack(fill='x', padx=24, ipady=6)
+        tk.Label(window, text=UI[self.lang]['source'], bg=self.BG, fg=self.FG,
+                 font=('Microsoft YaHei UI', 10)).pack(anchor='w', padx=24, pady=(8, 2))
+        ttk.Combobox(window, textvariable=source, state='readonly',
+                     values=[UI[self.lang]['source_self'], UI[self.lang]['source_public']]).pack(fill='x', padx=24)
+        def submit():
+            kind = 'self' if source.get() == UI[self.lang]['source_self'] else 'public'
+            try:
+                _, created, saved = self.archive.add(phone.get(), platform, url,
+                                                     self.region.get(), kind, note.get())
+            except ArchiveError as error:
+                self.status.set(UI[self.lang][error.code])
+                return
+            if not saved:
+                self.status.set(UI[self.lang]['state_warning'])
+            else:
+                self.set_state('archive_added' if created else 'archive_updated')
+            window.destroy()
+        tk.Button(window, text=UI[self.lang]['save'], command=submit, bg=self.ACCENT,
+                  fg=self.BG, padx=24, pady=12, relief='flat').pack(side='bottom', anchor='e', padx=24, pady=20)
+
+    def archive_dialog(self):
+        window = self.dialog('archive_manage', '860x560')
+        tk.Label(window, text=UI[self.lang]['archive_title'], bg=self.BG, fg=self.FG,
+                 font=('Microsoft YaHei UI', 16)).pack(anchor='w', padx=24, pady=(20, 4))
+        tk.Label(window, text=UI[self.lang]['archive_consent'], bg=self.BG, fg=self.MUTED,
+                 wraplength=800, justify='left', font=('Microsoft YaHei UI', 9)).pack(anchor='w', padx=24, pady=(0, 10))
+        listing = tk.Listbox(window, bg=self.PANEL, fg=self.FG, relief='flat',
+                             selectbackground='#203f52', font=('Microsoft YaHei UI', 10),
+                             activestyle='none', exportselection=False)
+        listing.pack(fill='both', expand=True, padx=24)
+        def populate():
+            listing.delete(0, 'end')
+            for item in self.archive.records:
+                listing.insert('end', f"{item['added'][:19]}  ·  {platform_name(item['platform'], self.lang)}  ·  "
+                                      f"{item['phone_display']}  ·  {item['url'][:60]}")
+            if not self.archive.records:
+                listing.insert('end', UI[self.lang]['archive_empty'])
+        populate()
+        def selected_record():
+            selected = listing.curselection()
+            if not selected or not self.archive.records or selected[0] >= len(self.archive.records):
+                return None
+            return self.archive.records[selected[0]]
+        def delete():
+            item = selected_record()
+            if not item:
+                return
+            if messagebox.askyesno(UI[self.lang]['archive_manage'],
+                                   UI[self.lang]['archive_delete_confirm'], parent=window):
+                if not self.archive.remove(item['id']):
+                    self.status.set(UI[self.lang]['state_warning'])
+                else:
+                    self.set_state('archive_deleted')
+                populate()
+        def export_all():
+            if not self.archive.records:
+                self.status.set(UI[self.lang]['archive_empty'])
+                return
+            path = filedialog.asksaveasfilename(defaultextension='.json',
+                        initialfile=f'GhostTrack-archive-{datetime.now().strftime("%Y%m%d-%H%M%S")}.json',
+                        filetypes=[('JSON', '*.json'), ('CSV', '*.csv'), ('HTML report', '*.html')], parent=window)
+            if not path:
+                return
+            try:
+                write_report(path, flatten(self.archive.records), (UI[self.lang]['field'], UI[self.lang]['value']))
+                self.set_state('saved')
+            except OSError:
+                messagebox.showerror(UI[self.lang]['export_failed'], UI[self.lang]['export_failed'], parent=window)
+        row = tk.Frame(window, bg=self.BG)
+        row.pack(fill='x', padx=24, pady=20)
+        tk.Button(row, text=UI[self.lang]['export_archive'], command=export_all, bg=self.ACCENT,
+                  fg=self.BG, relief='flat', padx=20, pady=10).pack(side='left')
+        tk.Button(row, text=UI[self.lang]['delete'], command=delete, bg=self.CARD,
+                  fg=self.FG, relief='flat', padx=20, pady=10).pack(side='right')
 
     def callback_error(self, error_type, error, trace):
         # Do not put user input or sharing tokens in logs.

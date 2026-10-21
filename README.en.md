@@ -2,15 +2,15 @@
 
 [简体中文](README.md) · **English** · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
 
-A public information console for Windows and Android. Eleven tools share the same query services, bringing domain records, DNS, website certificates, network registrations and public profiles into a dark interface with source status and exportable results.
+A public information console for Windows and Android. Twelve Windows tools and eleven Android modules share the same query services, bringing domain records, DNS, website certificates, network registrations and public profiles into a dark interface with source status and exportable results.
 
 > Documentation is available in Chinese, English, Japanese, Spanish and French. The app interface supports four languages: Simplified Chinese, English, Japanese and Spanish.
 
 ## Download and install
 
-| Platform | Download v1.6.0 | Installation |
+| Platform | Download v1.7.0 | Installation |
 |---|---|---|
-| Windows 10/11 x64 | [Portable ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.6.0/GhostTrack-v1.6.0-Windows-x64.zip) · [Release and SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.6.0) | Extract the entire archive; run `GhostTrack/GhostTrack.exe` |
+| Windows 10/11 x64 | [Portable ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [Release and SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | Extract the entire archive; run `GhostTrack/GhostTrack.exe` |
 | Android 7.0+ | [Universal APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Release and SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Open the APK in your phone's file manager |
 
 Windows requires no Python installation. Keep the executable with its bundled dependencies. The Android APK includes ARM64, ARMv7 and x86_64; first launch extracts the bundled runtime. Allow installation only for the app you use to open the APK. Use APKs from this repository signed with the same certificate for future updates.
@@ -25,10 +25,11 @@ Windows requires no Python installation. Keep the executable with its bundled de
 
 Numbered navigation, source labels, elapsed time and field counts reflect the current query. Decorative graphics do not indicate that a target is being scanned.
 
-## Eleven query tools
+## Twelve query tools
 
 | Tool | Input | Available public information |
 |---|---|---|
+| Authorized archive | Phone number or keyword | Locally saved consented phone-profile associations, with source and save time |
 | Domain overview | Domain | Parallel RDAP, DNS and HTTPS results, with a status for each source |
 | Domain records | Domain | Registrar, registration/expiry/update dates, DNSSEC and name servers |
 | DNS records | Domain | A, AAAA, CNAME, MX, NS, TXT, SOA, CAA and TTL |
@@ -50,6 +51,7 @@ Supported platforms: **Douyin, Xiaohongshu, Kuaishou, Bilibili, Weibo, Zhihu and
 - Export JSON, UTF-8 BOM CSV or standalone HTML, including the tool, input and UTC time. CSV protects formula-like text.
 - Windows: double-click / Ctrl+C to copy, Enter to query, Esc to cancel. Android: touch controls and the system document picker for export.
 - Windows keeps up to 50 session history entries. Saving history across sessions is optional and off by default. Android does not persist query history; it remembers the language and selected tool.
+- "Save to archive" stores a platform result's profile with a phone number you own or that the owner published (with source and save time). The sidebar Archive dialog deletes and exports records; tool 12 searches this local archive by number or keyword.
 
 ## Sources, privacy and limits
 
@@ -57,7 +59,7 @@ Queries use [RDAP](https://about.rdap.org/), [Google Public DNS](https://develop
 
 Login requirements, CAPTCHAs, JavaScript, rate limits and outages can limit results. The app preserves available data and source status; it does not bypass access controls or treat HTTP 200 as verified identity. Website queries accept public HTTPS on port 443, validate certificates and bound redirects and response size. Missing values are not invented. RDAP exports exclude registrant contact details.
 
-**Phone numbering regions and IP database locations are not live device locations. There is no reverse phone lookup for private platform accounts, real-name identification or cross-platform identity matching.** Query only public information you are entitled to access and follow each service's terms.
+**Phone numbering regions and IP database locations are not live device locations. There is no reverse phone lookup for private platform accounts, real-name identification or cross-platform identity matching; the authorized archive only stores associations you explicitly save with a declared source, stays on this device and can be deleted anytime.** Query only public information you are entitled to access and follow each service's terms.
 
 Windows settings and optional history live in `%LOCALAPPDATA%\GhostTrackDesk`; history can be cleared in the app. Error logs omit query content. Android requests Internet permission only, without location, contacts, SMS, phone or broad storage access. Manage exported files, clipboard contents and shared URLs with care because they may contain query data.
 

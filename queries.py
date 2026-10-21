@@ -4,12 +4,29 @@ from urllib.parse import quote
 import requests
 import phonenumbers
 from phonenumbers import carrier, geocoder, timezone
+from archive import flatten
 from platforms import lookup_profile
 from public_data import registration, dns_records, github_profile, website_info, is_public_address, domain_overview
 
+ARCHIVE_DISPLAY_LIMIT = 12
 
-def query(kind, value, region='CN', language='zh', platform='Bilibili', cancel=None, progress=None):
+
+def query(kind, value, region='CN', language='zh', platform='Bilibili', cancel=None, progress=None, archive=None):
     value = value.strip()
+    if kind == '授权账号档案':
+        if archive is None:
+            raise ValueError('archive unavailable')
+        matches = archive.search(value)
+        result = {'匹配记录数': len(matches),
+                  '说明': '仅含本人授权或公开主页保存的关联，不代表实时验证结果'}
+        if not matches:
+            result['提示'] = '没有匹配记录；在平台查询结果中可保存授权关联'
+            return result
+        result['显示记录数'] = min(len(matches), ARCHIVE_DISPLAY_LIMIT)
+        result.update(flatten(matches[:ARCHIVE_DISPLAY_LIMIT]))
+        if len(matches) > ARCHIVE_DISPLAY_LIMIT:
+            result['提示'] = '仅显示前 12 条；打开档案管理可查看或导出全部'
+        return result
     if kind == '域名综合报告':
         return domain_overview(value, cancel, progress)
     if kind == '域名档案':

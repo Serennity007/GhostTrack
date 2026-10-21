@@ -2,15 +2,15 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · **Español** · [Français](README.fr.md)
 
-Consola de información pública para Windows y Android. Once herramientas comparten los mismos servicios de consulta para mostrar registros de dominios, DNS, certificados web, registros de redes y perfiles públicos en una interfaz oscura con estado de las fuentes y resultados exportables.
+Consola de información pública para Windows y Android. Doce herramientas de Windows y once módulos de Android comparten los mismos servicios de consulta para mostrar registros de dominios, DNS, certificados web, registros de redes y perfiles públicos en una interfaz oscura con estado de las fuentes y resultados exportables.
 
 > La documentación está en chino, inglés, japonés, español y francés. La interfaz de la aplicación admite cuatro idiomas: chino simplificado, inglés, japonés y español.
 
 ## Descarga e instalación
 
-| Plataforma | Descargar v1.6.0 | Instalación |
+| Plataforma | Descargar v1.7.0 | Instalación |
 |---|---|---|
-| Windows 10/11 x64 | [ZIP portátil](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.6.0/GhostTrack-v1.6.0-Windows-x64.zip) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.6.0) | Extrae todo el archivo y ejecuta `GhostTrack/GhostTrack.exe` |
+| Windows 10/11 x64 | [ZIP portátil](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | Extrae todo el archivo y ejecuta `GhostTrack/GhostTrack.exe` |
 | Android 7.0 o posterior | [APK universal](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Abre el APK desde el gestor de archivos del teléfono |
 
 Windows no requiere instalar Python. Mantén el ejecutable junto a todas sus dependencias. El APK incluye ARM64, ARMv7 y x86_64; el primer inicio extrae el entorno incorporado. Autoriza la instalación solo a la aplicación que utilices para abrir el APK. Para actualizar, utiliza APK de este repositorio firmados con el mismo certificado.
@@ -25,10 +25,11 @@ Windows no requiere instalar Python. Mantén el ejecutable junto a todas sus dep
 
 La navegación numerada, las fuentes, el tiempo transcurrido y el número de campos reflejan la consulta actual. Los gráficos decorativos no indican un escaneo del objetivo.
 
-## Once herramientas de consulta
+## Doce herramientas de consulta
 
 | Herramienta | Entrada | Información pública disponible |
 |---|---|---|
+| Archivo autorizado | Teléfono o palabra clave | Asociaciones teléfono-perfil autorizadas guardadas en este equipo, con fuente y fecha |
 | Informe de dominio | Dominio | RDAP, DNS y HTTPS en paralelo, con estado por fuente |
 | Registro de dominio | Dominio | Registrador, fechas de alta/caducidad/actualización, DNSSEC y servidores de nombres |
 | Registros DNS | Dominio | A, AAAA, CNAME, MX, NS, TXT, SOA, CAA y TTL |
@@ -50,6 +51,7 @@ Plataformas compatibles: **Douyin, Xiaohongshu, Kuaishou, Bilibili, Weibo, Zhihu
 - Exporta JSON, CSV con UTF-8 BOM o HTML independiente, con herramienta, entrada y hora UTC. El CSV protege textos que podrían interpretarse como fórmulas.
 - Windows: doble clic / Ctrl+C para copiar, Enter para consultar y Esc para cancelar. Android: controles táctiles y selector de documentos del sistema para exportar.
 - Windows conserva hasta 50 entradas de historial de sesión. Guardarlas entre sesiones es opcional y está desactivado inicialmente. Android no guarda el historial de consultas de forma persistente; recuerda el idioma y la herramienta elegida.
+- «Guardar en archivo» registra el perfil de un resultado con un teléfono propio o publicado por el titular (con fuente y fecha). El diálogo Archivo de la barra lateral elimina y exporta registros; la herramienta 12 busca en este archivo local por número o palabra clave.
 
 ## Fuentes, privacidad y límites
 
@@ -57,7 +59,7 @@ Las consultas usan [RDAP](https://about.rdap.org/), [Google Public DNS](https://
 
 El inicio de sesión, los CAPTCHA, JavaScript, los límites de solicitudes y los fallos pueden reducir los resultados. La aplicación conserva los datos obtenidos y el estado de cada fuente; no elude controles de acceso ni considera que HTTP 200 confirme una identidad. Las consultas web solo acceden a HTTPS público en el puerto 443, validan los certificados y limitan redirecciones y tamaño de respuesta. No se inventan campos ausentes; RDAP no exporta datos de contacto del titular.
 
-**Las regiones de numeración y las ubicaciones de bases de datos IP no son la ubicación del dispositivo en tiempo real. No se buscan cuentas privadas por número de teléfono, no se identifican nombres reales ni se vinculan identidades entre plataformas.** Consulta solo información pública a la que tengas derecho a acceder y respeta las condiciones de cada servicio.
+**Las regiones de numeración y las ubicaciones de bases de datos IP no son la ubicación del dispositivo en tiempo real. No se buscan cuentas privadas por número de teléfono, no se identifican nombres reales ni se vinculan identidades entre plataformas; el archivo autorizado solo guarda asociaciones que tú registras con una fuente declarada, permanece en este equipo y puede borrarse en cualquier momento.** Consulta solo información pública a la que tengas derecho a acceder y respeta las condiciones de cada servicio.
 
 La configuración y el historial opcional de Windows están en `%LOCALAPPDATA%\GhostTrackDesk`; el historial se puede borrar en la aplicación. Los registros de errores no incluyen el contenido consultado. Android solo solicita acceso a Internet, sin permisos de ubicación, contactos, SMS, teléfono ni acceso general al almacenamiento. Los archivos exportados, el portapapeles y las URL compartidas pueden contener datos de consultas: gestiónalos según tus necesidades.
 

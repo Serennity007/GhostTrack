@@ -256,3 +256,58 @@ FIELDS.update({
 })
 
 CONTENT_ZH = {'content_parsed':'已解析页面内容', 'content_truncated':'内容已限长，页面元信息可能不完整', 'content_unsupported':'不支持的内容编码', 'content_decode_failed':'内容解压失败'}
+
+# Authorized account archive (module 12) and consent-based record dialogs.
+ARCHIVE_UI = {
+    'archive': ['授权账号档案', 'Authorized archive', '認定アーカイブ', 'Archivo autorizado'],
+    'hint_archive': ['输入电话号码或关键词，查找本机已保存的授权账号关联', 'Enter a phone number or keyword to search saved authorized associations', '電話番号・キーワードで保存済みの認可済み関連付けを検索', 'Introduce un teléfono o palabra clave para buscar asociaciones autorizadas'],
+    'save_archive': ['存入档案', 'Save to archive', 'アーカイブに保存', 'Guardar en archivo'],
+    'archive_manage': ['档案管理', 'Archive', 'アーカイブ', 'Archivo'],
+    'archive_title': ['授权账号档案 · 仅保存于本机', 'Authorized archive · stored locally', '認定アーカイブ · この端末のみ', 'Archivo autorizado · solo local'],
+    'archive_empty': ['暂无档案记录；在平台查询结果中可保存', 'No records yet; save one from a platform query result', '記録がありません。プラットフォーム検索結果から保存できます', 'Sin registros; guárdalos desde un resultado'],
+    'archive_added': ['档案已保存', 'Archive record saved', '保存しました', 'Registro guardado'],
+    'archive_updated': ['已有记录已更新', 'Existing record updated', '既存の記録を更新しました', 'Registro actualizado'],
+    'archive_deleted': ['已删除选中记录', 'Record deleted', '削除しました', 'Registro eliminado'],
+    'archive_delete_confirm': ['删除选中的档案记录？此操作无法撤销。', 'Delete the selected record? This cannot be undone.', '選択した記録を削除しますか？元に戻せません。', '¿Eliminar el registro seleccionado? No se puede deshacer.'],
+    'archive_consent': ['仅保存本人授权的号码与主页关联，或对方在公开主页主动公布的关联，并记录来源与保存时间；不支持按手机号探测陌生账号。', 'Save only associations you own or that the owner published on a public profile, with source and save time. Looking up strangers\u2019 accounts by phone number is not supported.', '本人が許可した番号とプロフィール、または相手が公開ページに掲載した関連付けのみを、情報源・保存日時とともに記録します。電話番号から他人のアカウントを探す機能はありません。', 'Guarda solo asociaciones propias o publicadas por el titular en su perfil público, con fuente y fecha. No se permite localizar cuentas ajenas por teléfono.'],
+    'archive_phone': ['请输入有效电话号码，建议含国家区号（例如 +86…）', 'Enter a valid phone number, ideally with country code (e.g. +1…)', '有効な電話番号を入力してください（国番号推奨、例 +81…）', 'Introduce un número válido, idealmente con código de país (p. ej. +34…)'],
+    'archive_url': ['主页链接无效或与平台不匹配', 'Invalid profile URL or platform mismatch', 'プロフィール URL が無効か、サービスと一致しません', 'URL de perfil no válida o no coincide con la plataforma'],
+    'archive_source': ['请选择关联来源', 'Choose the association source', '情報源を選択してください', 'Elige la fuente'],
+    'archive_platform': ['请选择有效的平台', 'Choose a valid platform', 'サービスを選択してください', 'Elige una plataforma válida'],
+    'phone_number': ['电话号码', 'Phone number', '電話番号', 'Número de teléfono'],
+    'note': ['备注（可选）', 'Note (optional)', 'メモ（任意）', 'Nota (opcional)'],
+    'source': ['来源', 'Source', '情報源', 'Fuente'],
+    'source_self': ['本人授权提供', 'Provided by the owner', '本人の許可済み', 'Autorizado por el titular'],
+    'source_public': ['主页公开信息', 'Published on the public profile', '公開プロフィールに掲載', 'Publicado en el perfil'],
+    'delete': ['删除选中', 'Delete selected', '選択を削除', 'Eliminar'],
+    'export_archive': ['导出全部', 'Export all', 'すべてエクスポート', 'Exportar todo'],
+}
+for key, translations in ARCHIVE_UI.items():
+    KEYS.append(key)
+    for language, value in zip(('zh', 'en', 'ja', 'es'), translations):
+        UI[language][key] = value
+
+FIELDS.update({
+    '授权账号档案': [UI[lang]['archive'] for lang in ('en', 'ja', 'es')],
+    '匹配记录数': ['Matching records', '一致件数', 'Registros coincidentes'],
+    '显示记录数': ['Records shown', '表示件数', 'Registros mostrados'],
+    '提示': ['Hint', 'ヒント', 'Sugerencia'],
+    '电话': ['Phone', '電話番号', 'Teléfono'],
+    '主页': ['Profile', 'プロフィール', 'Perfil'],
+    '来源': ['Source', '情報源', 'Fuente'],
+    '保存时间 UTC': ['Saved at (UTC)', '保存日時 (UTC)', 'Guardado (UTC)'],
+    '备注': ['Note', 'メモ', 'Nota'],
+    '本人授权提供': ['Provided by the owner', '本人の許可済み', 'Autorizado por el titular'],
+    '主页公开信息': ['Published on the public profile', '公開プロフィールに掲載', 'Publicado en el perfil'],
+    '仅含本人授权或公开主页保存的关联，不代表实时验证结果': ['Consented or publicly published associations only; not a live verification', '認可済み・公開の関連付けのみ。実時間の検証ではありません', 'Solo asociaciones autorizadas o públicas; no es verificación en vivo'],
+    '没有匹配记录；在平台查询结果中可保存授权关联': ['No matches; save authorized associations from platform results', '一致なし。プラットフォーム結果から保存できます', 'Sin coincidencias; guarda asociaciones desde un resultado'],
+    '仅显示前 12 条；打开档案管理可查看或导出全部': ['Showing the first 12; open Archive to view or export all', '先頭12件を表示。アーカイブ管理で全件表示・エクスポート可能', 'Mostrando 12; abre el archivo para ver o exportar todo'],
+})
+
+for language, value in {
+    'zh': '\n\n授权账号档案：在平台查询结果中点「存入档案」，保存本人授权或对方公开的电话号码与主页关联（含来源与保存时间）；模块 12 可按号码或关键词在本机档案中查找，侧栏「档案管理」可删除或导出。',
+    'en': '\n\nAuthorized archive: use "Save to archive" on a platform result to store a consented or publicly published phone-profile association (with source and save time). Module 12 searches this local archive by number or keyword; manage or export from the sidebar.',
+    'ja': '\n\n認定アーカイブ：プラットフォーム結果の「アーカイブに保存」で、本人許可または公開の電話番号とプロフィールの関連付けを情報源・保存日時とともに記録。モジュール12で番号・キーワード検索、サイドバーで管理・エクスポート。',
+    'es': '\n\nArchivo autorizado: usa "Guardar en archivo" en un resultado para registrar asociaciones teléfono-perfil propias o públicas (con fuente y fecha). El módulo 12 busca en este archivo local; gestiona o exporta desde la barra lateral.',
+}.items():
+    UI[language]['help_body'] += value

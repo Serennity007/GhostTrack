@@ -2,15 +2,15 @@
 
 [简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [Español](README.es.md) · **Français**
 
-Console de recherche d'informations publiques pour Windows et Android. Onze outils partagent les mêmes services de requête pour consulter les domaines, le DNS, les certificats web, les enregistrements réseau et les profils publics. L'interface sombre affiche l'état des sources et permet d'exporter les résultats.
+Console de recherche d'informations publiques pour Windows et Android. Douze outils Windows et onze modules Android partagent les mêmes services de requête pour consulter les domaines, le DNS, les certificats web, les enregistrements réseau et les profils publics. L'interface sombre affiche l'état des sources et permet d'exporter les résultats.
 
 > La documentation existe en chinois, anglais, japonais, espagnol et français. L'interface de l'application propose quatre langues : chinois simplifié, anglais, japonais et espagnol. Le français concerne ici la documentation.
 
 ## Télécharger et installer
 
-| Plateforme | Télécharger la v1.6.0 | Installation |
+| Plateforme | Télécharger la v1.7.0 | Installation |
 |---|---|---|
-| Windows 10/11 x64 | [ZIP portable](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.6.0/GhostTrack-v1.6.0-Windows-x64.zip) · [Version et SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.6.0) | Extraire toute l'archive puis lancer `GhostTrack/GhostTrack.exe` |
+| Windows 10/11 x64 | [ZIP portable](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [Version et SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | Extraire toute l'archive puis lancer `GhostTrack/GhostTrack.exe` |
 | Android 7.0 ou ultérieur | [APK universel](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Version et SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Ouvrir l'APK dans le gestionnaire de fichiers du téléphone |
 
 Windows ne nécessite pas d'installation de Python. Conservez l'exécutable avec toutes ses dépendances. L'APK contient ARM64, ARMv7 et x86_64 ; le premier démarrage extrait l'environnement intégré. N'autorisez l'installation que pour l'application utilisée pour ouvrir l'APK. Pour les mises à jour, utilisez les APK de ce dépôt signés avec le même certificat.
@@ -25,10 +25,11 @@ Windows ne nécessite pas d'installation de Python. Conservez l'exécutable avec
 
 La navigation numérotée, les sources, la durée et le nombre de champs correspondent à la requête en cours. Les éléments graphiques décoratifs n'indiquent pas qu'une cible est analysée par un scanner.
 
-## Onze outils de recherche
+## Douze outils de recherche
 
 | Outil | Entrée | Informations publiques disponibles |
 |---|---|---|
+| Archive autorisée | Numéro de téléphone ou mot-clé | Associations téléphone-profil autorisées, enregistrées localement avec source et date |
 | Rapport de domaine | Domaine | RDAP, DNS et HTTPS en parallèle, avec un état par source |
 | Enregistrement de domaine | Domaine | Bureau d'enregistrement, dates de création/expiration/mise à jour, DNSSEC, serveurs de noms |
 | Enregistrements DNS | Domaine | A, AAAA, CNAME, MX, NS, TXT, SOA, CAA et TTL |
@@ -50,6 +51,7 @@ Plateformes prises en charge : **Douyin, Xiaohongshu, Kuaishou, Bilibili, Weibo,
 - Exporter en JSON, CSV UTF-8 avec BOM ou HTML autonome, avec l'outil, la saisie et l'heure UTC. Le CSV protège les textes pouvant être interprétés comme des formules.
 - Windows : double-clic / Ctrl+C pour copier, Entrée pour rechercher, Échap pour annuler. Android : commandes tactiles et sélecteur de documents du système pour exporter.
 - Windows conserve au maximum 50 entrées dans l'historique de session. La conservation entre sessions est facultative et désactivée par défaut. Android ne conserve pas durablement l'historique des recherches ; seuls la langue et l'outil choisi sont mémorisés.
+- « Enregistrer dans l'archive » associe le profil d'un résultat à un numéro vous appartenant ou publié par son titulaire (avec source et date). La boîte de dialogue Archive de la barre latérale supprime et exporte les enregistrements ; l'outil 12 recherche dans cette archive locale par numéro ou mot-clé.
 
 ## Sources, confidentialité et limites
 
@@ -57,7 +59,7 @@ Les requêtes utilisent [RDAP](https://about.rdap.org/), [Google Public DNS](htt
 
 Une connexion obligatoire, un CAPTCHA, JavaScript, une limitation de débit ou une panne peut restreindre les résultats. L'application conserve les données obtenues et l'état des sources ; elle ne contourne pas les contrôles d'accès et ne considère pas HTTP 200 comme une identité vérifiée. Les recherches web acceptent uniquement HTTPS public sur le port 443, vérifient les certificats et limitent les redirections et la taille des réponses. Les valeurs manquantes ne sont pas inventées. Les exports RDAP excluent les coordonnées des titulaires.
 
-**Les régions de numérotation et les positions issues de bases IP ne sont pas la position d'un appareil en temps réel. Aucune recherche inversée de comptes privés par téléphone, identification de nom réel ou association d'identités entre plateformes n'est proposée.** Consultez uniquement les informations publiques auxquelles vous avez le droit d'accéder et respectez les conditions de chaque service.
+**Les régions de numérotation et les positions issues de bases IP ne sont pas la position d'un appareil en temps réel. Aucune recherche inversée de comptes privés par téléphone, identification de nom réel ou association d'identités entre plateformes n'est proposée ; l'archive autorisée ne conserve que les associations que vous enregistrez avec une source déclarée, reste sur cet appareil et peut être supprimée à tout moment.** Consultez uniquement les informations publiques auxquelles vous avez le droit d'accéder et respectez les conditions de chaque service.
 
 Les paramètres Windows et l'historique facultatif se trouvent dans `%LOCALAPPDATA%\GhostTrackDesk` ; l'historique peut être effacé dans l'application. Les journaux d'erreurs n'incluent pas le contenu des requêtes. Android ne demande que l'accès à Internet, sans accès à la position, aux contacts, aux SMS, au téléphone ou à l'ensemble du stockage. Les exports, le presse-papiers et les URL partagées peuvent contenir vos recherches : gérez-les en conséquence.
 

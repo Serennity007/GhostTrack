@@ -2,15 +2,15 @@
 
 **简体中文** · [English](README.en.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
 
-面向 Windows 与 Android 的公开信息查询控制台。11 个工具共享查询服务，以深色控制台、清晰的来源状态和可导出的结果，集中查看域名、DNS、网站证书、网络注册与公开主页信息。
+面向 Windows 与 Android 的公开信息查询控制台。12 个 Windows 工具与 11 个 Android 模块共享查询服务，以深色控制台、清晰的来源状态和可导出的结果，集中查看域名、DNS、网站证书、网络注册与公开主页信息。
 
 > 文档提供中、英、日、西、法五种语言；应用界面支持简体中文、English、日本語、Español 四种语言。
 
 ## 下载与安装
 
-| 平台 | 下载 v1.6.0 | 安装方法 |
+| 平台 | 下载 v1.7.0 | 安装方法 |
 |---|---|---|
-| Windows 10/11 x64 | [便携 ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.6.0/GhostTrack-v1.6.0-Windows-x64.zip) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.6.0) | 完整解压，运行 `GhostTrack/GhostTrack.exe` |
+| Windows 10/11 x64 | [便携 ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.7.0/GhostTrack-v1.7.0-Windows-x64.zip) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.7.0) | 完整解压，运行 `GhostTrack/GhostTrack.exe` |
 | Android 7.0+ | [通用 APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | 在手机文件管理器中打开 APK 安装 |
 
 Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要单独移动 EXE。Android 包支持 ARM64、ARMv7 和 x86_64，首次启动会解压内置运行环境；只给实际用于打开 APK 的应用授予安装来源权限。后续更新请使用本仓库以同一证书签名的 APK。
@@ -25,10 +25,11 @@ Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要
 
 界面提供编号导航、来源标识、查询耗时和字段数量。装饰图形不表示正在扫描目标；查询状态与结果来自实际返回的数据。
 
-## 11 个查询工具
+## 12 个查询工具
 
 | 工具 | 输入 | 可取得的公开信息 |
 |---|---|---|
+| 授权账号档案 | 电话号码或关键词 | 本机保存的授权号码与主页关联、来源与保存时间 |
 | 域名综合报告 | 域名 | 并行汇总 RDAP、DNS、HTTPS，各来源独立标记状态 |
 | 域名档案 | 域名 | 注册商、注册/到期/更新日期、DNSSEC、名称服务器 |
 | DNS 记录 | 域名 | A、AAAA、CNAME、MX、NS、TXT、SOA、CAA 与 TTL |
@@ -50,6 +51,7 @@ Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要
 - 导出 JSON、UTF-8 BOM CSV、离线 HTML，附查询工具、输入和 UTC 时间；CSV 包含公式文本保护。
 - Windows 支持双击 / Ctrl+C 复制、Enter 查询、Esc 取消；Android 支持触屏复制与系统文件选择器导出。
 - Windows 会话历史最多 50 条，默认不跨会话保存，可在设置中开启本机保存；Android 不持久保存查询历史，仅记住语言和模块。
+- 平台查询结果可一键「存入档案」：保存本人授权或对方公开的电话号码与主页关联（含来源与保存时间），侧栏「档案管理」支持删除与导出，模块 12 可按号码或关键词在本机档案中查找。
 
 ## 数据来源与限制
 
@@ -57,7 +59,7 @@ Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要
 
 平台登录、验证码、JavaScript、限流或服务故障可能限制结果。程序保留已取得的数据及来源状态，不绕过访问控制，也不将 HTTP 200 当作身份已验证。网站模块只读取公网 HTTPS 默认 443 端口，验证证书并限制跳转与内容大小。缺失字段不会补造；RDAP 不导出注册人联系信息。
 
-**号码段与 IP 数据库位置不是设备实时位置。没有手机号反查私人平台账号、实名识别或跨平台身份关联功能。** 仅查询你有权访问的公开信息，并遵守来源服务的使用规则。
+**号码段与 IP 数据库位置不是设备实时位置。没有手机号反查私人平台账号、实名识别或跨平台身份关联功能；授权账号档案只保存你主动提供并声明来源的关联，仅存放在本机，可随时删除。** 仅查询你有权访问的公开信息，并遵守来源服务的使用规则。
 
 Windows 设置与可选历史位于 `%LOCALAPPDATA%\GhostTrackDesk`，可在应用中清空历史；错误日志不记录查询内容。Android 仅申请联网权限，不申请定位、通讯录、短信、电话或整盘存储权限。导出文件、剪贴板与分享链接可能含查询内容，请自行管理。
 
