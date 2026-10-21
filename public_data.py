@@ -1,5 +1,5 @@
 """Public Internet resource lookups. No account correlation or contact harvesting."""
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 import http.client
 import ipaddress
@@ -8,11 +8,12 @@ import re
 import socket
 import ssl
 import time
+import zlib
 from urllib.parse import quote, urlencode, urljoin, urlsplit
 
 import requests
 
-from platforms import MetadataParser, check_cancel
+from platforms import MetadataParser, QueryCancelled, check_cancel
 
 
 class PublicQueryError(ValueError):
@@ -222,6 +223,27 @@ class PinnedHTTPS(http.client.HTTPSConnection):
             raise
 
 
+def decode_http_body(body, content_encoding, limit=131072):
+    encoding = content_encoding.strip().lower()
+    if encoding in ('', 'identity'):
+        return bytes(body[:limit]), 'content_truncated' if len(body) >= limit else 'content_parsed'
+    if encoding not in ('gzip', 'deflate'):
+        return b'', 'content_unsupported'
+    try:
+        window = 16 + zlib.MAX_WBITS if encoding == 'gzip' else zlib.MAX_WBITS
+        try:
+            decoder = zlib.decompressobj(window)
+            decoded = decoder.decompress(bytes(body), limit)
+        except zlib.error:
+            if encoding != 'deflate':
+                raise
+            decoder = zlib.decompressobj(-zlib.MAX_WBITS)
+            decoded = decoder.decompress(bytes(body), limit)
+        return decoded, 'content_truncated' if not decoder.eof else 'content_parsed'
+    except zlib.error:
+        return b'', 'content_decode_failed'
+
+
 def website_info(value, cancel=None):
     current, _, _ = public_target(value)
     chain = []
@@ -235,7 +257,8 @@ def website_info(value, cancel=None):
         try:
             connection.connect()
             certificate = connection.sock.getpeercert()
-            connection.request('GET', path, headers={'User-Agent': 'GhostTrack-Desktop/1.4', 'Accept': 'text/html'})
+            connection.request('GET', path, headers={'User-Agent': 'GhostTrack-Desktop/1.5',
+                                'Accept': 'text/html', 'Accept-Encoding': 'gzip, deflate'})
             response = connection.getresponse()
             chain.append(f'{response.status} {current}')
             if response.status in (301, 302, 303, 307, 308):
@@ -254,6 +277,8 @@ def website_info(value, cancel=None):
                     break
                 body.extend(chunk)
             metadata = MetadataParser()
+            content_encoding = response.getheader('Content-Encoding', '')
+            body, content_status = decode_http_body(body, content_encoding)
             content_type = response.getheader('Content-Type', '')
             encoding_hint = re.search(r'charset\s*=\s*["\x27]?([A-Za-z0-9._-]+)',
                                       content_type + ' ' + body[:4096].decode('ascii', errors='ignore'), re.I)
@@ -268,6 +293,7 @@ def website_info(value, cancel=None):
             days = int((ssl.cert_time_to_seconds(expires) - time.time()) / 86400) if expires else None
             result = {'来源链接': current, 'HTTP 状态': response.status, '连接地址': address,
                       '页面标题': ' '.join(metadata.title.split()) or '—',
+                      '内容编码': content_encoding or 'identity', '页面内容状态': content_status,
                       '响应类型': response.getheader('Content-Type', '—'),
                       '服务器标识': response.getheader('Server', '—'),
                       '跳转链': '\n'.join(chain), '响应耗时 ms': round((time.monotonic() - started) * 1000),
@@ -276,10 +302,49 @@ def website_info(value, cancel=None):
                       '证书覆盖域名': ', '.join(v for k, v in certificate.get('subjectAltName', ()) if k == 'DNS')[:3000]}
             for header in ('Strict-Transport-Security', 'Content-Security-Policy', 'X-Content-Type-Options', 'Referrer-Policy'):
                 result[header] = response.getheader(header, '—')[:3000]
-            result['查询状态'] = '已完成' if response.status < 400 else '部分来源不可用'
+            result['查询状态'] = '已完成' if response.status < 400 and content_status in ('content_parsed', 'content_truncated') else '部分来源不可用'
             return result
         except ssl.SSLError:
             raise PublicQueryError('tls_failed') from None
         finally:
             connection.close()
     raise PublicQueryError('redirect_limit')
+
+
+def domain_overview(value, cancel=None, progress=None):
+    """Combine the existing resource services; failures remain source-specific."""
+    check_cancel(cancel)
+    name = domain_name(value)
+    result = {'域名': name, '来源链接': f'https://rdap.org/domain/{name}', '来源总数': 3}
+    services = {'RDAP': lambda: registration(name, cancel=cancel),
+                'DNS': lambda: dns_records(name, cancel),
+                'HTTPS': lambda: website_info('https://' + name + '/', cancel)}
+    completed, successful = 0, 0
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        futures = {pool.submit(call): section for section, call in services.items()}
+        sections = {}
+        for future in as_completed(futures):
+            check_cancel(cancel)
+            section = futures[future]
+            try:
+                data = future.result()
+                full = data.get('查询状态') != '部分来源不可用'
+                data.setdefault('查询状态', '已完成')
+                successful += int(full)
+            except QueryCancelled:
+                raise
+            except Exception as error:
+                data = {'查询状态': '部分来源不可用', '失败原因': getattr(error, 'code', 'source_unavailable')}
+                full = False
+            sections[section] = data
+            completed += 1
+            if progress:
+                progress({'section': section, 'completed': completed, 'total': 3,
+                          'ok': full, 'fields': len(data)})
+    check_cancel(cancel)
+    for section in services:
+        for key, item in sections[section].items():
+            result[f'{section} / {key}'] = item
+    result['成功来源数'] = successful
+    result['查询状态'] = '已完成' if successful == 3 else '部分来源不可用'
+    return result

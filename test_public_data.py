@@ -135,6 +135,18 @@ class PublicDataTests(unittest.TestCase):
             self.assertEqual(result['HTTP 状态'], 200)
             connection.close.assert_called_once()
 
+    def test_compressed_website_title(self):
+        import gzip
+        connection = self.fake_connection()
+        response = connection.getresponse.return_value
+        response.getheader.side_effect = lambda key, default=None: {
+            'Content-Type': 'text/html; charset=utf-8', 'Content-Encoding': 'gzip'}.get(key, default)
+        response.read.side_effect = [gzip.compress(b'<title>Compressed title</title>'), b'']
+        with patch('public_data.public_addresses', return_value=['8.8.8.8']), patch('public_data.PinnedHTTPS', return_value=connection):
+            result = website_info('https://example.com/')
+            self.assertEqual(result['页面标题'], 'Compressed title')
+            self.assertEqual(result['页面内容状态'], 'content_parsed')
+
     def test_website_blocks_redirect_to_private_network(self):
         connection = self.fake_connection(302, 'https://127.0.0.1/')
         with patch('public_data.public_addresses', return_value=['8.8.8.8']), patch('public_data.PinnedHTTPS', return_value=connection) as factory:

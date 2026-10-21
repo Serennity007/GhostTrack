@@ -5,11 +5,13 @@ import requests
 import phonenumbers
 from phonenumbers import carrier, geocoder, timezone
 from platforms import lookup_profile
-from public_data import registration, dns_records, github_profile, website_info, is_public_address
+from public_data import registration, dns_records, github_profile, website_info, is_public_address, domain_overview
 
 
-def query(kind, value, region='CN', language='zh', platform='Bilibili', cancel=None):
+def query(kind, value, region='CN', language='zh', platform='Bilibili', cancel=None, progress=None):
     value = value.strip()
+    if kind == '域名综合报告':
+        return domain_overview(value, cancel, progress)
     if kind == '域名档案':
         return registration(value, cancel=cancel)
     if kind == 'DNS 记录':

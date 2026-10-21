@@ -1,14 +1,15 @@
-# GhostTrack Console 1.4.0 使用说明
+# GhostTrack Console 1.5.0 使用说明
 
 ## 安装与启动
 
-下载 `GhostTrack-v1.4.0-Windows-x64.zip`，完整解压，运行 `GhostTrack/GhostTrack.exe`。Windows 10/11 x64，无需 Python、管理员权限或账号登录。不要单独复制 EXE，`_internal` 和 `assets` 是运行依赖。
+下载 `GhostTrack-v1.5.0-Windows-x64.zip`，完整解压，运行 `GhostTrack/GhostTrack.exe`。Windows 10/11 x64，无需 Python、管理员权限或账号登录。不要单独复制 EXE，`_internal` 和 `assets` 是运行依赖。
 
 ## 公开资源查询（新增）
 
+- **域名综合报告**：输入域名，一次并行获取 RDAP、DNS、HTTPS 三类结果。每个来源保留独立字段、状态和来源链接；一个来源失败不影响其余结果。进度来自实际返回的来源。
 - **域名档案**：输入已注册的域名，如 `example.com`，获取 RDAP 公开注册元数据。子域名通常没有独立注册档案。
 - **DNS 记录**：输入域名，并行查询 A、AAAA、CNAME、MX、NS、TXT、SOA、CAA，保留 TTL。每类最多展示20条、6000字符，超出会标记截断，可打开来源核实。无记录显示 `—`，不存在显示 `NXDOMAIN`，请求失败显示 `ERROR` 并标记部分不可用。
-- **网站与证书**：输入域名或 HTTPS URL，读取响应、标题、跳转链、公开响应头及证书。只连接公网443，最多4次请求，读取有限大小内容；TLS 验证失败会停止。支持声明 charset 的页面标题。
+- **网站与证书**：输入域名或 HTTPS URL，读取响应、标题、跳转链、公开响应头及证书。只连接公网443，最多4次请求，读取有限大小内容；TLS 验证失败会停止。支持声明 charset 的页面标题以及 gzip/deflate 压缩内容；解压和读取均限长，截断和不支持编码会明确标记。
 - **IP / ASN 注册**：输入公网 IPv4/IPv6 或 `AS15169`，查看注册范围、CIDR、网络名称/标识和公开日期；不是终端用户身份。
 - **GitHub 公开资料**：输入用户名或 `https://github.com/用户名`，读取公开简介、仓库/粉丝/关注计数和最近5个公开仓库。匿名 API 限流时保留已取得的部分结果，不要求填入登录凭据。
 
@@ -34,6 +35,7 @@
 
 ## 结果与快捷键
 
+- “填入示例”只填入当前模块的示例，不会自动查询。切换模块会清空当前视图，已完成查询仍可在会话历史中回看。
 - Enter：查询；Esc：取消；Ctrl+L：输入框。
 - 结果筛选框：按字段或内容过滤，不会删掉完整结果。
 - 选中一行：下方滚动区显示完整文本。
@@ -69,7 +71,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe build_windows.py
 ```
 
-输出 `dist/v1.4.0/GhostTrack/`、`dist/GhostTrack-v1.4.0-Windows-x64.zip`、`dist/SHA256SUMS-v1.4.0.txt`。用 PowerShell `Get-FileHash` 对照 SHA256 校验文件。
+输出 `dist/v1.5.0/GhostTrack/`、`dist/GhostTrack-v1.5.0-Windows-x64.zip`、`dist/SHA256SUMS-v1.5.0.txt`。用 PowerShell `Get-FileHash` 对照 SHA256 校验文件。
 
 ## Languages
 

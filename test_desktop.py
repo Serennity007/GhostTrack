@@ -63,6 +63,7 @@ class DesktopTests(unittest.TestCase):
                     app.select(mode)
                     root.update_idletasks()
                     self.assertEqual(app.entry['state'], 'disabled' if mode == 1 else 'normal')
+                app.result = {'国家': 'Japan', '有效号码': True}
                 app.show_result()
                 app.tree.selection_set(app.tree.get_children()[0])
                 app.copy_selected()
@@ -78,6 +79,36 @@ class DesktopTests(unittest.TestCase):
         finally:
             root.update_idletasks()
             root.destroy()
+
+    def test_module_clear_examples_and_source_fields(self):
+        root = tk.Tk(); root.withdraw()
+        try:
+            app = App(root, data_dir=self.state_dir.name)
+            app.result = {'HTTPS / 页面标题': 'Example', 'RDAP / 失败原因': 'public_rate_limit'}
+            app.lang = 'en'
+            self.assertIn('HTTPS / Page title', app.localized_result())
+            self.assertEqual(app.localized_result()['RDAP / Failure reason'], UI['en']['public_rate_limit'])
+            app.result = {'名称服务器': 'ns1.example.com\nns2.example.com'}
+            app.show_result()
+            row = app.tree.get_children()[0]
+            self.assertNotIn('\n', app.tree.item(row, 'values')[1])
+            app.tree.selection_set(row)
+            app.copy_selected()
+            self.assertEqual(root.clipboard_get(), 'ns1.example.com\nns2.example.com')
+            app.select(7)
+            self.assertEqual(app.result, {})
+            self.assertEqual(app.action_buttons[0]['state'], 'disabled')
+            app.use_example()
+            self.assertEqual(app.value.get(), 'https://www.python.org/')
+            app.busy = True
+            app.events.put((app.job_id, 'progress', {'completed': 1, 'total': 3, 'section': 'DNS'}, None))
+            app.poll()
+            self.assertTrue(app.busy)
+            self.assertIn('DNS', app.status.get())
+            self.assertEqual(app.result, {})
+            app.cancel()
+        finally:
+            root.update_idletasks(); root.destroy()
 
     def test_phone(self):
         self.assertEqual(query('号码归属地', '+12025550123')['地区代码'], 'US')

@@ -119,6 +119,8 @@ def localize(value, lang):
         return {'zh': ('否','是'), 'en': ('No','Yes'), 'ja': ('いいえ','はい'), 'es': ('No','Sí')}[lang][value]
     if value is None:
         return '—'
+    if lang == 'zh' and isinstance(value, str) and value in CONTENT_ZH:
+        return CONTENT_ZH[value]
     if lang == 'zh' or value not in FIELDS:
         return value
     return FIELDS[value][{'en':0,'ja':1,'es':2}[lang]]
@@ -225,3 +227,32 @@ for language, value in {
  'es':'Faltan algunos datos públicos; abre la fuente para comprobar'
 }.items():
  UI[language]['limited']=value
+
+# Console overview and source-specific progress.
+CONSOLE_UI = {
+    'overview': ['域名综合报告', 'Domain overview', 'ドメイン総合レポート', 'Informe de dominio'],
+    'hint_overview': ['输入域名，例如 python.org；并行汇总注册档案、8类 DNS、网站响应和证书。', 'Domain, e.g. python.org: registry, 8 DNS types, website response and TLS in one report.', 'ドメイン名（例 python.org）：登録情報・8種のDNS・ウェブ応答・TLS を一括取得。', 'Dominio, p. ej. python.org: registro, 8 tipos DNS, respuesta web y TLS en un informe.'],
+    'example': ['填入示例', 'Example', '入力例', 'Ejemplo'],
+    'modules_metric': ['查询模块', 'MODULES', 'モジュール', 'MÓDULOS'],
+    'fields_metric': ['结果字段', 'FIELDS', '取得項目', 'CAMPOS'],
+    'elapsed_metric': ['实际耗时', 'ELAPSED', '経過時間', 'TIEMPO'],
+    'source_progress': ['来源 {completed}/{total} · {section} 已返回', 'Source {completed}/{total} · {section} returned', '情報源 {completed}/{total} · {section} 応答済み', 'Fuente {completed}/{total} · {section} respondió'],
+}
+for key, translations in CONSOLE_UI.items():
+    KEYS.append(key)
+    for language, value in zip(('zh', 'en', 'ja', 'es'), translations):
+        UI[language][key] = value
+FIELDS.update({
+    '域名综合报告': [UI[lang]['overview'] for lang in ('en','ja','es')],
+    '来源总数': ['Total sources', '情報源数', 'Fuentes totales'],
+    '成功来源数': ['Complete sources', '取得成功の情報源', 'Fuentes completas'],
+    '失败原因': ['Failure reason', '失敗理由', 'Motivo del fallo'],
+    '内容编码': ['Content encoding', 'コンテンツ符号化', 'Codificación del contenido'],
+    '页面内容状态': ['Page content status', 'ページ内容の状態', 'Estado del contenido'],
+    'content_parsed': ['Content parsed', '内容を解析しました', 'Contenido analizado'],
+    'content_truncated': ['Content limited; metadata may be incomplete', '内容を制限しました。情報が不完全な可能性があります', 'Contenido limitado; los metadatos pueden estar incompletos'],
+    'content_unsupported': ['Unsupported content encoding', '未対応のコンテンツ符号化', 'Codificación de contenido no compatible'],
+    'content_decode_failed': ['Content decompression failed', '内容の展開に失敗しました', 'Falló la descompresión del contenido'],
+})
+
+CONTENT_ZH = {'content_parsed':'已解析页面内容', 'content_truncated':'内容已限长，页面元信息可能不完整', 'content_unsupported':'不支持的内容编码', 'content_decode_failed':'内容解压失败'}

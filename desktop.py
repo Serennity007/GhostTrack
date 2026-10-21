@@ -30,14 +30,14 @@ class App:
     BG, PANEL, CARD = '#070d0b', '#0d1915', '#172b22'
     FG, MUTED, ACCENT = '#e3f9ee', '#91ac9d', '#a3ff6f'
     MODES = ['IP 归属地', '本机公网 IP', '号码归属地', '用户名链接', '国内平台',
-             '域名档案', 'DNS 记录', '网站与证书', 'IP 注册网络', 'GitHub 公开资料']
-    MODE_KEYS = ['ip', 'self', 'phone', 'username', 'domestic', 'domain', 'dns', 'website', 'network', 'github']
+             '域名档案', 'DNS 记录', '网站与证书', 'IP 注册网络', 'GitHub 公开资料', '域名综合报告']
+    MODE_KEYS = ['ip', 'self', 'phone', 'username', 'domestic', 'domain', 'dns', 'website', 'network', 'github', 'overview']
 
     def __init__(self, root, data_dir=None):
         self.root, self.result = root, {}
         self.store = Store(data_dir)
         self.events = queue.Queue()
-        self.lang, self.mode, self.busy = self.store.settings['language'], 0, False
+        self.lang, self.mode, self.busy = self.store.settings['language'], 10, False
         self.job_id, self.closed = 0, False
         self.cancel_event = threading.Event()
         self.network_slots = threading.BoundedSemaphore(2)
@@ -108,7 +108,7 @@ class App:
         self.nav = []
         for index, key in enumerate(self.MODE_KEYS):
             button = self.button_widget(side, key, lambda n=index: self.select(n))
-            button.config(font=('Microsoft YaHei UI', 9), pady=6, anchor='w')
+            button.config(font=('Microsoft YaHei UI', 10), pady=5, anchor='w')
             button.pack(fill='x', padx=14, pady=2)
             self.nav.append(button)
         tk.Frame(side, height=1, bg='#284235').pack(fill='x', padx=22, pady=10)
@@ -131,14 +131,30 @@ class App:
         language = ttk.Combobox(top, textvariable=self.language, values=list(LANGUAGES),
                                 state='readonly', width=15)
         language.pack(side='right')
-        tk.Label(top, textvariable=self.telemetry, bg=self.BG, fg='#69d9cc',
+        tk.Label(top, text='// PUBLIC SOURCES', bg=self.BG, fg='#69d9cc',
                   font=('Consolas', 9)).pack(side='right', padx=18)
         language.bind('<<ComboboxSelected>>', self.change_language)
-        self.heading = self.label(main, 'tagline', size=22, color=self.FG, wraplength=730)
-        self.heading.grid(row=1, column=0, sticky='w', pady=(14, 18))
-        form = tk.Frame(main, bg=self.PANEL, padx=22, pady=18)
+        hero = tk.Frame(main, bg=self.BG)
+        hero.grid(row=1, column=0, sticky='ew', pady=(14, 16))
+        self.heading = self.label(hero, 'tagline', size=22, color=self.FG, wraplength=730)
+        self.heading.pack(anchor='w', pady=(0, 12))
+        metrics = tk.Frame(hero, bg=self.BG)
+        metrics.pack(fill='x')
+        self.metric_values = [tk.StringVar() for _ in range(3)]
+        for n, key in enumerate(('modules_metric', 'fields_metric', 'elapsed_metric')):
+            metrics.columnconfigure(n, weight=1)
+            card = tk.Frame(metrics, bg=self.PANEL, highlightbackground='#294437', highlightthickness=1)
+            card.grid(row=0, column=n, sticky='ew', padx=(0, 8 if n < 2 else 0))
+            tk.Label(card, textvariable=self.metric_values[n], bg=self.PANEL, fg=self.ACCENT,
+                     font=('Consolas', 19, 'bold')).pack(side='left', padx=12, pady=8)
+            self.label(card, key, bg=self.PANEL, size=9).pack(side='left', padx=(0, 8))
+        form = tk.Frame(main, bg=self.PANEL, padx=18, pady=14, highlightbackground='#294437', highlightthickness=1)
         form.grid(row=2, column=0, sticky='ew')
-        self.label(form, 'parameters', bg=self.PANEL, color=self.ACCENT).pack(anchor='w')
+        form_top = tk.Frame(form, bg=self.PANEL)
+        form_top.pack(fill='x')
+        self.label(form_top, 'parameters', bg=self.PANEL, color=self.ACCENT).pack(side='left')
+        self.source_badge = tk.Label(form_top, bg=self.PANEL, fg='#69d9cc', font=('Consolas', 9))
+        self.source_badge.pack(side='right')
         self.label(form, 'input', bg=self.PANEL).pack(anchor='w', pady=(14, 6))
         input_row = tk.Frame(form, bg=self.PANEL)
         input_row.pack(fill='x')
@@ -150,7 +166,7 @@ class App:
         self.entry.bind('<Return>', lambda _: self.start())
         self.hint = tk.Label(form, bg=self.PANEL, fg=self.MUTED,
                              font=('Microsoft YaHei UI', 9), anchor='w', wraplength=680)
-        self.hint.pack(fill='x', pady=10)
+        self.hint.pack(fill='x', pady=8)
         row = tk.Frame(form, bg=self.PANEL)
         row.pack(fill='x')
         self.region_label = self.label(row, 'region', bg=self.PANEL)
@@ -166,8 +182,10 @@ class App:
         self.cancel_button = self.button_widget(row, 'cancel', self.cancel)
         self.cancel_button.pack(side='right', padx=8)
         self.cancel_button.config(state='disabled')
+        self.example_button = self.button_widget(row, 'example', self.use_example)
+        self.example_button.pack(side='left')
         results_header = tk.Frame(main, bg=self.BG)
-        results_header.grid(row=3, column=0, sticky='ew', pady=(24, 12))
+        results_header.grid(row=3, column=0, sticky='ew', pady=(16, 10))
         self.label(results_header, 'results', color=self.FG, size=12).pack(side='left')
         self.progress = ttk.Progressbar(results_header, mode='indeterminate', length=70,
                                         style='Query.Horizontal.TProgressbar')
@@ -178,13 +196,13 @@ class App:
         self.label(results_header, 'filter', size=8, wraplength=220).pack(side='right', padx=8)
         self.filter.trace_add('write', lambda *_: self.show_result() if self.result else None)
         self.filter_entry.bind('<Escape>', lambda _: self.filter.set(''))
-        results = tk.Frame(main, bg=self.PANEL)
+        results = tk.Frame(main, bg=self.PANEL, highlightbackground='#294437', highlightthickness=1)
         results.grid(row=4, column=0, sticky='nsew')
         self.empty = tk.Frame(results, bg=self.PANEL)
         self.empty.pack(fill='both', expand=True)
-        radar = tk.Canvas(self.empty, width=180, height=135, bg=self.PANEL, highlightthickness=0)
-        radar.pack(pady=(16, 0))
-        for radius in (18, 37, 58):
+        radar = tk.Canvas(self.empty, width=180, height=105, bg=self.PANEL, highlightthickness=0)
+        radar.pack(pady=(6, 0))
+        for radius in (14, 29, 44):
             radar.create_oval(90-radius, 67-radius, 90+radius, 67+radius, outline='#31573e')
         radar.create_line(20, 67, 160, 67, fill='#244332')
         radar.create_line(90, 3, 90, 132, fill='#244332')
@@ -196,7 +214,7 @@ class App:
         self.empty_help.pack(pady=(0, 15))
         self.tree = ttk.Treeview(results, columns=('key', 'value'), show='headings',
                                  style='Result.Treeview', selectmode='browse')
-        self.tree.column('key', width=165, stretch=False)
+        self.tree.column('key', width=220, stretch=False)
         self.tree.column('value', width=470)
         self.tree.tag_configure('even', background=self.PANEL)
         self.tree.tag_configure('odd', background='#10231b')
@@ -273,10 +291,38 @@ class App:
         elif self.busy:
             self.show_empty('busy', 'empty_help')
 
+    def use_example(self):
+        if self.busy:
+            return
+        examples = ['8.8.8.8', '', '+12025550123', 'octocat',
+                    'https://space.bilibili.com/2', 'example.com', 'example.com',
+                    'https://www.python.org/', 'AS15169', 'octocat', 'python.org']
+        self.value.set(examples[self.mode])
+        if self.mode == 4:
+            self.platform.set('Bilibili')
+            self.select(4)
+        self.entry.focus_set()
+
     def select(self, index):
+        changed = index != self.mode
         if self.busy and index != self.mode:
             self.cancel()
         self.mode = index
+        if changed:
+            self.result = {}
+            self.context = None
+            self.elapsed = 0.0
+            self.value.set('')
+            self.filter.set('')
+            self.set_state('ready')
+            self.show_empty('empty', 'empty_help')
+            self.update_actions()
+            self.update_telemetry()
+        sources = ['IPWHO.IS', 'IPIFY + IPWHO.IS', 'LOCAL METADATA', 'PUBLIC LINKS',
+                   'PUBLIC PROFILE HTML', 'RDAP', 'DNS OVER HTTPS', 'HTTPS / TLS',
+                   'RDAP / IP / ASN', 'GITHUB REST', 'RDAP + DNS + HTTPS']
+        self.source_badge.config(text=sources[index])
+        self.example_button.config(state='disabled' if self.busy or index == 1 else 'normal')
         self.platform_choice.set(platform_name(self.platform.get(), self.lang))
         self.platform_box.config(values=[platform_name(p, self.lang) for p in ('Auto', *PLATFORMS)])
         for n, button in enumerate(self.nav):
@@ -335,6 +381,8 @@ class App:
 
     def update_telemetry(self):
         self.telemetry.set(f'{len(self.MODES):02d} MODULES / {len(self.result):02d} FIELDS / {self.elapsed:.2f}s')
+        for variable, value in zip(self.metric_values, (f'{len(self.MODES):02d}', f'{len(self.result):02d}', f'{self.elapsed:.1f}s')):
+            variable.set(value)
 
     def start(self):
         if self.busy:
@@ -352,6 +400,7 @@ class App:
         self.started = time.monotonic()
         self.elapsed = 0.0
         self.button.config(state='disabled')
+        self.example_button.config(state='disabled')
         self.cancel_button.config(state='normal')
         self.entry.config(state='disabled')
         self.platform_box.config(state='disabled')
@@ -365,7 +414,7 @@ class App:
         self.show_empty('busy', 'empty_help')
         def work():
             try:
-                data = query(*args, cancel=cancel)
+                data = query(*args, cancel=cancel, progress=lambda data: self.events.put((job_id, 'progress', data, args)))
                 data.setdefault('查询时间 UTC', datetime.now(timezone.utc).isoformat(timespec='seconds'))
                 data['查询工具'] = args[0]
                 data['查询输入'] = args[1] if args[0] != '本机公网 IP' else '—'
@@ -389,9 +438,16 @@ class App:
     def poll(self):
         if self.closed:
             return
+        if self.busy and self.started is not None:
+            self.elapsed = time.monotonic() - self.started
+            self.update_telemetry()
         try:
             job_id, success, data, args = self.events.get_nowait()
             if job_id != self.job_id:
+                self.root.after(100, self.poll)
+                return
+            if success == 'progress':
+                self.status.set(UI[self.lang]['source_progress'].format(**data))
                 self.root.after(100, self.poll)
                 return
             self.busy = False
@@ -450,7 +506,13 @@ class App:
         self.empty_help.config(text=UI[self.lang][help_key])
 
     def localized_result(self):
-        return {localize(k, self.lang): localize(v, self.lang) for k, v in self.result.items()}
+        def key_label(key):
+            if ' / ' in key:
+                prefix, suffix = key.split(' / ', 1)
+                return prefix + ' / ' + str(localize(suffix, self.lang))
+            return localize(key, self.lang)
+        return {key_label(k): (UI[self.lang].get(v, v) if k.endswith('失败原因') else localize(v, self.lang))
+                for k, v in self.result.items()}
 
     def show_result(self):
         self.set_detail(UI[self.lang]['select_row'])
@@ -459,15 +521,18 @@ class App:
         self.scroll.pack(side='right', fill='y')
         self.tree.pack(fill='both', expand=True)
         self.tree.delete(*self.tree.get_children())
+        self.visible_rows = {}
         needle = self.filter.get().casefold().strip()
         for key, value in self.localized_result().items():
             if not needle or needle in f'{key} {value}'.casefold():
-                self.tree.insert('', 'end', values=(key, value), tags=('even' if len(self.tree.get_children()) % 2 == 0 else 'odd',))
+                preview = ' / '.join(str(value).splitlines())
+                row = self.tree.insert('', 'end', values=(key, preview[:600]), tags=('even' if len(self.tree.get_children()) % 2 == 0 else 'odd',))
+                self.visible_rows[row] = (key, str(value))
 
     def select_result(self, _=None):
         selected = self.tree.selection()
         if selected:
-            key, value = self.tree.item(selected[0], 'values')
+            key, value = self.visible_rows[selected[0]]
             self.set_detail(f'{key}: {value}')
 
     def set_detail(self, text):
@@ -489,7 +554,7 @@ class App:
         if not selected or not self.result:
             self.status.set(UI[self.lang]['select_row'])
             return 'break'
-        value = self.tree.item(selected[0], 'values')[1]
+        value = self.visible_rows[selected[0]][1]
         self.root.clipboard_clear()
         self.root.clipboard_append(value)
         self.set_state('copied')

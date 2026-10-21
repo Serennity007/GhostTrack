@@ -1,12 +1,12 @@
 # GhostTrack Console
 
-四语言 Windows 公开信息控制台：10 个查询模块，黑绿终端风格、编号导航、等宽结果区和真实查询耗时，基于 [HunxByts/GhostTrack](https://github.com/HunxByts/GhostTrack) 扩展。
+四语言 Windows 公开信息控制台：11 个查询模块，黑绿终端风格、编号导航、等宽结果区和真实查询耗时，基于 [HunxByts/GhostTrack](https://github.com/HunxByts/GhostTrack) 扩展。
 
 [下载 Windows 版](https://github.com/Serennity007/GhostTrack/releases/latest) · [使用说明](README_WINDOWS.md) · [更新记录](CHANGELOG.md) · [原项目说明](UPSTREAM_README.md)
 
 ## 快速开始
 
-1. 在 Release 下载 `GhostTrack-v1.4.0-Windows-x64.zip`。
+1. 在 Release 下载 `GhostTrack-v1.5.0-Windows-x64.zip`。
 2. 解压整个文件夹，运行其中的 **GhostTrack.exe**，无需安装 Python。
 3. 选择查询工具；国内平台可粘贴主页链接或分享文案，按 Enter 查询。
 
@@ -16,6 +16,7 @@ Windows 10/11 x64。便携包未签名，目录内的 `_internal` 文件夹是�
 
 | 工具 | 输入 | 结果 |
 |---|---|---|
+| 域名综合报告 | 域名 | 并行汇总 RDAP、8类 DNS、网站与 TLS，分别标注来源状态 |
 | 域名档案 | 域名 | 注册商、注册/到期/更新时间、DNSSEC、名称服务器 |
 | DNS 记录 | 域名 | A / AAAA / CNAME / MX / NS / TXT / SOA / CAA |
 | 网站与证书 | 公网 HTTPS 网址 | 响应状态、标题、跳转链、公开响应头、证书颁发者/有效期/SAN |
@@ -33,6 +34,7 @@ Windows 10/11 x64。便携包未签名，目录内的 `_internal` 文件夹是�
 
 ## 日常使用
 
+- 示例一键填入（不会自动发出请求）、模块来源标识、真实耗时与结果字段统计。
 - 简体中文 / English / 日本語 / Español 即时切换，记住语言和默认号码地区。
 - 复制单个值或全部结果；选中行后双击 / Ctrl+C。
 - 筛选结果字段与内容，查看完整值；打开来源核实。
