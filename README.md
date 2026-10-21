@@ -1,104 +1,132 @@
 # GhostTrack Console
 
-**简体中文** · [English](README.en.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
+**English** · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
 
-**Windows / Android 跨平台 OSINT 公开信息研究工作台。**
+**A public-information research workbench for Windows and Android.**
 
-在桌面与手机上，把分散的公开信息整理成结构化结果。GhostTrack Console 将域名注册、DNS、TLS 证书、IP/ASN 网络信息、GitHub 与国内公开主页查询集中到同一套工作台，Windows 集成 12 个工具，Android 提供 11 个查询模块。
+Investigate a domain, inspect its DNS and TLS, review network registration, and collect public profile metadata from one console. GhostTrack presents returned data as searchable fields with source context, copy actions, and JSON, CSV, or standalone HTML reports.
 
-- **一键域名综合报告**：并行汇总 RDAP、8 类 DNS、HTTPS 与 TLS，逐来源显示状态，保留已取得的部分结果。
-- **从查询到报告**：按字段筛选、复制单项或全部，保留查询时间与来源信息，导出 JSON、CSV、HTML 报告。
-- **桌面与移动端**：Windows 双栏控制台、Android 原生触屏界面，四语言界面、五语言文档，无需自行安装 Python。
+[Download](#download) · [Screenshots](#screenshots) · [Features](docs/FEATURES.md) · [Windows guide](docs/windows.md) · [Android guide](docs/android.md) · [Changelog](CHANGELOG.md)
 
-> 文档提供中、英、日、西、法五种语言；应用界面支持简体中文、English、日本語、Español 四种语言。
+- **One domain, three sources.** Query RDAP, eight DNS record types, and HTTPS/TLS in parallel. Each source keeps its own status, so partial results remain useful.
+- **A workspace for the whole result.** Use the Windows two-column console or native Android interface to filter fields, inspect long values, copy evidence, and export reports with query context.
+- **Desktop and mobile, ready to run.** Twelve Windows tools and eleven Android modules share the query engine. Release packages include Python; the interface supports English, Simplified Chinese, Japanese, and Spanish.
 
-## 下载与安装
+## Screenshots
 
-| 平台 | 当前下载 | 安装方法 |
-|---|---|---|
-| Windows 10/11 x64 · v1.8.0 | [便携 ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | 完整解压，运行 `GhostTrack/GhostTrack.exe` |
-| Android 7.0+ · v1.6.0 | [通用 APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | 在手机文件管理器中打开 APK 安装 |
+### Windows · v1.8.0
 
-Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要单独移动 EXE。Android 包支持 ARM64、ARMv7 和 x86_64，首次启动会解压内置运行环境；只给实际用于打开 APK 的应用授予安装来源权限。后续更新请使用本仓库以同一证书签名的 APK。
+![GhostTrack Windows console in English showing a real python.org domain overview](docs/screenshots/windows-overview-en.jpg)
 
-[Windows 使用说明](README_WINDOWS.md) · [Android 使用与构建](README_ANDROID.md) · [更新记录](CHANGELOG.md)
+The input and source notes stay beside the results table. Metric cards show the actual field count and elapsed time; the detail pane shows the selected value in full.
 
-## 界面
+### Android · v1.6.0
 
-![Windows 公开信息控制台](docs/desktop.png)
+<p>
+  <img src="docs/screenshots/android-overview-en.png" width="300" alt="Android English module selection and domain query" />
+  <img src="docs/screenshots/android-results-en.png" width="300" alt="Android English results for a real python.org HTTPS query" />
+</p>
 
-<img src="docs/android.png" width="320" alt="Android 公开信息控制台" />
+These are captures of the released applications using public example data. See the [screenshot inventory](docs/screenshots/README.md) for versions and capture details.
 
-Windows v1.8.0 采用左右分栏工作台：
+## Download
 
-- 左侧集中输入、示例和来源说明，右侧保留结果表格与完整值详情。
-- 紧凑编号导航容纳 12 个工具，指标卡显示真实字段数量、查询耗时和当前状态。
-- 操作工具栏随窗口宽度调整，筛选、复制和导出靠近结果区。
+| Platform | Release package | Requirements |
+| --- | --- | --- |
+| Windows · **1.8.0** | [Portable ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [Release notes and checksums](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | Windows 10/11, x64 |
+| Android · **1.6.0** | [Universal APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Release notes, checksums and signature](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Android 7.0+, ARM64 / ARMv7 / x86_64 |
 
-装饰图形不表示正在扫描目标；查询状态与结果来自实际返回的数据。Android 最新版本仍为 v1.6.0。
+**Windows:** extract the entire ZIP, then run `GhostTrack/GhostTrack.exe`. Keep the executable with its bundled files. No separate Python installation is needed.
 
-## 12 个查询工具
+**Android:** open the APK from your file manager and install it. First launch extracts the bundled runtime. Future updates must use the same signing certificate. See the [Android guide](docs/android.md) for installation and verification.
 
-| 工具 | 输入 | 可取得的公开信息 |
-|---|---|---|
-| 授权账号档案 | 电话号码或关键词 | 本机保存的授权号码与主页关联、来源与保存时间 |
-| 域名综合报告 | 域名 | 并行汇总 RDAP、DNS、HTTPS，各来源独立标记状态 |
-| 域名档案 | 域名 | 注册商、注册/到期/更新日期、DNSSEC、名称服务器 |
-| DNS 记录 | 域名 | A、AAAA、CNAME、MX、NS、TXT、SOA、CAA 与 TTL |
-| 网站与证书 | 公网 HTTPS 网址 | HTTP 状态、标题、跳转、公开响应头、TLS 颁发者/有效期/SAN |
-| IP / ASN 注册 | 公网 IP 或 `AS15169` | 注册范围、CIDR、网络名称、注册国家代码与日期 |
-| GitHub 公开资料 | 用户名或主页 URL | 公开简介、计数、注册日期、最近 5 个公开仓库 |
-| 国内公开主页 | 主页 URL、分享文案或平台用户 ID | 可读取的页面标题、简介、访问状态、来源和查询时间 |
-| IP 归属地 | 公网 IPv4 / IPv6 | 数据库估算地区、网络组织、服务商、ASN 和时区 |
-| 本机公网 IP | 无需输入 | 当前网络出口的公网 IP |
-| 号码元数据 | 电话号码与默认地区 | 本地解析号码段归属地、运营商、时区、格式和有效性 |
-| 用户名链接 | 用户名 | 生成 GitHub、Instagram、X 主页链接，不验证账号存在 |
+Windows and Android have separate version numbers and release tags. The current Android release does not include the Windows authorized archive.
 
-国内平台支持 **抖音、小红书、快手、B站、微博、知乎、豆瓣**。建议粘贴完整个人主页链接；支持部分抖音、小红书主页分享短链。显示昵称、“抖音号”、视频或笔记链接不能替代对应的主页标识。
+## Features
 
-## 结果处理
+All network results depend on what the source returns. The [full feature catalogue](docs/FEATURES.md) describes fields, input formats, providers, and limits for each tool.
 
-- 示例一键填入，不自动发起请求；可取消查询并忽略迟到响应。
-- 按字段或内容筛选，查看完整值，复制单项或全部结果，打开来源核实。
-- 导出 JSON、UTF-8 BOM CSV、离线 HTML，附查询工具、输入和 UTC 时间；CSV 包含公式文本保护。
-- Windows 支持双击 / Ctrl+C 复制、Enter 查询、Esc 取消；Android 支持触屏复制与系统文件选择器导出。
-- Windows 会话历史最多 50 条，默认不跨会话保存，可在设置中开启本机保存；Android 不持久保存查询历史，仅记住语言和模块。
-- 平台查询结果可一键「存入档案」：保存本人授权或对方公开的电话号码与主页关联（含来源与保存时间），侧栏「档案管理」支持删除与导出，模块 12 可按号码或关键词在本机档案中查找。
+| Tool | Input | Result | Windows | Android |
+| --- | --- | --- | :---: | :---: |
+| Domain overview | `python.org` | Parallel RDAP, DNS, HTTPS/TLS report with per-source status | ✓ | ✓ |
+| Domain registration | Domain | Registrar, registration/update/expiry dates, DNSSEC, name servers | ✓ | ✓ |
+| DNS records | Domain | A, AAAA, CNAME, MX, NS, TXT, SOA, CAA and TTL | ✓ | ✓ |
+| Website and certificate | Public HTTPS URL | Status, title, redirects, selected headers, certificate issuer/validity/SAN | ✓ | ✓ |
+| IP / ASN registration | Public IP or `AS15169` | Registered ranges, CIDR, network identifiers and dates | ✓ | ✓ |
+| GitHub public profile | Username or profile URL | Public bio, counts, creation date and five recent public repositories | ✓ | ✓ |
+| Chinese platform profiles | Profile URL, supported share text or platform ID | Readable public title/description, access status and source context | ✓ | ✓ |
+| IP location | Public IPv4 / IPv6 | Database location estimate, network organization, ASN and time zone | ✓ | ✓ |
+| My public IP | No input | Current network's public egress IP | ✓ | ✓ |
+| Phone metadata | Phone number and default region | Offline formatting, numbering region, carrier metadata, validity and time zones | ✓ | ✓ |
+| Username links | Username | Generated GitHub, Instagram and X links; account existence is unverified | ✓ | ✓ |
+| Authorized archive | Saved phone number or keyword | Search user-supplied phone/profile associations stored locally | ✓ | — |
 
-## 数据来源与限制
+**Chinese platforms:** Douyin, Xiaohongshu, Kuaishou, Bilibili, Weibo, Zhihu, and Douban. Prefer complete profile URLs. Supported Douyin and Xiaohongshu profile share links can be expanded. Display names, phone numbers, video links, and note links do not replace the required profile identifier.
 
-查询访问 [RDAP](https://about.rdap.org/)、[Google Public DNS](https://developers.google.com/speed/public-dns/docs/doh/json)、[GitHub 公共 API](https://docs.github.com/en/rest/users/users#get-a-user)、ipwho.is、api.ipify.org，以及输入的公开网站或平台主页。联网模块会把查询目标发送给相应服务；号码元数据在本地解析。没有项目中转服务器、账号登录或统计遥测。
+### From query to report
 
-平台登录、验证码、JavaScript、限流或服务故障可能限制结果。程序保留已取得的数据及来源状态，不绕过访问控制，也不将 HTTP 200 当作身份已验证。网站模块只读取公网 HTTPS 默认 443 端口，验证证书并限制跳转与内容大小。缺失字段不会补造；RDAP 不导出注册人联系信息。
+1. Select a tool and enter a target. **Example** fills a sample without sending a request.
+2. Run the query. Review source status alongside the available fields; cancel when needed.
+3. Filter fields or values and copy one value or all results. Windows provides a row detail pane and **Open source**; Android presents selectable result cards.
+4. Export **JSON**, **UTF-8 BOM CSV**, or **standalone HTML** with tool, input, and UTC query time. CSV protects formula-like values; HTML escapes returned text.
 
-**号码段与 IP 数据库位置不是设备实时位置。没有手机号反查私人平台账号、实名识别或跨平台身份关联功能；授权账号档案只保存你主动提供并声明来源的关联，仅存放在本机，可随时删除。** 仅查询你有权访问的公开信息，并遵守来源服务的使用规则。
+Windows adds keyboard shortcuts, up to 50 history entries, optional history persistence, and an archive dialog for saving, searching, exporting, or deleting declared associations. Android uses touch controls and the system document picker for exports. See the platform guides for exact controls and storage behavior.
 
-Windows 设置与可选历史位于 `%LOCALAPPDATA%\GhostTrackDesk`，可在应用中清空历史；错误日志不记录查询内容。Android 仅申请联网权限，不申请定位、通讯录、短信、电话或整盘存储权限。导出文件、剪贴板与分享链接可能含查询内容，请自行管理。
+## Data and limits
 
-## 开发与构建
+Network requests go directly to the relevant RDAP service, Google Public DNS, GitHub public API, ipwho.is, api.ipify.org, or the public website you query. There is no project relay service, application account, or analytics telemetry. [Privacy and data handling](docs/PRIVACY.md) covers what leaves the device, local files, clipboard/export behavior, and Android activity restoration.
 
-Python 3.11 x64，Windows 示例：
+Login requirements, CAPTCHAs, JavaScript, rate limits, and outages may limit the returned fields. Access status and HTTP 200 do not prove account ownership or identity. Website requests validate TLS, accept public HTTPS on port 443, restrict redirects, and bound response size. Domain registration results omit registrant contact details.
+
+Phone metadata describes a numbering plan; IP location is a database estimate. Neither provides a live device location. The Windows archive searches associations you explicitly supply with a source declaration; it does not discover private accounts from phone numbers or establish a shared identity across platforms.
+
+## Run from source
+
+Use **Python 3.11**. The desktop interface uses Tkinter; on Windows it is included in the standard Python installer.
 
 ```powershell
+git clone https://github.com/Serennity007/GhostTrack.git
+cd GhostTrack
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-build.txt
 .\.venv\Scripts\python.exe -m unittest discover -v
 .\.venv\Scripts\python.exe desktop.py
-.\.venv\Scripts\python.exe build_windows.py
 ```
 
-Android 需要 JDK 17 与 Android SDK Platform 36 / Build Tools 36.0.0，仓库包含 Gradle Wrapper：
+The original upstream entry point, `GhostTR.py`, is retained. The console documented here starts with `desktop.py`; Android uses its native application and shared Python modules.
+
+### Build packages
 
 ```powershell
-$env:JAVA_HOME = '你的 JDK 17 目录'
-$env:ANDROID_HOME = '你的 Android SDK 目录'
+# Windows portable package and SHA256 file
+.\.venv\Scripts\python.exe build_windows.py
+
+# Android: JDK 17, SDK Platform 36 and Build Tools 36.0.0
+$env:JAVA_HOME = 'path to JDK 17'
+$env:ANDROID_HOME = 'path to Android SDK'
 .\.venv\Scripts\python.exe build_android.py --gradle .\android\gradlew.bat
 ```
 
-构建脚本运行测试、生成发布包与 SHA256；Android 另运行 Lint 并验证签名。签名密钥位于仓库外，备份方法见 [Android 构建说明](README_ANDROID.md)。不要将私钥或凭据提交到 Git。Windows 自动构建模板见 [工作流示例](docs/windows-workflow.example.yml)；提供模板不代表已启用线上 CI。
+Build scripts run the Python tests. The Android build also runs Lint and verifies the signed APK. Preserve its signing backup outside Git for future updates. Follow the [Windows](docs/windows.md#run-and-build-from-source) and [Android](docs/android.md#build-from-source) guides for prerequisites, output paths, and signing details. A [Windows Actions workflow example](docs/windows-workflow.example.yml) is supplied as a template; it is not an active hosted release workflow.
 
-## 来源与反馈
+## Documentation and participation
 
-基于 [HunxByts/GhostTrack](https://github.com/HunxByts/GhostTrack) 扩展，保留原命令行入口 `GhostTR.py` 与[原项目说明](UPSTREAM_README.md)。本项目不是所查询平台的官方客户端。
+English is the primary language for the repository home, technical guides, changelog, and contribution templates. Localized project introductions are available in [简体中文](README.zh-CN.md), [日本語](README.ja.md), [Español](README.es.md), and [Français](README.fr.md). French is a documentation language; it is not currently an interface language.
 
-遇到问题请在 [Issues](https://github.com/Serennity007/GhostTrack/issues) 提供系统版本、应用版本和复现步骤，不要上传令牌、私钥、个人历史或私密链接。
+| Need | Start here |
+| --- | --- |
+| All tools, fields and source limits | [Feature catalogue](docs/FEATURES.md) |
+| Installation, controls, export and troubleshooting | [Windows guide](docs/windows.md) · [Android guide](docs/android.md) |
+| Storage, providers and permissions | [Privacy and data handling](docs/PRIVACY.md) |
+| Release history | [English changelog](CHANGELOG.md) · [中文更新记录](CHANGELOG.zh-CN.md) |
+| Report a bug or suggest a feature | [Issue forms](https://github.com/Serennity007/GhostTrack/issues/new/choose) · [Support](SUPPORT.md) |
+| Contribute code, translations or screenshots | [Contributing](CONTRIBUTING.md) · [Maintenance checklist](docs/maintenance.md) |
+| Report a security vulnerability privately | [Security policy](SECURITY.md) |
+
+Issue reports should include the platform, version, steps, and a redacted example. Remove personal query history, private URLs, tokens, and signing credentials before sharing logs or screenshots.
+
+## Attribution and license status
+
+This fork extends [HunxByts/GhostTrack](https://github.com/HunxByts/GhostTrack). The [original README](UPSTREAM_README.md), credits, and CLI entry point are retained. GhostTrack Console is not an official client of the queried platforms.
+
+No project-wide license is currently declared in this repository. Third-party dependencies retain their own licenses.

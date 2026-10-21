@@ -1,6 +1,6 @@
 # GhostTrack Console
 
-[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · [Español](README.es.md) · **Français**
+[简体中文](README.zh-CN.md) · [English](README.md) · [日本語](README.ja.md) · [Español](README.es.md) · **Français**
 
 **Un espace de travail OSINT multiplateforme pour explorer les informations publiques sur Windows et Android.**
 
@@ -21,7 +21,7 @@ Réunissez les enregistrements de domaines, le DNS, les certificats TLS, les reg
 
 Windows ne nécessite pas d'installation de Python. Conservez l'exécutable avec toutes ses dépendances. L'APK contient ARM64, ARMv7 et x86_64 ; le premier démarrage extrait l'environnement intégré. N'autorisez l'installation que pour l'application utilisée pour ouvrir l'APK. Pour les mises à jour, utilisez les APK de ce dépôt signés avec le même certificat.
 
-[Guide Windows en chinois](README_WINDOWS.md) · [Guide Android et compilation en chinois](README_ANDROID.md) · [Historique des versions](CHANGELOG.md)
+[Guide Windows en anglais](docs/windows.md) · [Guide Android et compilation en anglais](docs/android.md) · [Historique des versions en anglais](CHANGELOG.md)
 
 ## Interface
 
@@ -95,7 +95,7 @@ $env:ANDROID_HOME = 'chemin du SDK Android'
 .\.venv\Scripts\python.exe build_android.py --gradle .\android\gradlew.bat
 ```
 
-Les scripts exécutent les tests et produisent les fichiers de distribution et leurs sommes SHA256. Android exécute aussi Lint et vérifie la signature de l'APK. Gardez les clés de signature hors de Git et sauvegardez-les selon le [guide Android](README_ANDROID.md). L'[exemple de workflow Windows](docs/windows-workflow.example.yml) est un modèle, pas une affirmation qu'une CI hébergée est active.
+Les scripts exécutent les tests et produisent les fichiers de distribution et leurs sommes SHA256. Android exécute aussi Lint et vérifie la signature de l'APK. Gardez les clés de signature hors de Git et sauvegardez-les selon le [guide Android en anglais](docs/android.md). L'[exemple de workflow Windows](docs/windows-workflow.example.yml) est un modèle, pas une affirmation qu'une CI hébergée est active.
 
 ## Crédits et retours
 

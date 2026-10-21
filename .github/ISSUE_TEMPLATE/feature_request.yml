@@ -1,0 +1,45 @@
+name: Feature request
+description: Propose an improvement or a public-data source with a clear use case.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the user problem and a focused improvement. Public-data features must respect source access controls and make their limits clear.
+        Do not submit private account details, credentials or personal query history.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem should this solve?
+      description: Describe the task and the limitation you encounter today.
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Target platform
+      options:
+        - Both Windows and Android
+        - Windows
+        - Android
+        - Repository documentation or build tooling
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Explain the input, output and interaction. Include alternatives if relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Public source and limitations
+      description: For a new data source, link its official public page/API documentation and describe available fields, rate limits and access requirements. Leave blank for non-query improvements.
+      placeholder: Public source URL, expected fields, known restrictions
+  - type: textarea
+    id: context
+    attributes:
+      label: Examples or mockups
+      description: Use public or synthetic examples without personal information.

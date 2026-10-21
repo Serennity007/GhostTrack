@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation and support
+    url: https://github.com/Serennity007/GhostTrack/blob/main/SUPPORT.md
+    about: Find installation guides, feature details and reporting guidance.
+  - name: Report a security vulnerability privately
+    url: https://github.com/Serennity007/GhostTrack/security/advisories/new
+    about: Keep vulnerability details and sensitive evidence out of public issues.

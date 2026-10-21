@@ -1,6 +1,6 @@
 # GhostTrack Console
 
-[简体中文](README.md) · [English](README.en.md) · [日本語](README.ja.md) · **Español** · [Français](README.fr.md)
+[简体中文](README.zh-CN.md) · [English](README.md) · [日本語](README.ja.md) · **Español** · [Français](README.fr.md)
 
 **Un espacio de trabajo OSINT multiplataforma para investigar información pública desde Windows y Android.**
 
@@ -21,7 +21,7 @@ Reúne registros de dominios, DNS, certificados TLS, registros de IP / ASN y per
 
 Windows no requiere instalar Python. Mantén el ejecutable junto a todas sus dependencias. El APK incluye ARM64, ARMv7 y x86_64; el primer inicio extrae el entorno incorporado. Autoriza la instalación solo a la aplicación que utilices para abrir el APK. Para actualizar, utiliza APK de este repositorio firmados con el mismo certificado.
 
-[Guía de Windows, en chino](README_WINDOWS.md) · [Guía y compilación de Android, en chino](README_ANDROID.md) · [Cambios](CHANGELOG.md)
+[Guía de Windows, en inglés](docs/windows.md) · [Guía y compilación de Android, en inglés](docs/android.md) · [Cambios, en inglés](CHANGELOG.md)
 
 ## Interfaz
 
@@ -95,7 +95,7 @@ $env:ANDROID_HOME = 'ruta del SDK de Android'
 .\.venv\Scripts\python.exe build_android.py --gradle .\android\gradlew.bat
 ```
 
-Los scripts ejecutan pruebas y generan paquetes y sumas SHA256; Android también ejecuta Lint y verifica la firma del APK. Guarda las claves fuera de Git y haz una copia segura según la [guía de Android](README_ANDROID.md). El [ejemplo de flujo de Windows](docs/windows-workflow.example.yml) es una plantilla, no una indicación de que exista CI alojada activa.
+Los scripts ejecutan pruebas y generan paquetes y sumas SHA256; Android también ejecuta Lint y verifica la firma del APK. Guarda las claves fuera de Git y haz una copia segura según la [guía de Android, en inglés](docs/android.md). El [ejemplo de flujo de Windows](docs/windows-workflow.example.yml) es una plantilla, no una indicación de que exista CI alojada activa.
 
 ## Créditos y comentarios
 

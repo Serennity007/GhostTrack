@@ -1,0 +1,66 @@
+name: Bug report
+description: Report a reproducible problem in the Windows or Android application.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check existing issues first. For suspected vulnerabilities, use [private security reporting](https://github.com/Serennity007/GhostTrack/security/advisories/new).
+        Use public examples or synthetic data. Remove tokens, real phone numbers, private URLs, personal archives and unrelated screenshot content.
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows release package
+        - Android release APK
+        - Windows source checkout
+        - Android source build
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Application version or commit
+      description: Use the version displayed by the app, or the commit SHA for a source build.
+      placeholder: Windows 1.8.0 / Android 1.6.0 / commit SHA
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Operating system and display
+      description: Include OS version; add display scaling or Android device/emulator details for UI issues.
+      placeholder: Windows 11, 150% scaling / Android 14, device model
+    validations:
+      required: true
+  - type: input
+    id: module
+    attributes:
+      label: Module and interface language
+      placeholder: Domain overview, English
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Prefer a public example such as python.org. Say how often the problem occurs.
+      placeholder: |
+        1. Open ...
+        2. Enter ...
+        3. Select ...
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: Include the exact error or source status if available.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Redacted screenshots or additional context
+      description: Attach only relevant, sanitized evidence. Never attach signing files or an entire settings/history directory.

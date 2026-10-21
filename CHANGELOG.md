@@ -1,71 +1,83 @@
 # Changelog
 
+[English](CHANGELOG.md) · [简体中文](CHANGELOG.zh-CN.md) · [Project home](README.md)
+
+Windows and Android have separate release versions. Entries below identify the platform when a release applies to only one of them.
+
+## Unreleased · repository and Android build
+
+- Make English the primary repository language. Preserve the Chinese introduction and changelog; add complete English platform guides, a feature catalogue, privacy notes, maintenance instructions, and real English Windows/Android screenshots.
+- Add contribution, support, and security policies, bug/feature forms, and a pull request template.
+- Fix Android source packaging after the Windows archive addition by including the shared `archive.py` dependency. Generate the mobile Python version from Gradle's Android version rather than the desktop version.
+- Name Android artifacts from the built APK's validated version, and add `--output-dir` for verification builds. Add isolated source-packaging and APK-metadata regression tests.
+- Verify 78 Python tests and the signed Android release build with Lint. These source changes do not replace the existing Windows 1.8.0 or Android 1.6.0 release assets.
+
 ## 1.8.0 · Windows
 
-- 基于 1.7.0 的 12 工具工作台重整布局：左侧查询与来源说明、右侧结果表格和完整值详情，保留授权账号档案功能。
-- 紧凑编号导航、真实查询指标卡和随窗口宽度调整的结果工具栏，改进窗口空间利用与操作层次。
-- 同步中、英、日、西、法五语言 README 与 Windows 使用说明；应用界面继续支持中、英、日、西四语言。Android 最新发布仍为 1.6.0，此版本仅更新 Windows。
+- Reorganize the 12-tool workbench from 1.7.0 into a query and source pane on the left, with the result table and full-value detail on the right. Retain the authorized account archive.
+- Add compact numbered navigation, actual query metrics, and a result toolbar that adapts to the window width.
+- Update the Chinese, English, Japanese, Spanish, and French READMEs and the Windows guide. The app interface continues to support Chinese, English, Japanese, and Spanish. This release updates Windows only; the latest Android release remains 1.6.0.
 
 ## 1.7.0 · Windows
 
-- 新增授权账号档案（模块 12）：平台查询结果一键「存入档案」，保存本人授权或对方公开主页主动公布的电话号码与主页关联，记录来源与保存时间；相同号码+平台+主页自动更新去重，上限 200 条。
-- 档案模块支持按号码数字片段或关键词在本机查找，结果可筛选、复制并导出 JSON/CSV/HTML；侧栏「档案管理」可删除选中记录或导出全部，档案独立于历史持久保存于本机。
-- 明确隐私边界：档案不联网验证、不支持按手机号探测陌生账号；保存对话框与档案管理均展示授权提示，四语言帮助同步说明。
-- 侧栏改为双排工具按钮布局，12 个模块在最小窗口下仍完整可见；新增 10 项档案与界面测试，共 75 项测试通过。
+- Add the authorized account archive as tool 12. Save a phone/profile association from a platform result when it concerns your own authorized information or a number the owner published on their public profile. Record the source and save time; update duplicate phone/platform/profile combinations. Limit the archive to 200 records.
+- Search local records by phone digits or keyword, then filter, copy, or export results as JSON, CSV, or HTML. Manage archive can delete selected records or export all records. Archive storage is independent of query history.
+- Explain the archive's limits in the save dialog, management view, and four-language help. The archive does not verify associations online or probe platforms for accounts by phone number.
+- Use a two-column tool navigation layout so all 12 tools remain visible at the minimum window size. Add 10 archive and interface tests; 75 tests passed for the release.
 
 ## 1.6.0 · Windows / Android
 
-- 五语言产品 README：中文、英文、日文、西班牙文、法文，提供互相切换的入口与 Windows/Android 下载。应用界面继续支持原四语言。
-- 统一深蓝黑、薄荷绿与青色视觉，改进 Windows 导航、来源分区、指标卡、输入焦点和结果区域。
-- Android 压缩首屏标题与留白，采用紧凑工具栏、当前模块标题、渐变面板和触摸反馈，让查询更快可达。
-- Windows 发布包包含已验证的临时文件访问拒绝有限重试修复。
+- Publish product READMEs in Chinese, English, Japanese, Spanish, and French, with language navigation and Windows/Android download links. The app interface retains its four existing languages.
+- Introduce a shared blue-black, mint, and cyan palette. Improve Windows navigation, source sections, metric cards, input focus, and the results area.
+- Reduce Android's first-screen heading and spacing; add a compact toolbar, current-tool heading, gradient panels, and touch feedback.
+- Include the tested bounded retry for temporary local-file access denials in the Windows package.
 
 ## Android 1.5.0
 
-- 新增原生 Android 黑绿控制台，支持中英日西四语言、11个查询模块和共享 Python 服务。
-- 触屏参数、示例、主动粘贴、查询取消、结果筛选、单项/全部复制，以及系统文件选择器 JSON/CSV/HTML 导出。
-- 仅声明联网权限，不申请定位、通讯录、短信或存储权限；仅保存语言和工具选择。
-- 支持 Android 7.0+，ARM64/ARMv7/x86_64 通用签名 APK；专用发布密钥保留在构建机用户目录。
+- Add a native Android dark console with Chinese, English, Japanese, and Spanish, 11 query tools, and shared Python services.
+- Add touch input, examples, user-initiated paste, query cancellation, result filters, single-value/all-result copy, and JSON/CSV/HTML export through the system document picker.
+- Declare only Internet access; request no location, contacts, SMS, or storage permissions. Remember only the language and tool selection.
+- Support Android 7.0+ with a signed universal APK for ARM64, ARMv7, and x86_64. Keep the dedicated release key in the build user's data directory.
 
-## 未打包到既有 Windows Release 的源码修复
+## Source fix initially absent from existing Windows release packages
 
-- Windows 本机历史文件遭遇暂时访问拒绝时，有限重试原子替换；持续失败仍保留旧文件并返回错误。
+- Retry atomic history-file replacement a bounded number of times when Windows reports a temporary access denial. Preserve the old file and report an error if replacement continues to fail.
 
 ## 1.5.0
 
-- 新增一键域名综合报告，并行汇总 RDAP、8类 DNS、HTTPS/TLS；逐来源进度与失败隔离，共11个查询模块。
-- 控制台指标卡、来源标识、示例入口、边框分区和更清晰的导航；切换模块清空旧视图，保留历史回看。
-- 修复压缩响应导致网站标题为空，支持有限大小 gzip/deflate 解码和明确内容状态。
-- 补齐中英日西四语言的综合报告字段与来源错误提示。
+- Add a domain overview that queries RDAP, eight DNS record types, and HTTPS/TLS in parallel. Isolate source failures and show per-source progress, for a total of 11 query tools.
+- Add metric cards, source labels, example inputs, panel borders, and clearer navigation. Clear the previous view when switching tools while retaining completed queries in history.
+- Fix empty website titles for compressed responses. Add bounded gzip/deflate decoding and explicit content-status fields.
+- Add domain overview fields and source-error messages in Chinese, English, Japanese, and Spanish.
 
 ## 1.4.0
 
-- 新增域名 RDAP、8类 DNS、网站响应/TLS证书、IP/ASN 注册、GitHub 公开资料，共10个查询模块。
-- 丰富号码格式和IP公开网络元数据，展示来源链接与实际查询状态。
-- 黑绿控制台、编号导航、雷达装饰、等宽斑马纹表格、真实字段数量和查询耗时；四语言继续支持。
-- 公网 HTTPS 地址固定连接、严格 TLS 校验、受限跳转及响应大小，适配 198.18/15 Fake-IP 公网解析。
-- 分版本构建输出，避免正在运行的旧版阻塞新版本打包。
+- Add domain RDAP, eight DNS record types, website response/TLS certificate metadata, IP/ASN registration, and GitHub public profiles, for a total of 10 query tools.
+- Expand phone formats and public IP network metadata; show source links and actual query status.
+- Add a dark green console, numbered navigation, decorative radar, monospaced striped result rows, actual field counts, and elapsed query time. Retain four-language support.
+- Pin public HTTPS connections to validated addresses, enforce TLS checks, bound redirects and response size, and support public resolution for the `198.18.0.0/15` Fake-IP pool.
+- Use versioned build output directories so a running older version does not block packaging a new one.
 
 ## 1.3.0
 
-- 支持抖音、小红书、快手公开主页，共7个国内平台。
-- 主页链接自动识别，分享文案提取，抖音/小红书主页短链的受限域名解析；详细输入错误和访问限制状态。
-- 可取消的后台查询、并发上限、过期响应隔离、查询上下文和 UTC 时间。
-- 会话历史、最多50条的可选本机持久化、历史回看/清空、语言和默认地区记忆。
-- 结果筛选、滚动详情、复制单值/全部、剪贴板粘贴、浏览器打开和 HTML/JSON/CSV 报告。
-- 四语言帮助与设置、Windows 应用图标和版本资源、DPI 处理、有限错误日志。
-- 模块拆分、依赖固定、自动化测试和 Windows 构建脚本/CI模板、更新产品主页与使用手册。
+- Add Douyin, Xiaohongshu, and Kuaishou public profiles, bringing the supported Chinese platforms to seven.
+- Detect profile platforms, extract links from share messages, and expand supported Douyin/Xiaohongshu profile short links through allowed domains. Add detailed input errors and access-status fields.
+- Add cancellable background queries, concurrency limits, stale-response isolation, query context, and UTC timestamps.
+- Add session history, optional local persistence of up to 50 entries, history review and clearing, and saved language/default-region settings.
+- Add result filtering, scrollable full-value details, single-value/all-result copy, clipboard paste, browser opening, and HTML/JSON/CSV reports.
+- Add four-language help and settings, a Windows application icon and version resource, DPI handling, and bounded error logs.
+- Split service modules, pin dependencies, add automated tests, and provide a Windows build script and CI template. Update the product page and user guide.
 
 ## 1.2.0
 
-- B站、微博、知乎、豆瓣公开主页元信息与访问状态。
-- 单值复制、全部复制、双击/Ctrl+C、打开主页。
-- 小窗口布局修复，17项测试。
+- Add public profile metadata and access status for Bilibili, Weibo, Zhihu, and Douban.
+- Add single-value and full-result copy, double-click/Ctrl+C, and profile opening.
+- Fix the small-window layout; include 17 tests.
 
 ## 1.1.0
 
-- 中英日西四语言与深色工作台、结构化结果。
+- Add Chinese, English, Japanese, and Spanish, a dark workbench, and structured results.
 
 ## 1.0.0
 
-- Windows 中文图形入口、IP/号码查询、用户名链接和 JSON/CSV 导出。
+- Add a Chinese Windows GUI, IP and phone queries, username links, and JSON/CSV export.

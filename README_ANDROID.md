@@ -1,5 +1,7 @@
 # GhostTrack Android 1.6.0
 
+[中文项目主页](README.zh-CN.md) · [English guide](docs/android.md) · [Windows 使用说明](README_WINDOWS.md) · [中文更新记录](CHANGELOG.zh-CN.md)
+
 Android 原生触屏界面，复用 Windows 版的公开查询服务；支持简体中文、English、日本語、Español。
 
 <img src="docs/android.png" width="300" alt="Android 公开信息控制台" /> <img src="docs/android-results.png" width="300" alt="Android 查询与导出" />

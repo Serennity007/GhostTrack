@@ -1,6 +1,6 @@
 # GhostTrack Console
 
-[简体中文](README.md) · [English](README.en.md) · **日本語** · [Español](README.es.md) · [Français](README.fr.md)
+[简体中文](README.zh-CN.md) · [English](README.md) · **日本語** · [Español](README.es.md) · [Français](README.fr.md)
 
 **Windows と Android で使える、公開情報調査のための OSINT ワークベンチ。**
 
@@ -21,7 +21,7 @@
 
 Windows 版に Python のインストールは不要です。EXE だけを移動せず、付属ファイルを同じフォルダーに残してください。Android 版は ARM64・ARMv7・x86_64 を含み、初回起動時に内蔵ランタイムを展開します。APK を開くアプリにのみインストールを許可してください。更新には本リポジトリの同じ証明書で署名された APK を使用します。
 
-[Windows ガイド（中国語）](README_WINDOWS.md) · [Android の使用・ビルド（中国語）](README_ANDROID.md) · [変更履歴](CHANGELOG.md)
+[Windows ガイド（英語）](docs/windows.md) · [Android の使用・ビルド（英語）](docs/android.md) · [変更履歴（英語）](CHANGELOG.md)
 
 ## 画面
 
@@ -95,7 +95,7 @@ $env:ANDROID_HOME = 'Android SDK のパス'
 .\.venv\Scripts\python.exe build_android.py --gradle .\android\gradlew.bat
 ```
 
-ビルドスクリプトはテストを実行し、配布ファイルと SHA256 を生成します。Android では Lint と署名検証も実行します。署名鍵は Git に入れず、[Android ガイド](README_ANDROID.md)に従って安全にバックアップしてください。[Windows ワークフロー例](docs/windows-workflow.example.yml)はテンプレートであり、ホスト型 CI の稼働を示すものではありません。
+ビルドスクリプトはテストを実行し、配布ファイルと SHA256 を生成します。Android では Lint と署名検証も実行します。署名鍵は Git に入れず、[Android ガイド（英語）](docs/android.md)に従って安全にバックアップしてください。[Windows ワークフロー例](docs/windows-workflow.example.yml)はテンプレートであり、ホスト型 CI の稼働を示すものではありません。
 
 ## 原作者と不具合報告
 
