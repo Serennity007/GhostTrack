@@ -27,8 +27,8 @@ from i18n import LANGUAGES, UI, localize, platform_name
 
 
 class App:
-    BG, PANEL, CARD = '#070d0b', '#0d1915', '#172b22'
-    FG, MUTED, ACCENT = '#e3f9ee', '#91ac9d', '#a3ff6f'
+    BG, PANEL, CARD = '#080e17', '#101b2a', '#172638'
+    FG, MUTED, ACCENT = '#e7f4f1', '#8da9b5', '#5cf0b7'
     MODES = ['IP 归属地', '本机公网 IP', '号码归属地', '用户名链接', '国内平台',
              '域名档案', 'DNS 记录', '网站与证书', 'IP 注册网络', 'GitHub 公开资料', '域名综合报告']
     MODE_KEYS = ['ip', 'self', 'phone', 'username', 'domestic', 'domain', 'dns', 'website', 'network', 'github', 'overview']
@@ -66,7 +66,7 @@ class App:
         root.minsize(int(1040 * self.scale), int(700 * self.scale))
         root.configure(bg=self.BG)
         for option, value in (('background', self.CARD), ('foreground', self.FG),
-                              ('selectBackground', '#245565'), ('selectForeground', self.FG),
+                              ('selectBackground', '#203f52'), ('selectForeground', self.FG),
                               ('font', ('Microsoft YaHei UI', 10))):
             root.option_add('*TCombobox*Listbox.' + option, value)
         icon = Path(__file__).parent / 'assets' / 'ghosttrack.ico'
@@ -86,32 +86,32 @@ class App:
         style.map('TCombobox', fieldbackground=[('readonly', self.CARD)],
                   foreground=[('readonly', self.FG)], selectbackground=[('readonly', self.CARD)])
         style.configure('Result.Treeview', background=self.PANEL, fieldbackground=self.PANEL,
-                        foreground=self.FG, rowheight=36, borderwidth=0, bordercolor=self.PANEL,
-                        lightcolor=self.PANEL, darkcolor=self.PANEL, font=('Cascadia Mono', 10))
+                        foreground=self.FG, rowheight=39, borderwidth=0, bordercolor=self.PANEL,
+                        lightcolor=self.PANEL, darkcolor=self.PANEL, font=('Consolas', 10))
         style.configure('Result.Treeview.Heading', background=self.CARD, foreground=self.MUTED,
                         bordercolor=self.PANEL, lightcolor=self.PANEL, darkcolor=self.PANEL,
                         padding=12, font=('Microsoft YaHei UI', 10))
         style.configure('Result.Vertical.TScrollbar', background=self.CARD, troughcolor=self.PANEL,
                          arrowcolor=self.ACCENT, borderwidth=0)
-        style.map('Result.Treeview', background=[('selected', '#245565')])
+        style.map('Result.Treeview', background=[('selected', '#203f52')])
         style.configure('Query.Horizontal.TProgressbar', background=self.ACCENT,
                          troughcolor=self.PANEL, borderwidth=0, thickness=4)
         side = tk.Frame(root, bg=self.PANEL, width=int(245 * self.scale))
         side.pack(side='left', fill='y')
         side.pack_propagate(False)
-        self.brand = tk.Label(side, text='GHOST//TRACK', bg=self.PANEL, fg=self.ACCENT,
-                              font=('Consolas', 17, 'bold'))
+        self.brand = tk.Label(side, text='GHOSTTRACK', bg=self.PANEL, fg=self.ACCENT,
+                              font=('Consolas', 18, 'bold'))
         self.brand.pack(anchor='w', padx=22, pady=(22, 4))
-        tk.Label(side, text=f'PUBLIC INTELLIGENCE / {VERSION}', bg=self.PANEL,
+        tk.Label(side, text=f'PUBLIC DATA / DESK {VERSION}', bg=self.PANEL,
                  fg=self.MUTED, font=('Consolas', 8)).pack(anchor='w', padx=22, pady=(0, 14))
         self.label(side, 'tools', bg=self.PANEL).pack(anchor='w', padx=22, pady=(0, 12))
         self.nav = []
         for index, key in enumerate(self.MODE_KEYS):
             button = self.button_widget(side, key, lambda n=index: self.select(n))
-            button.config(font=('Microsoft YaHei UI', 10), pady=5, anchor='w')
+            button.config(font=('Microsoft YaHei UI', 10), pady=5, anchor='w', padx=12)
             button.pack(fill='x', padx=14, pady=2)
             self.nav.append(button)
-        tk.Frame(side, height=1, bg='#284235').pack(fill='x', padx=22, pady=10)
+        tk.Frame(side, height=1, bg='#263d50').pack(fill='x', padx=22, pady=10)
         for key, command in (('history', self.history_dialog), ('settings', self.settings_dialog), ('help', self.help_dialog)):
             utility = self.button_widget(side, key, command)
             utility.config(font=('Microsoft YaHei UI', 9), pady=6)
@@ -122,37 +122,51 @@ class App:
         tk.Label(footer, text='Built on HunxByts/GhostTrack', bg=self.PANEL,
                  fg=self.MUTED, font=('Segoe UI', 8)).pack(anchor='w')
         main = tk.Frame(root, bg=self.BG)
-        main.pack(side='left', fill='both', expand=True, padx=30, pady=28)
+        main.pack(side='left', fill='both', expand=True, padx=26, pady=24)
         main.columnconfigure(0, weight=1)
         main.rowconfigure(4, weight=1)
         top = tk.Frame(main, bg=self.BG)
         top.grid(row=0, column=0, sticky='ew')
-        self.label(top, 'workspace', size=11).pack(side='left')
+        self.label(top, 'workspace', size=10, color='#69d9cc').pack(side='left')
         language = ttk.Combobox(top, textvariable=self.language, values=list(LANGUAGES),
                                 state='readonly', width=15)
         language.pack(side='right')
-        tk.Label(top, text='// PUBLIC SOURCES', bg=self.BG, fg='#69d9cc',
+        tk.Label(top, text='[ PUBLIC DATA ]', bg=self.BG, fg='#69d9cc',
                   font=('Consolas', 9)).pack(side='right', padx=18)
         language.bind('<<ComboboxSelected>>', self.change_language)
         hero = tk.Frame(main, bg=self.BG)
         hero.grid(row=1, column=0, sticky='ew', pady=(14, 16))
-        self.heading = self.label(hero, 'tagline', size=22, color=self.FG, wraplength=730)
-        self.heading.pack(anchor='w', pady=(0, 12))
+        headline = tk.Frame(hero, bg=self.BG)
+        headline.pack(fill='x', pady=(0, 14))
+        self.heading = self.label(headline, 'tagline', size=24, color=self.FG, wraplength=730)
+        self.heading.pack(side='left', anchor='w')
+        mark = tk.Canvas(headline, width=88, height=44, bg=self.BG, highlightthickness=0)
+        mark.pack(side='right')
+        for x in range(8, 89, 14):
+            mark.create_line(x, 8, x, 36, fill='#1c3043')
+        mark.create_line(8, 22, 78, 22, fill='#29465b')
+        mark.create_oval(30, 7, 60, 37, outline='#69d9cc', width=2)
+        mark.create_line(45, 22, 66, 7, fill=self.ACCENT, width=2)
+        mark.create_oval(42, 19, 48, 25, fill=self.ACCENT, outline='')
         metrics = tk.Frame(hero, bg=self.BG)
         metrics.pack(fill='x')
         self.metric_values = [tk.StringVar() for _ in range(3)]
         for n, key in enumerate(('modules_metric', 'fields_metric', 'elapsed_metric')):
             metrics.columnconfigure(n, weight=1)
-            card = tk.Frame(metrics, bg=self.PANEL, highlightbackground='#294437', highlightthickness=1)
-            card.grid(row=0, column=n, sticky='ew', padx=(0, 8 if n < 2 else 0))
-            tk.Label(card, textvariable=self.metric_values[n], bg=self.PANEL, fg=self.ACCENT,
-                     font=('Consolas', 19, 'bold')).pack(side='left', padx=12, pady=8)
+            card = tk.Frame(metrics, bg=self.PANEL, highlightbackground='#263d50', highlightthickness=1)
+            card.grid(row=0, column=n, sticky='ew', padx=(0, 10 if n < 2 else 0))
+            strip = tk.Frame(card, bg=('#69d9cc', self.ACCENT, '#b5a6ff')[n], width=3)
+            strip.pack(side='left', fill='y')
+            tk.Label(card, textvariable=self.metric_values[n], bg=self.PANEL,
+                     fg=('#69d9cc', self.ACCENT, '#c0b4ff')[n],
+                     font=('Consolas', 24, 'bold')).pack(side='left', padx=14, pady=9)
             self.label(card, key, bg=self.PANEL, size=9).pack(side='left', padx=(0, 8))
-        form = tk.Frame(main, bg=self.PANEL, padx=18, pady=14, highlightbackground='#294437', highlightthickness=1)
+        form = tk.Frame(main, bg=self.PANEL, padx=18, pady=14, highlightbackground='#263d50', highlightthickness=1)
         form.grid(row=2, column=0, sticky='ew')
         form_top = tk.Frame(form, bg=self.PANEL)
         form_top.pack(fill='x')
-        self.label(form_top, 'parameters', bg=self.PANEL, color=self.ACCENT).pack(side='left')
+        tk.Label(form_top, text='01 /', bg=self.PANEL, fg='#69d9cc', font=('Consolas', 11, 'bold')).pack(side='left', padx=(0, 8))
+        self.label(form_top, 'parameters', bg=self.PANEL, color=self.FG).pack(side='left')
         self.source_badge = tk.Label(form_top, bg=self.PANEL, fg='#69d9cc', font=('Consolas', 9))
         self.source_badge.pack(side='right')
         self.label(form, 'input', bg=self.PANEL).pack(anchor='w', pady=(14, 6))
@@ -160,7 +174,7 @@ class App:
         input_row.pack(fill='x')
         self.entry = tk.Entry(input_row, textvariable=self.value, bg=self.CARD, fg=self.FG,
                               disabledbackground=self.CARD, disabledforeground=self.MUTED,
-                              insertbackground=self.ACCENT, relief='flat', font=('Segoe UI', 14))
+                              insertbackground=self.ACCENT, relief='flat', highlightthickness=1, highlightbackground='#2b435a', highlightcolor=self.ACCENT, font=('Segoe UI', 14))
         self.entry.pack(side='left', fill='x', expand=True, ipady=10)
         self.button_widget(input_row, 'paste', self.paste).pack(side='right', padx=(8, 0))
         self.entry.bind('<Return>', lambda _: self.start())
@@ -186,6 +200,7 @@ class App:
         self.example_button.pack(side='left')
         results_header = tk.Frame(main, bg=self.BG)
         results_header.grid(row=3, column=0, sticky='ew', pady=(16, 10))
+        tk.Label(results_header, text='02 /', bg=self.BG, fg='#69d9cc', font=('Consolas', 11, 'bold')).pack(side='left', padx=(0, 8))
         self.label(results_header, 'results', color=self.FG, size=12).pack(side='left')
         self.progress = ttk.Progressbar(results_header, mode='indeterminate', length=70,
                                         style='Query.Horizontal.TProgressbar')
@@ -196,18 +211,24 @@ class App:
         self.label(results_header, 'filter', size=8, wraplength=220).pack(side='right', padx=8)
         self.filter.trace_add('write', lambda *_: self.show_result() if self.result else None)
         self.filter_entry.bind('<Escape>', lambda _: self.filter.set(''))
-        results = tk.Frame(main, bg=self.PANEL, highlightbackground='#294437', highlightthickness=1)
+        results = tk.Frame(main, bg=self.PANEL, highlightbackground='#263d50', highlightthickness=1)
         results.grid(row=4, column=0, sticky='nsew')
         self.empty = tk.Frame(results, bg=self.PANEL)
         self.empty.pack(fill='both', expand=True)
-        radar = tk.Canvas(self.empty, width=180, height=105, bg=self.PANEL, highlightthickness=0)
-        radar.pack(pady=(6, 0))
-        for radius in (14, 29, 44):
-            radar.create_oval(90-radius, 67-radius, 90+radius, 67+radius, outline='#31573e')
-        radar.create_line(20, 67, 160, 67, fill='#244332')
-        radar.create_line(90, 3, 90, 132, fill='#244332')
-        radar.create_line(90, 67, 128, 25, fill=self.ACCENT, width=2)
-        radar.create_oval(121, 35, 127, 41, fill='#69d9cc', outline='')
+        radar = tk.Canvas(self.empty, width=300, height=120, bg=self.PANEL, highlightthickness=0)
+        radar.pack(pady=(8, 0))
+        for x in range(20, 300, 20):
+            radar.create_line(x, 14, x, 110, fill='#182c3d')
+        for y in range(14, 120, 16):
+            radar.create_line(20, y, 280, y, fill='#182c3d')
+        for radius in (18, 34, 48):
+            radar.create_oval(150-radius, 61-radius, 150+radius, 61+radius, outline='#2a5262')
+        radar.create_arc(102, 13, 198, 109, start=15, extent=110, style='arc', outline='#69d9cc', width=2)
+        radar.create_line(150, 61, 182, 29, fill=self.ACCENT, width=2)
+        radar.create_oval(147, 58, 153, 64, fill=self.ACCENT, outline='')
+        for x, direction in ((22, 1), (278, -1)):
+            for y, vertical in ((14, 1), (110, -1)):
+                radar.create_line(x, y + vertical*10, x, y, x + direction*16, y, fill='#69d9cc')
         self.empty_title = self.label(self.empty, 'empty', bg=self.PANEL, color=self.FG, size=15)
         self.empty_title.pack(pady=8)
         self.empty_help = self.label(self.empty, 'empty_help', bg=self.PANEL, wraplength=620)
@@ -217,15 +238,15 @@ class App:
         self.tree.column('key', width=220, stretch=False)
         self.tree.column('value', width=470)
         self.tree.tag_configure('even', background=self.PANEL)
-        self.tree.tag_configure('odd', background='#10231b')
+        self.tree.tag_configure('odd', background='#122133')
         self.scroll = ttk.Scrollbar(results, command=self.tree.yview, style='Result.Vertical.TScrollbar')
         self.tree.configure(yscrollcommand=self.scroll.set)
         self.tree.bind('<<TreeviewSelect>>', self.select_result)
         self.tree.bind('<Control-c>', self.copy_selected)
         self.tree.bind('<Control-C>', self.copy_selected)
         self.tree.bind('<Double-1>', self.copy_selected)
-        self.detail = tk.Text(main, bg=self.PANEL, fg=self.MUTED, height=3, state='disabled',
-                              wrap='word', relief='flat', padx=10, pady=8, font=('Microsoft YaHei UI', 9))
+        self.detail = tk.Text(main, bg=self.PANEL, fg=self.FG, height=3, state='disabled',
+                              wrap='word', relief='flat', highlightthickness=1, highlightbackground='#263d50', padx=12, pady=10, font=('Microsoft YaHei UI', 9))
         self.detail.grid(row=5, column=0, sticky='ew', pady=(8, 0))
         self.detail.grid_remove()
         self.status_label = tk.Label(main, textvariable=self.status, bg=self.BG, fg=self.ACCENT,
@@ -259,11 +280,13 @@ class App:
         return widget
 
     def button_widget(self, parent, key, command, primary=False):
-        button = tk.Button(parent, command=command, relief='flat', bd=0,
+        button = tk.Button(parent, command=command, relief='flat', bd=0, highlightthickness=1, highlightbackground='#2b435a', highlightcolor=self.ACCENT,
                             bg=self.ACCENT if primary else self.CARD,
-                            fg=self.BG if primary else self.FG, activebackground='#7cebd0',
+                            fg=self.BG if primary else self.FG, activebackground='#7cf6ca',
                             activeforeground=self.BG, cursor='hand2', padx=16, pady=10,
                             font=('Microsoft YaHei UI', 10, 'bold'))
+        button.bind('<Enter>', lambda _: button.config(highlightbackground=self.ACCENT) if str(button['state']) != 'disabled' else None)
+        button.bind('<Leave>', lambda _: button.config(highlightbackground='#2b435a'))
         self.bindings.append((button, key))
         return button
 
@@ -327,7 +350,7 @@ class App:
         self.platform_box.config(values=[platform_name(p, self.lang) for p in ('Auto', *PLATFORMS)])
         for n, button in enumerate(self.nav):
             button.config(text=f'{n+1:02d} / {UI[self.lang][self.MODE_KEYS[n]]}',
-                          bg='#25442b' if n == index else self.CARD,
+                          bg='#1b3944' if n == index else self.CARD,
                           fg=self.ACCENT if n == index else self.FG)
         self.heading.config(text=f'{index+1:02d} / {UI[self.lang][self.MODE_KEYS[index]]}')
         self.hint.config(text=UI[self.lang]['hint_' + self.MODE_KEYS[index]])
@@ -588,7 +611,7 @@ class App:
                           font=('Microsoft YaHei UI', 16))
         title.pack(anchor='w', padx=24, pady=20)
         listing = tk.Listbox(window, bg=self.PANEL, fg=self.FG, relief='flat',
-                             selectbackground='#245565', font=('Microsoft YaHei UI', 10),
+                             selectbackground='#203f52', font=('Microsoft YaHei UI', 10),
                              activestyle='none', exportselection=False)
         listing.pack(fill='both', expand=True, padx=24)
         def populate():

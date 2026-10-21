@@ -1,4 +1,4 @@
-# GhostTrack Android 1.5.0
+# GhostTrack Android 1.6.0
 
 Android 原生触屏界面，复用 Windows 版的公开查询服务；支持简体中文、English、日本語、Español。
 
@@ -6,7 +6,7 @@ Android 原生触屏界面，复用 Windows 版的公开查询服务；支持简
 
 ## 安装
 
-在 [GitHub Release](https://github.com/Serennity007/GhostTrack/releases) 下载 `GhostTrack-v1.5.0-Android-universal.apk`，在手机文件管理器中打开安装。支持 Android 7.0 及以上，ARM64、ARMv7 和 x86_64；首次启动需要解压内置查询运行环境，可能稍慢。
+在 [GitHub Release](https://github.com/Serennity007/GhostTrack/releases) 下载 `GhostTrack-v1.6.0-Android-universal.apk`，在手机文件管理器中打开安装。支持 Android 7.0 及以上，ARM64、ARMv7 和 x86_64；首次启动需要解压内置查询运行环境，可能稍慢。
 
 系统若提示来源权限，只为你实际用于打开 APK 的应用授权。此安装包通过项目专用发布证书签名，不是 Google Play 商店版本。更新时请使用同一仓库发布、同一证书签名的安装包。
 

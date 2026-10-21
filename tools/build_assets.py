@@ -14,7 +14,7 @@ def build_icon(path):
             # A radar / G mark built from native geometric primitives.
             mark = ring and not (x > 34 and 18 < y < 31)
             mark = mark or (31 <= x <= 51 and 30 <= y <= 34) or (47 <= x <= 51 and 31 <= y <= 43)
-            color = (163, 255, 111) if mark else (13, 25, 21)
+            color = (92, 240, 183) if mark else (16, 27, 42)
             alpha = 255 if 3 <= x <= 60 and 3 <= y <= 60 else 0
             pixels.extend((color[2], color[1], color[0], alpha))
     mask = bytes(((size + 31) // 32) * 4 * size)

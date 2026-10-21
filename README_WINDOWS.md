@@ -1,8 +1,8 @@
-# GhostTrack Console 1.5.0 使用说明
+# GhostTrack Console 1.6.0 使用说明
 
 ## 安装与启动
 
-下载 `GhostTrack-v1.5.0-Windows-x64.zip`，完整解压，运行 `GhostTrack/GhostTrack.exe`。Windows 10/11 x64，无需 Python、管理员权限或账号登录。不要单独复制 EXE，`_internal` 和 `assets` 是运行依赖。
+下载 `GhostTrack-v1.6.0-Windows-x64.zip`，完整解压，运行 `GhostTrack/GhostTrack.exe`。Windows 10/11 x64，无需 Python、管理员权限或账号登录。不要单独复制 EXE，`_internal` 和 `assets` 是运行依赖。
 
 ## 公开资源查询（新增）
 
@@ -71,7 +71,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe build_windows.py
 ```
 
-输出 `dist/v1.5.0/GhostTrack/`、`dist/GhostTrack-v1.5.0-Windows-x64.zip`、`dist/SHA256SUMS-v1.5.0.txt`。用 PowerShell `Get-FileHash` 对照 SHA256 校验文件。
+输出 `dist/v1.6.0/GhostTrack/`、`dist/GhostTrack-v1.6.0-Windows-x64.zip`、`dist/SHA256SUMS-v1.6.0.txt`。用 PowerShell `Get-FileHash` 对照 SHA256 校验文件。
 
 ## Languages
 

@@ -1,73 +1,90 @@
 # GhostTrack Console
 
-四语言 Windows / Android 公开信息控制台：11 个查询模块，黑绿终端风格、编号导航、等宽结果区和真实查询耗时，基于 [HunxByts/GhostTrack](https://github.com/HunxByts/GhostTrack) 扩展。
+**简体中文** · [English](README.en.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
 
-[Android 安装与使用](README_ANDROID.md) · [下载 Windows 版](https://github.com/Serennity007/GhostTrack/releases/latest) · [使用说明](README_WINDOWS.md) · [更新记录](CHANGELOG.md) · [原项目说明](UPSTREAM_README.md)
+面向 Windows 与 Android 的公开信息查询控制台。11 个工具共享查询服务，以深色控制台、清晰的来源状态和可导出的结果，集中查看域名、DNS、网站证书、网络注册与公开主页信息。
 
-## 快速开始
+> 文档提供中、英、日、西、法五种语言；应用界面支持简体中文、English、日本語、Español 四种语言。
 
-1. 在 Release 下载 `GhostTrack-v1.5.0-Windows-x64.zip`。
-2. 解压整个文件夹，运行其中的 **GhostTrack.exe**，无需安装 Python。
-3. 选择查询工具；国内平台可粘贴主页链接或分享文案，按 Enter 查询。
+## 下载与安装
 
-Windows 10/11 x64。便携包未签名，目录内的 `_internal` 文件夹是运行依赖，不能单独移走 EXE。
-
-## 可以做什么
-
-| 工具 | 输入 | 结果 |
+| 平台 | 下载 v1.6.0 | 安装方法 |
 |---|---|---|
-| 域名综合报告 | 域名 | 并行汇总 RDAP、8类 DNS、网站与 TLS，分别标注来源状态 |
-| 域名档案 | 域名 | 注册商、注册/到期/更新时间、DNSSEC、名称服务器 |
-| DNS 记录 | 域名 | A / AAAA / CNAME / MX / NS / TXT / SOA / CAA |
-| 网站与证书 | 公网 HTTPS 网址 | 响应状态、标题、跳转链、公开响应头、证书颁发者/有效期/SAN |
-| IP / ASN 注册 | 公网 IP 或 AS15169 | 注册范围、CIDR、网络名称、注册国家代码 |
-| GitHub 公开资料 | 用户名或主页 URL | 公开简介、计数、注册时间、最近5个公开仓库 |
-| 国内公开主页 | 主页 URL / 分享文案 / 对应平台的用户 ID | 可读取的标题、简介、HTTP 状态、来源和查询时间 |
-| IP 归属地 | 公网 IPv4 / IPv6 | 国家、地区、城市、经纬度估算、ASN、网络组织、服务商和时区 |
-| 本机公网 IP | 无需输入 | 当前出口公网 IP |
-| 号码元数据 | 电话号码，可选默认地区 | 号码段归属地、运营商、时区、国际格式和有效性 |
-| 用户名链接 | 用户名 | GitHub、Instagram、X 的公开主页链接，未验证账号存在 |
+| Windows 10/11 x64 | [便携 ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.6.0/GhostTrack-v1.6.0-Windows-x64.zip) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.6.0) | 完整解压，运行 `GhostTrack/GhostTrack.exe` |
+| Android 7.0+ | [通用 APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | 在手机文件管理器中打开 APK 安装 |
 
-支持 **抖音、小红书、快手、B站、微博、知乎、豆瓣**。识别主页链接和分享文案，支持抖音/小红书主页短链的有限跳转解析。视频、笔记、登录页和昵称反查不在当前支持范围。抖音主页标识与“抖音号”不同，请优先粘贴主页链接。
+Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要单独移动 EXE。Android 包支持 ARM64、ARMv7 和 x86_64，首次启动会解压内置运行环境；只给实际用于打开 APK 的应用授予安装来源权限。后续更新请使用本仓库以同一证书签名的 APK。
 
-平台可能要求登录、验证或 JavaScript；这时显示受限状态，保留可复制、可在浏览器中打开的链接。不会把 HTTP 200 当作账号或身份已确认，也不会凭空补全粉丝数等字段。
+[Windows 使用说明](README_WINDOWS.md) · [Android 使用与构建](README_ANDROID.md) · [更新记录](CHANGELOG.md)
 
-## 日常使用
+## 界面
 
-- 示例一键填入（不会自动发出请求）、模块来源标识、真实耗时与结果字段统计。
-- 简体中文 / English / 日本語 / Español 即时切换，记住语言和默认号码地区。
-- 复制单个值或全部结果；选中行后双击 / Ctrl+C。
-- 筛选结果字段与内容，查看完整值；打开来源核实。
-- JSON、Excel 兼容 CSV、独立 HTML 报告导出，附查询输入、工具和 UTC 时间。
-- 可取消查询，忽略迟到响应；会话历史最多 50 条，支持回看和清空。
-- 历史默认不跨会话保存，可在设置中开启本机保存。
-- 使用帮助、错误提示、滚动长文本、窗口布局适配、应用图标和版本信息。
+![Windows 公开信息控制台](docs/desktop.png)
+
+<img src="docs/android.png" width="320" alt="Android 公开信息控制台" />
+
+界面提供编号导航、来源标识、查询耗时和字段数量。装饰图形不表示正在扫描目标；查询状态与结果来自实际返回的数据。
+
+## 11 个查询工具
+
+| 工具 | 输入 | 可取得的公开信息 |
+|---|---|---|
+| 域名综合报告 | 域名 | 并行汇总 RDAP、DNS、HTTPS，各来源独立标记状态 |
+| 域名档案 | 域名 | 注册商、注册/到期/更新日期、DNSSEC、名称服务器 |
+| DNS 记录 | 域名 | A、AAAA、CNAME、MX、NS、TXT、SOA、CAA 与 TTL |
+| 网站与证书 | 公网 HTTPS 网址 | HTTP 状态、标题、跳转、公开响应头、TLS 颁发者/有效期/SAN |
+| IP / ASN 注册 | 公网 IP 或 `AS15169` | 注册范围、CIDR、网络名称、注册国家代码与日期 |
+| GitHub 公开资料 | 用户名或主页 URL | 公开简介、计数、注册日期、最近 5 个公开仓库 |
+| 国内公开主页 | 主页 URL、分享文案或平台用户 ID | 可读取的页面标题、简介、访问状态、来源和查询时间 |
+| IP 归属地 | 公网 IPv4 / IPv6 | 数据库估算地区、网络组织、服务商、ASN 和时区 |
+| 本机公网 IP | 无需输入 | 当前网络出口的公网 IP |
+| 号码元数据 | 电话号码与默认地区 | 本地解析号码段归属地、运营商、时区、格式和有效性 |
+| 用户名链接 | 用户名 | 生成 GitHub、Instagram、X 主页链接，不验证账号存在 |
+
+国内平台支持 **抖音、小红书、快手、B站、微博、知乎、豆瓣**。建议粘贴完整个人主页链接；支持部分抖音、小红书主页分享短链。显示昵称、“抖音号”、视频或笔记链接不能替代对应的主页标识。
+
+## 结果处理
+
+- 示例一键填入，不自动发起请求；可取消查询并忽略迟到响应。
+- 按字段或内容筛选，查看完整值，复制单项或全部结果，打开来源核实。
+- 导出 JSON、UTF-8 BOM CSV、离线 HTML，附查询工具、输入和 UTC 时间；CSV 包含公式文本保护。
+- Windows 支持双击 / Ctrl+C 复制、Enter 查询、Esc 取消；Android 支持触屏复制与系统文件选择器导出。
+- Windows 会话历史最多 50 条，默认不跨会话保存，可在设置中开启本机保存；Android 不持久保存查询历史，仅记住语言和模块。
+
+## 数据来源与限制
+
+查询访问 [RDAP](https://about.rdap.org/)、[Google Public DNS](https://developers.google.com/speed/public-dns/docs/doh/json)、[GitHub 公共 API](https://docs.github.com/en/rest/users/users#get-a-user)、ipwho.is、api.ipify.org，以及输入的公开网站或平台主页。联网模块会把查询目标发送给相应服务；号码元数据在本地解析。没有项目中转服务器、账号登录或统计遥测。
+
+平台登录、验证码、JavaScript、限流或服务故障可能限制结果。程序保留已取得的数据及来源状态，不绕过访问控制，也不将 HTTP 200 当作身份已验证。网站模块只读取公网 HTTPS 默认 443 端口，验证证书并限制跳转与内容大小。缺失字段不会补造；RDAP 不导出注册人联系信息。
+
+**号码段与 IP 数据库位置不是设备实时位置。没有手机号反查私人平台账号、实名识别或跨平台身份关联功能。** 仅查询你有权访问的公开信息，并遵守来源服务的使用规则。
+
+Windows 设置与可选历史位于 `%LOCALAPPDATA%\GhostTrackDesk`，可在应用中清空历史；错误日志不记录查询内容。Android 仅申请联网权限，不申请定位、通讯录、短信、电话或整盘存储权限。导出文件、剪贴板与分享链接可能含查询内容，请自行管理。
 
 ## 开发与构建
+
+Python 3.11 x64，Windows 示例：
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-build.txt
-.\.venv\Scripts\python.exe desktop.py
 .\.venv\Scripts\python.exe -m unittest discover -v
+.\.venv\Scripts\python.exe desktop.py
 .\.venv\Scripts\python.exe build_windows.py
 ```
 
-构建脚本先运行测试，再打包 EXE，生成 ZIP 和 SHA256 校验文件。`docs/windows-workflow.example.yml` 提供 Windows GitHub Actions 模板；本次登录令牌没有 workflow 权限，未启用线上自动构建。具备权限时可将模板放到 `.github/workflows/windows.yml`。
+Android 需要 JDK 17 与 Android SDK Platform 36 / Build Tools 36.0.0，仓库包含 Gradle Wrapper：
 
-## 数据与边界
+```powershell
+$env:JAVA_HOME = '你的 JDK 17 目录'
+$env:ANDROID_HOME = '你的 Android SDK 目录'
+.\.venv\Scripts\python.exe build_android.py --gradle .\android\gradlew.bat
+```
 
-数据保存在 `%LOCALAPPDATA%\GhostTrackDesk`。历史仅在用户开启后写入本机，含分享链接和查询结果，可清空。分享链接中的公开访问参数可能保留，以便平台正常打开。错误日志不记录查询内容。没有统计上报、账号登录或后台遥测。
+构建脚本运行测试、生成发布包与 SHA256；Android 另运行 Lint 并验证签名。签名密钥位于仓库外，备份方法见 [Android 构建说明](README_ANDROID.md)。不要将私钥或凭据提交到 Git。Windows 自动构建模板见 [工作流示例](docs/windows-workflow.example.yml)；提供模板不代表已启用线上 CI。
 
-公开资源使用 RDAP 注册服务、Google Public DNS、GitHub 公共 API；网站模块直接读取用户输入的公网 HTTPS 网址。IP 归属地使用 ipwho.is，公网 IP 使用 api.ipify.org；主页查询访问相应平台。号码解析在本地完成。号码段信息和 IP 数据库位置均非实时设备位置。
+## 来源与反馈
 
-原命令行入口 `GhostTR.py` 保留。原作者为 HunxByts；本仓库不是各平台官方客户端。具体使用和故障排查见 [Windows 使用说明](README_WINDOWS.md)。
+基于 [HunxByts/GhostTrack](https://github.com/HunxByts/GhostTrack) 扩展，保留原命令行入口 `GhostTR.py` 与[原项目说明](UPSTREAM_README.md)。本项目不是所查询平台的官方客户端。
 
-## 公开来源与服务限制
-
-- [RDAP 服务](https://about.rdap.org/)：域名、IP/ASN 的公开注册元数据，不导出注册人联系信息。
-- [Google DNS JSON API](https://developers.google.com/speed/public-dns/docs/doh/json)：8类 DNS 记录；网站模块遇到本地代理的 198.18/15 Fake-IP 池时，使用公网 DoH 答案并验证其为公网后连接。
-- [GitHub 用户接口](https://docs.github.com/en/rest/users/users#get-a-user)：匿名公开资料和最近公开仓库；不读取私有数据或邮箱，不使用本机 gh 登录令牌。限流时标记部分来源不可用。
-- 网站仅支持 HTTPS 默认443端口。逐次验证解析地址并固定公网连接地址，保留 TLS 主机名校验；不访问内网、回环和保留目标，不绕过证书错误。该模块使用直接 TLS 连接，某些仅支持显式 HTTP 代理的网络可能无法访问。
-
-公开来源有各自的可用性、限流和字段差异；结果不会补造缺失内容。没有手机号到私人平台账号的反查或身份关联。
+遇到问题请在 [Issues](https://github.com/Serennity007/GhostTrack/issues) 提供系统版本、应用版本和复现步骤，不要上传令牌、私钥、个人历史或私密链接。

@@ -13,6 +13,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -63,13 +65,14 @@ import java.util.function.Consumer;
 
 /** Native, permission-minimal mobile client for the shared public-data services. */
 public final class MainActivity extends Activity {
-    private static final int BG = Color.rgb(7, 13, 12);
-    private static final int PANEL = Color.rgb(13, 25, 22);
-    private static final int INPUT = Color.rgb(8, 18, 15);
-    private static final int LINE = Color.rgb(35, 65, 54);
-    private static final int GREEN = Color.rgb(86, 244, 170);
-    private static final int TEXT = Color.rgb(233, 247, 239);
-    private static final int MUTED = Color.rgb(151, 177, 165);
+    private static final int BG = Color.rgb(8, 14, 23);
+    private static final int PANEL = Color.rgb(16, 27, 42);
+    private static final int INPUT = Color.rgb(23, 38, 56);
+    private static final int LINE = Color.rgb(41, 65, 82);
+    private static final int GREEN = Color.rgb(92, 240, 183);
+    private static final int CYAN = Color.rgb(105, 217, 204);
+    private static final int TEXT = Color.rgb(231, 244, 241);
+    private static final int MUTED = Color.rgb(141, 169, 181);
     private static final int AMBER = Color.rgb(255, 199, 104);
     private static final int EXPORT_REQUEST = 300;
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
@@ -92,7 +95,7 @@ public final class MainActivity extends Activity {
     private Spinner toolPicker, languagePicker, platformPicker;
     private Button runButton, cancelButton, copyButton, exportButton, exampleButton, pasteButton;
     private ProgressBar progress;
-    private TextView status, fieldMetric, timeMetric, sourceLabel, hintLabel, resultCaption;
+    private TextView status, fieldMetric, timeMetric, sourceLabel, hintLabel, resultCaption, contextTitle;
 
     private final Runnable ticker = new Runnable() {
         @Override public void run() {
@@ -192,47 +195,54 @@ public final class MainActivity extends Activity {
 
         LinearLayout appBar = row();
         appBar.setGravity(Gravity.CENTER_VERTICAL);
-        appBar.setPadding(dp(20), dp(14), dp(12), dp(10));
+        appBar.setPadding(dp(16), dp(8), dp(12), dp(8));
+        appBar.setBackgroundColor(PANEL);
+        Radar emblem = new Radar(this);
+        LinearLayout.LayoutParams emblemParams = new LinearLayout.LayoutParams(dp(38), dp(38));
+        emblemParams.rightMargin = dp(9);
+        appBar.addView(emblem, emblemParams);
         LinearLayout identity = column();
-        TextView brand = text("GHOSTTRACK", 20, TEXT, true);
-        brand.setLetterSpacing(.09f);
+        TextView brand = text("GHOSTTRACK", 16, TEXT, true);
+        brand.setLetterSpacing(.10f);
         identity.addView(brand);
-        identity.addView(text("ANDROID / PUBLIC DATA", 9, GREEN, true));
+        TextView edition = text("PUBLIC DATA / ANDROID", 8, CYAN, true);
+        edition.setPadding(0, dp(5), 0, 0);
+        edition.setLetterSpacing(.05f);
+        identity.addView(edition);
         appBar.addView(identity, new LinearLayout.LayoutParams(0, -2, 1));
+        languagePicker = spinner(languageNames());
+        languagePicker.setContentDescription(t("language", "Language"));
+        appBar.addView(languagePicker, new LinearLayout.LayoutParams(dp(106), dp(48)));
         Button help = button("?", false);
         help.setContentDescription(t("help", "Help"));
         help.setOnClickListener(v -> new AlertDialog.Builder(this).setTitle(t("help", "Help"))
                 .setMessage(t("help_body", "Public sources only. Phone data does not identify account owners."))
                 .setPositiveButton(t("close", "Close"), null).show());
-        appBar.addView(help, new LinearLayout.LayoutParams(dp(48), dp(48)));
+        LinearLayout.LayoutParams helpParams = new LinearLayout.LayoutParams(dp(48), dp(48));
+        helpParams.leftMargin = dp(6);
+        appBar.addView(help, helpParams);
         root.addView(appBar);
+        View divider = new View(this);
+        divider.setBackgroundColor(LINE);
+        root.addView(divider, new LinearLayout.LayoutParams(-1, dp(1)));
 
         ScrollView scroll = new ScrollView(this);
         scroll.setFillViewport(true);
         scroll.setClipToPadding(false);
         root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
         LinearLayout content = column();
-        content.setPadding(dp(18), dp(4), dp(18), dp(28));
+        content.setPadding(dp(16), dp(16), dp(16), dp(24));
         scroll.addView(content);
 
-        LinearLayout languageLine = row();
-        languageLine.setGravity(Gravity.CENTER_VERTICAL);
-        TextView edition = text("● " + local("公开资源控制台", "PUBLIC RESOURCE CONSOLE", "公開情報コンソール", "CONSOLA DE DATOS PÚBLICOS"), 10, GREEN, true);
-        languageLine.addView(edition, new LinearLayout.LayoutParams(0, -2, 1));
-        languagePicker = spinner(languageNames());
-        languagePicker.setContentDescription(t("language", "Language"));
-        languageLine.addView(languagePicker, new LinearLayout.LayoutParams(dp(140), dp(48)));
-        content.addView(languageLine);
-        TextView title = text(local("公开信息，\n尽在掌握。", "Public information.\nClearly connected.", "公開情報を、\nひとつの画面に。", "Información pública.\nCon claridad."), 30, TEXT, true);
-        title.setLineSpacing(dp(2), 1);
-        title.setPadding(0, dp(15), 0, dp(12));
-        content.addView(title);
-        TextView intro = text(local("查询网络资产与公开主页，保留来源，随手复制与导出。", "Explore network assets and public profiles, with sources, copy and export.",
-                "ネットワーク資産と公開プロフィールを検索。出典の確認、コピー、保存に対応。", "Consulta activos de red y perfiles públicos, con fuentes, copia y exportación."), 13, MUTED, false);
-        intro.setLineSpacing(dp(3), 1);
+        contextTitle = text("", 24, TEXT, true);
+        contextTitle.setPadding(0, 0, 0, dp(5));
+        content.addView(contextTitle);
+        TextView intro = text(local("公开来源 · 清晰溯源 · 复制与导出", "Public sources · Clear evidence · Copy & export",
+                "公開情報 · 出典を確認 · コピーと保存", "Fuentes públicas · Datos claros · Copia y exporta"), 11, MUTED, false);
+        intro.setLineSpacing(dp(2), 1);
         content.addView(intro);
         LinearLayout metrics = row();
-        metrics.setPadding(0, dp(20), 0, dp(20));
+        metrics.setPadding(0, dp(14), 0, dp(14));
         metric(metrics, Integer.toString(tools.length()), local("查询模块", "MODULES", "ツール", "MÓDULOS"));
         fieldMetric = metric(metrics, result == null ? "0" : Integer.toString(result.length()), local("结果字段", "FIELDS", "項目", "CAMPOS"));
         timeMetric = metric(metrics, "—", local("实际耗时", "ELAPSED", "経過時間", "TIEMPO"));
@@ -241,16 +251,15 @@ public final class MainActivity extends Activity {
         LinearLayout parameters = panel();
         content.addView(parameters);
         parameters.addView(kicker("01", t("parameters", "QUERY PARAMETERS")));
-        parameters.addView(label(t("tools", "TOOLS")));
         toolPicker = spinner(labels(tools));
         toolPicker.setContentDescription(t("tools", "Tools"));
         parameters.addView(toolPicker, new LinearLayout.LayoutParams(-1, dp(52)));
-        sourceLabel = text("", 10, GREEN, true);
-        sourceLabel.setPadding(0, dp(10), 0, dp(4));
+        sourceLabel = text("", 10, CYAN, true);
+        sourceLabel.setPadding(0, dp(9), 0, dp(2));
         parameters.addView(sourceLabel);
         hintLabel = text("", 12, MUTED, false);
-        hintLabel.setLineSpacing(dp(3), 1);
-        hintLabel.setPadding(0, dp(3), 0, dp(12));
+        hintLabel.setLineSpacing(dp(2), 1);
+        hintLabel.setPadding(0, dp(3), 0, dp(10));
         parameters.addView(hintLabel);
 
         platformRow = column();
@@ -273,7 +282,7 @@ public final class MainActivity extends Activity {
         parameters.addView(regionRow);
 
         target = input(t("input", "Target"));
-        target.setMinLines(2);
+        target.setMinLines(1);
         target.setMaxLines(4);
         target.setGravity(Gravity.TOP | Gravity.START);
         target.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE
@@ -282,9 +291,10 @@ public final class MainActivity extends Activity {
         target.setImeOptions(EditorInfo.IME_ACTION_DONE);
         target.setText(initialInput);
         target.setContentDescription(t("input", "Target"));
+        target.setMinHeight(dp(60));
         parameters.addView(target, new LinearLayout.LayoutParams(-1, -2));
         LinearLayout inputActions = row();
-        inputActions.setPadding(0, dp(8), 0, dp(8));
+        inputActions.setPadding(0, dp(6), 0, dp(6));
         exampleButton = button(t("example", "Example"), false);
         pasteButton = button(t("paste", "Paste"), false);
         weightedButton(inputActions, exampleButton, true);
@@ -312,13 +322,13 @@ public final class MainActivity extends Activity {
         progressParams.topMargin = dp(14);
         parameters.addView(progress, progressParams);
         status = text(t("ready", "Ready"), 12, MUTED, false);
-        status.setPadding(0, dp(12), 0, 0);
+        status.setPadding(0, dp(10), 0, 0);
         status.setAccessibilityLiveRegion(View.ACCESSIBILITY_LIVE_REGION_POLITE);
         parameters.addView(status);
 
         LinearLayout resultsPanel = panel();
         LinearLayout.LayoutParams resultParams = new LinearLayout.LayoutParams(-1, -2);
-        resultParams.topMargin = dp(16);
+        resultParams.topMargin = dp(14);
         content.addView(resultsPanel, resultParams);
         resultsPanel.addView(kicker("02", t("results", "RESULTS")));
         resultCaption = text(resultToolTitle, 12, MUTED, false);
@@ -395,6 +405,7 @@ public final class MainActivity extends Activity {
     private void updateTool(boolean changed) {
         JSONObject tool = toolAt(toolPicker.getSelectedItemPosition());
         selectedTool = tool.optString("id");
+        contextTitle.setText(tool.optString("title"));
         sourceLabel.setText("↗ " + tool.optString("source"));
         hintLabel.setText(tool.optString("hint"));
         boolean self = selectedTool.equals("本机公网 IP");
@@ -525,19 +536,21 @@ public final class MainActivity extends Activity {
         exportButton.setEnabled(hasResult && !exporting);
         filter.setEnabled(hasResult);
         if (!hasResult) {
-            LinearLayout empty = column();
-            empty.setPadding(dp(8), dp(12), dp(8), dp(18));
-            empty.setGravity(Gravity.CENTER);
-            empty.addView(new Radar(this), new LinearLayout.LayoutParams(dp(100), dp(100)));
-            TextView message = text(t("empty", "Your next discovery starts here"), 16, TEXT, true);
-            message.setGravity(Gravity.CENTER);
-            message.setPadding(0, dp(4), 0, dp(8));
-            empty.addView(message);
-            TextView help = text(local("选择查询模块，填写目标后开始。\n数据来自公开来源，查询由你发起。", "Choose a module, enter a target, then run.\nOnly your actions start a query.",
-                    "ツールと検索対象を選んで開始します。\n操作するまで外部検索は行いません。", "Elige un módulo, introduce un objetivo y consulta.\nLas consultas solo se inician con tu acción."), 12, MUTED, false);
-            help.setGravity(Gravity.CENTER);
+            LinearLayout empty = row();
+            empty.setPadding(0, dp(12), 0, dp(10));
+            empty.setGravity(Gravity.CENTER_VERTICAL);
+            LinearLayout.LayoutParams radarParams = new LinearLayout.LayoutParams(dp(56), dp(56));
+            radarParams.rightMargin = dp(12);
+            empty.addView(new Radar(this), radarParams);
+            LinearLayout description = column();
+            TextView message = text(t("empty", "Your next discovery starts here"), 15, TEXT, true);
+            message.setPadding(0, 0, 0, dp(7));
+            description.addView(message);
+            TextView help = text(local("选择模块、填写目标，开始查询。", "Choose a module and target to begin.",
+                    "ツールと対象を選んで検索を開始。", "Elige un módulo y objetivo para empezar."), 12, MUTED, false);
             help.setLineSpacing(dp(3), 1);
-            empty.addView(help);
+            description.addView(help);
+            empty.addView(description, new LinearLayout.LayoutParams(0, -2, 1));
             output.addView(empty);
             return;
         }
@@ -551,14 +564,14 @@ public final class MainActivity extends Activity {
             if (!needle.isEmpty() && !(key + "\n" + value).toLowerCase(Locale.ROOT).contains(needle)) continue;
             shown++;
             LinearLayout card = column();
-            card.setPadding(dp(12), dp(8), dp(12), dp(13));
-            card.setBackground(round(INPUT, LINE, 9));
+            card.setPadding(dp(14), dp(6), dp(14), dp(15));
+            card.setBackground(round(INPUT, LINE, 12));
             LinearLayout.LayoutParams cp = new LinearLayout.LayoutParams(-1, -2);
             cp.topMargin = dp(8);
             output.addView(card, cp);
             LinearLayout heading = row();
             heading.setGravity(Gravity.CENTER_VERTICAL);
-            TextView field = text(key, 12, MUTED, true);
+            TextView field = text(key, 12, CYAN, true);
             heading.addView(field, new LinearLayout.LayoutParams(0, -2, 1));
             Button copy = button(local("复制", "Copy", "コピー", "Copiar"), false);
             copy.setTextSize(11);
@@ -569,7 +582,7 @@ public final class MainActivity extends Activity {
             TextView detail = text(value, 14, TEXT, false);
             detail.setTypeface(Typeface.MONOSPACE);
             detail.setTextIsSelectable(true);
-            detail.setLineSpacing(dp(3), 1);
+            detail.setLineSpacing(dp(4), 1);
             card.addView(detail, new LinearLayout.LayoutParams(-1, -2));
         }
         if (shown == 0) {
@@ -818,8 +831,12 @@ public final class MainActivity extends Activity {
     }
     private LinearLayout panel() {
         LinearLayout layout = column();
-        layout.setPadding(dp(15), dp(18), dp(15), dp(16));
-        layout.setBackground(round(PANEL, LINE, 16));
+        layout.setPadding(dp(16), dp(16), dp(16), dp(14));
+        GradientDrawable background = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                new int[]{PANEL, Color.rgb(13, 23, 36)});
+        background.setCornerRadius(dp(18));
+        background.setStroke(dp(1), LINE);
+        layout.setBackground(background);
         return layout;
     }
     private GradientDrawable round(int color, int stroke, int radius) {
@@ -834,11 +851,16 @@ public final class MainActivity extends Activity {
         button.setTypeface(Typeface.create("sans-serif-medium", Typeface.NORMAL));
         button.setMinHeight(dp(48)); button.setMinimumHeight(dp(48)); button.setMinWidth(0); button.setMinimumWidth(0);
         button.setPadding(dp(12), dp(5), dp(12), dp(5));
-        android.content.res.ColorStateList colors = new android.content.res.ColorStateList(
-                new int[][]{new int[]{-android.R.attr.state_enabled}, new int[]{}},
-                new int[]{primary ? Color.rgb(34, 77, 55) : INPUT, primary ? GREEN : INPUT});
-        button.setBackground(round(primary ? GREEN : INPUT, primary ? GREEN : LINE, 8));
-        button.setBackgroundTintList(colors);
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[]{-android.R.attr.state_enabled}, round(primary ? Color.rgb(33, 64, 66) : PANEL, LINE, 10));
+        GradientDrawable enabled = primary
+                ? new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{GREEN, CYAN})
+                : round(INPUT, LINE, 10);
+        enabled.setCornerRadius(dp(10));
+        states.addState(new int[]{}, enabled);
+        button.setBackground(new RippleDrawable(android.content.res.ColorStateList.valueOf(Color.argb(50, 105, 217, 204)), states, null));
+        button.setBackgroundTintList(null);
+        button.setElevation(primary ? dp(2) : 0);
         button.setTextColor(new android.content.res.ColorStateList(
                 new int[][]{new int[]{-android.R.attr.state_enabled}, new int[]{}}, new int[]{MUTED, primary ? BG : GREEN}));
         return button;
@@ -851,7 +873,7 @@ public final class MainActivity extends Activity {
     private EditText input(String hint) {
         EditText edit = new EditText(this);
         edit.setTextSize(14); edit.setTextColor(TEXT); edit.setHintTextColor(MUTED); edit.setHint(hint);
-        edit.setBackground(round(INPUT, LINE, 8)); edit.setPadding(dp(12), dp(14), dp(12), dp(14));
+        edit.setBackground(round(INPUT, LINE, 10)); edit.setPadding(dp(13), dp(12), dp(13), dp(12));
         edit.setSelectAllOnFocus(false);
         return edit;
     }
@@ -874,21 +896,21 @@ public final class MainActivity extends Activity {
             }
         };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        picker.setAdapter(adapter); picker.setBackground(round(INPUT, LINE, 8));
+        picker.setAdapter(adapter); picker.setBackground(round(INPUT, LINE, 10));
         return picker;
     }
     private TextView metric(LinearLayout parent, String value, String caption) {
         LinearLayout card = column();
-        card.setPadding(dp(11), dp(14), dp(8), dp(14));
-        card.setBackground(round(PANEL, LINE, 10));
+        card.setPadding(dp(11), dp(10), dp(8), dp(10));
+        card.setBackground(round(PANEL, LINE, 12));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, -2, 1);
         if (parent.getChildCount() > 0) params.leftMargin = dp(8);
         parent.addView(card, params);
-        TextView number = text(value, 23, GREEN, true);
+        TextView number = text(value, 20, GREEN, true);
         number.setTypeface(Typeface.MONOSPACE);
         card.addView(number);
         TextView label = text(caption, 9, MUTED, true);
-        label.setPadding(0, dp(7), 0, 0);
+        label.setPadding(0, dp(5), 0, 0);
         card.addView(label);
         return number;
     }
