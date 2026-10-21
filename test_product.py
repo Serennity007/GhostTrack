@@ -13,6 +13,17 @@ from storage import Store
 
 
 class PersistenceTests(unittest.TestCase):
+    def test_large_results_keep_persisted_state_readable(self):
+        with tempfile.TemporaryDirectory() as folder:
+            store = Store(folder)
+            store.settings['remember'] = True
+            for value in ('old', 'new'):
+                store.record('DNS 记录', value, 'CN', 'Auto', {'large': 'x' * 1_100_000})
+            self.assertLess(store.path.stat().st_size, 2_000_000)
+            loaded = Store(folder)
+            self.assertFalse(loaded.warning)
+            self.assertEqual(loaded.history[0]['input'], 'new')
+
     def test_history_is_session_only_by_default(self):
         with tempfile.TemporaryDirectory() as folder:
             store = Store(folder)

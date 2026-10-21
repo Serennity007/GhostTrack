@@ -31,11 +31,13 @@ StringStruct('OriginalFilename','GhostTrack.exe'),
 StringStruct('Comments','Based on HunxByts/GhostTrack')])]),
 VarFileInfo([VarStruct('Translation',[1033,1200])])])''', encoding='utf-8')
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--noconfirm', '--clean', '--onedir',
+                    '--distpath', str(root / 'dist' / f'v{VERSION}'),
+                    '--workpath', str(root / 'build' / f'pyinstaller-v{VERSION}'),
                     '--windowed', '--name', 'GhostTrack', '--icon', 'assets/ghosttrack.ico',
                     '--version-file', str(resource), '--add-data', 'assets;assets',
                     '--collect-all', 'phonenumbers', '--copy-metadata', 'phonenumbers',
                     '--copy-metadata', 'requests', 'desktop.py'], cwd=root, check=True)
-    distribution = root / 'dist' / 'GhostTrack'
+    distribution = root / 'dist' / f'v{VERSION}' / 'GhostTrack'
     for filename in ('README_WINDOWS.md', 'CHANGELOG.md', 'UPSTREAM_README.md'):
         shutil.copy2(root / filename, distribution / filename)
     archive = root / 'dist' / f'GhostTrack-v{VERSION}-Windows-x64.zip'

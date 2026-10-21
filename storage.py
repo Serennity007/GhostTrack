@@ -42,9 +42,14 @@ class Store:
         temporary = self.directory / ('state-' + uuid4().hex + '.tmp')
         try:
             self.directory.mkdir(parents=True, exist_ok=True)
-            state = {'schema': 1, 'settings': self.settings,
-                     'history': self.history[:50] if self.settings['remember'] else []}
-            temporary.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding='utf-8')
+            history = self.history[:50] if self.settings['remember'] else []
+            while True:
+                state = {'schema': 1, 'settings': self.settings, 'history': history}
+                encoded = json.dumps(state, ensure_ascii=False, indent=2)
+                if len(encoded.encode('utf-8')) <= 1_900_000 or not history:
+                    break
+                history = history[:-1]
+            temporary.write_text(encoded, encoding='utf-8')
             temporary.replace(self.path)
             return True
         except (OSError, TypeError, ValueError):

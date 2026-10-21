@@ -29,7 +29,7 @@ class DesktopTests(unittest.TestCase):
                 root.update()
                 self.assertLessEqual(app.brand.winfo_reqwidth(), app.brand.master.winfo_width() - 40)
                 for widget, key in app.bindings:
-                    if key in ('copy_selected', 'copy', 'open_profile', 'export'):
+                    if key in ('copy_selected', 'copy', 'open_profile', 'export', 'history', 'settings', 'help'):
                         self.assertGreater(widget.winfo_width(), 20)
                         self.assertLessEqual(widget.winfo_rootx() + widget.winfo_width(),
                                              root.winfo_rootx() + root.winfo_width())

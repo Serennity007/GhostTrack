@@ -5,20 +5,35 @@ import requests
 import phonenumbers
 from phonenumbers import carrier, geocoder, timezone
 from platforms import lookup_profile
+from public_data import registration, dns_records, github_profile, website_info, is_public_address
 
 
 def query(kind, value, region='CN', language='zh', platform='Bilibili', cancel=None):
     value = value.strip()
+    if kind == '域名档案':
+        return registration(value, cancel=cancel)
+    if kind == 'DNS 记录':
+        return dns_records(value, cancel)
+    if kind == '网站与证书':
+        return website_info(value, cancel)
+    if kind == 'IP 注册网络':
+        return registration(value, is_ip=True, cancel=cancel)
+    if kind == 'GitHub 公开资料':
+        return github_profile(value, cancel)
     if kind == '国内平台':
         return lookup_profile(platform, value, cancel)
     if kind == '号码归属地':
         number = phonenumbers.parse(value, region)
         return {'国际格式': phonenumbers.format_number(number, phonenumbers.PhoneNumberFormat.INTERNATIONAL),
+                'E.164 格式': phonenumbers.format_number(number, phonenumbers.PhoneNumberFormat.E164),
+                '国内格式': phonenumbers.format_number(number, phonenumbers.PhoneNumberFormat.NATIONAL),
+                '国家呼叫码': number.country_code,
                 '归属地': geocoder.description_for_number(number, language),
                 '运营商': carrier.name_for_number(number, language),
                 '地区代码': phonenumbers.region_code_for_number(number),
                 '时区': ', '.join(timezone.time_zones_for_number(number)),
                 '有效号码': phonenumbers.is_valid_number(number),
+                '可能有效': phonenumbers.is_possible_number(number),
                 '说明': '号码段元数据，不代表持有人身份或实时位置'}
     if kind == '用户名链接':
         if not value or len(value) > 100 or any(c.isspace() for c in value):
@@ -33,7 +48,7 @@ def query(kind, value, region='CN', language='zh', platform='Bilibili', cancel=N
         response.raise_for_status()
         return {'公网 IP': str(ipaddress.ip_address(response.text.strip()))}
     address = ipaddress.ip_address(value)
-    if not address.is_global:
+    if not is_public_address(address):
         raise ValueError('请输入公网 IPv4 或 IPv6 地址，内网地址没有公网归属地')
     response = requests.get(f'https://ipwho.is/{address}', timeout=15)
     response.raise_for_status()
@@ -43,5 +58,10 @@ def query(kind, value, region='CN', language='zh', platform='Bilibili', cancel=N
     return {'IP': str(address), '国家': data.get('country'), '地区': data.get('region'),
             '城市': data.get('city'), '纬度': data.get('latitude'), '经度': data.get('longitude'),
             '网络服务商': data.get('connection', {}).get('isp'),
+            '网络组织': data.get('connection', {}).get('org'),
+            'ASN': data.get('connection', {}).get('asn'),
+            '网络域名': data.get('connection', {}).get('domain'),
+            '洲': data.get('continent'), '邮政编码': data.get('postal'),
+            '时区': data.get('timezone', {}).get('id'),
             '说明': 'IP 数据库估算位置，不代表设备实时位置'}
 

@@ -122,3 +122,106 @@ def localize(value, lang):
     if lang == 'zh' or value not in FIELDS:
         return value
     return FIELDS[value][{'en':0,'ja':1,'es':2}[lang]]
+
+
+PUBLIC_UI = {
+    'domain': ['域名档案', 'Domain registry', 'ドメイン登録情報', 'Registro de dominio'],
+    'dns': ['DNS 记录', 'DNS records', 'DNS レコード', 'Registros DNS'],
+    'website': ['网站与证书', 'Website + TLS', 'ウェブ・TLS 証明書', 'Web y certificado TLS'],
+    'network': ['IP / ASN 注册', 'IP / ASN registry', 'IP / ASN 登録情報', 'Registro de IP / ASN'],
+    'github': ['GitHub 公开资料', 'GitHub profile', 'GitHub 公開情報', 'Perfil de GitHub'],
+    'hint_domain': ['输入域名，例如 example.com；查询注册商、注册时间、到期时间和名称服务器。', 'Domain, e.g. example.com: registrar, registration dates and nameservers.', 'ドメイン名（例 example.com）：登録事業者・登録日時・有効期限・ネームサーバー。', 'Dominio, p. ej. example.com: registrador, fechas y servidores de nombres.'],
+    'hint_dns': ['输入域名；并行查询 A / AAAA / CNAME / MX / NS / TXT / SOA / CAA。', 'Domain: A / AAAA / CNAME / MX / NS / TXT / SOA / CAA records.', 'ドメイン名：A / AAAA / CNAME / MX / NS / TXT / SOA / CAA を検索。', 'Dominio: registros A / AAAA / CNAME / MX / NS / TXT / SOA / CAA.'],
+    'hint_website': ['输入域名或 HTTPS 网址；查看响应、跳转、公开响应头和 TLS 证书。', 'Domain or HTTPS URL: response, redirects, public headers and TLS certificate.', 'ドメイン名・HTTPS URL：応答・転送・公開ヘッダー・TLS 証明書。', 'Dominio o URL HTTPS: respuesta, redirecciones, cabeceras y certificado TLS.'],
+    'hint_network': ['输入公网 IPv4 / IPv6 或 AS15169；查看注册网段、CIDR、网络名称和国家代码。', 'Public IPv4 / IPv6 or AS15169: registered range, CIDR, network name and country code.', '公開 IPv4 / IPv6・AS15169：登録範囲・CIDR・ネットワーク名・国コード。', 'IPv4 / IPv6 pública o AS15169: rango, CIDR, nombre de red y país.'],
+    'invalid_asn': ['请输入有效 ASN，例如 AS15169', 'Enter a valid ASN, e.g. AS15169', '有効な ASN を入力してください（例 AS15169）', 'Introduce un ASN válido, p. ej. AS15169'],
+    'hint_github': ['输入 GitHub 用户名或主页链接；公开简介、仓库数和最近 5 个公开仓库。', 'GitHub username or profile URL: public bio, counts and 5 recent repositories.', 'GitHub ユーザー名・URL：公開紹介文・件数・最近の公開リポジトリ5件。', 'Usuario o URL de GitHub: biografía, estadísticas y 5 repositorios recientes.'],
+    'invalid_domain': ['请输入有效的公网域名，例如 example.com', 'Enter a valid public domain, e.g. example.com', '公開ドメイン名を入力してください（例 example.com）', 'Introduce un dominio público válido, p. ej. example.com'],
+    'public_not_found': ['公开来源未找到对应记录', 'No record found at the public source', '公開情報源にレコードがありません', 'No se encontró un registro público'],
+    'public_rate_limit': ['公开服务限制了当前请求，请稍后重试', 'Public service denied or rate-limited this request; retry later', '公開サービスで制限されています。後で再試行してください', 'El servicio limitó la solicitud; inténtalo más tarde'],
+    'source_unavailable': ['来源暂不可用、响应过大或超时，请稍后重试', 'Source unavailable, response too large or timed out', '情報源が利用不可・応答が大きすぎる・タイムアウトです', 'Fuente no disponible, respuesta demasiado grande o tiempo agotado'],
+    'public_address_only': ['仅查询公网地址；域名不能解析到内网、回环或保留地址', 'Public addresses only; private, loopback and reserved targets are blocked', '公開アドレスのみ対応。プライベート・ループバック・予約アドレスは不可', 'Solo direcciones públicas; no se admiten destinos privados o reservados'],
+    'invalid_github': ['请输入有效的 GitHub 用户名或账号主页链接', 'Enter a valid GitHub username or profile URL', '有効な GitHub ユーザー名・プロフィール URL を入力してください', 'Introduce un usuario o URL de perfil de GitHub válido'],
+    'https_public_only': ['请输入公网 HTTPS 网址，仅支持默认 443 端口', 'Use a public HTTPS URL on the default port 443', '公開 HTTPS URL（既定ポート443）を入力してください', 'Usa una URL HTTPS pública en el puerto 443'],
+    'tls_failed': ['TLS 证书验证或握手失败，未继续访问', 'TLS certificate validation or handshake failed; stopped', 'TLS 証明書検証・ハンドシェイクに失敗したため停止しました', 'Falló la validación o conexión TLS; se detuvo el acceso'],
+    'redirect_limit': ['网站跳转次数超过限制，已停止访问', 'Redirect limit reached; stopped', '転送回数の上限に達したため停止しました', 'Se alcanzó el límite de redirecciones'],
+}
+for key, translations in PUBLIC_UI.items():
+    KEYS.append(key)
+    for language, value in zip(('zh', 'en', 'ja', 'es'), translations):
+        UI[language][key] = value
+for language, workspace, input_label, source_label in (
+        ('zh', '公开信息控制台', '目标 / 域名 / IP / 用户名 / 主页链接', '打开来源'),
+        ('en', 'PUBLIC DATA CONSOLE', 'Target / domain / IP / username / profile URL', 'Open source'),
+        ('ja', '公開情報コンソール', '対象 / ドメイン / IP / ユーザー名 / URL', '情報源を開く'),
+        ('es', 'CONSOLA DE DATOS PÚBLICOS', 'Destino / dominio / IP / usuario / URL', 'Abrir fuente')):
+    UI[language].update(workspace=workspace, input=input_label, open_profile=source_label)
+
+FIELDS.update({
+    '国内格式': ['National format', '国内形式', 'Formato nacional'],
+    'E.164 格式': ['E.164 format', 'E.164 形式', 'Formato E.164'],
+    '国家呼叫码': ['Country calling code', '国番号', 'Código telefónico del país'],
+    '可能有效': ['Possible number', '有効な可能性', 'Número posible'],
+    '网络组织': ['Network organization', 'ネットワーク組織', 'Organización de red'],
+    '网络域名': ['Network domain', 'ネットワークドメイン', 'Dominio de red'],
+    '洲': ['Continent', '大陸', 'Continente'],
+    '邮政编码': ['Postal code', '郵便番号', 'Código postal'],
+    'ASN 起始': ['Start ASN', '開始 ASN', 'ASN inicial'],
+    'ASN 结束': ['End ASN', '終了 ASN', 'ASN final'],
+    'DNSSEC 已签名': ['DNSSEC delegation signed', 'DNSSEC 委任署名', 'Delegación DNSSEC firmada'],
+    '来源链接': ['Source URL', '情報源 URL', 'URL de la fuente'],
+    '域名': ['Domain', 'ドメイン', 'Dominio'],
+    '注册状态': ['Registration status', '登録状態', 'Estado del registro'],
+    '名称服务器': ['Nameservers', 'ネームサーバー', 'Servidores de nombres'],
+    '注册商': ['Registrar', '登録事業者', 'Registrador'],
+    '注册时间': ['Registered at', '登録日時', 'Fecha de registro'],
+    '到期时间': ['Expires at', '有効期限', 'Fecha de vencimiento'],
+    '更新时间': ['Updated at', '更新日時', 'Fecha de actualización'],
+    '网络名称': ['Network name', 'ネットワーク名', 'Nombre de la red'],
+    '网络标识': ['Network handle', 'ネットワーク識別子', 'Identificador de red'],
+    '起始地址': ['Start address', '開始アドレス', 'Dirección inicial'],
+    '结束地址': ['End address', '終了アドレス', 'Dirección final'],
+    '注册国家代码': ['Registration country code', '登録国コード', 'Código de país del registro'],
+    '地址版本': ['IP version', 'IP バージョン', 'Versión de IP'],
+    '查询状态': ['Query status', '検索状態', 'Estado de consulta'],
+    '已完成': ['Complete', '完了', 'Completado'],
+    '部分来源不可用': ['Some sources unavailable', '一部の情報源は利用できません', 'Algunas fuentes no están disponibles'],
+    '失败记录类型': ['Failed record types', '失敗したレコード種別', 'Tipos de registro fallidos'],
+    '截断记录类型': ['Truncated record types', '省略したレコード種別', 'Tipos de registro truncados'],
+    '用户名': ['Username', 'ユーザー名', 'Usuario'],
+    '显示名称': ['Display name', '表示名', 'Nombre visible'],
+    '账号类型': ['Account type', 'アカウント種別', 'Tipo de cuenta'],
+    '公开仓库数': ['Public repositories', '公開リポジトリ数', 'Repositorios públicos'],
+    '粉丝数': ['Followers', 'フォロワー数', 'Seguidores'],
+    '关注数': ['Following', 'フォロー数', 'Siguiendo'],
+    '最近公开仓库': ['Recent public repositories', '最近の公開リポジトリ', 'Repositorios públicos recientes'],
+    '连接地址': ['Connected address', '接続アドレス', 'Dirección conectada'],
+    '响应类型': ['Content type', 'コンテンツ種別', 'Tipo de contenido'],
+    '服务器标识': ['Server header', 'サーバーヘッダー', 'Cabecera de servidor'],
+    '跳转链': ['Redirect chain', '転送履歴', 'Cadena de redirecciones'],
+    '响应耗时 ms': ['Response time (ms)', '応答時間 (ms)', 'Tiempo de respuesta (ms)'],
+    '证书颁发者': ['Certificate issuer', '証明書発行者', 'Emisor del certificado'],
+    '证书生效时间': ['Certificate valid from', '証明書有効開始', 'Certificado válido desde'],
+    '证书到期时间': ['Certificate expires', '証明書有効期限', 'Vencimiento del certificado'],
+    '证书剩余天数': ['Certificate days remaining', '証明書残り日数', 'Días restantes del certificado'],
+    '证书覆盖域名': ['Certificate DNS names', '証明書 DNS 名', 'Dominios del certificado'],
+})
+for kind, key in (('域名档案', 'domain'), ('DNS 记录', 'dns'), ('网站与证书', 'website'),
+                  ('IP 注册网络', 'network'), ('GitHub 公开资料', 'github')):
+    FIELDS[kind] = [UI[lang][key] for lang in ('en', 'ja', 'es')]
+
+for language, suffix in {
+    'zh': '\n\n公开资源模块：域名档案查注册商/日期/NS；DNS 查8种记录；网站与证书查公网 HTTPS 响应、跳转、证书和响应头；IP/ASN 查注册网段；GitHub 查公开简介、计数和最近仓库。来源链接可以打开核实。第三方限流会标注部分来源不可用。',
+    'en': '\n\nPublic resources: domain registration, 8 DNS record types, public HTTPS response/redirects/TLS/headers, IP/ASN registry and GitHub public profiles/repositories. Open source URLs to verify. Rate limits are shown as partial availability.',
+    'ja': '\n\n公開情報：ドメイン登録、8種のDNS、公開HTTPS応答・転送・TLS・ヘッダー、IP/ASN登録情報、GitHub公開プロフィールとリポジトリ。情報源URLで確認できます。利用制限は一部取得不可として表示します。',
+    'es': '\n\nRecursos públicos: registro de dominio, 8 tipos DNS, respuesta HTTPS/redirecciones/TLS/cabeceras, registro IP/ASN y perfiles/repositorios públicos de GitHub. Abre la fuente para verificar. Los límites se muestran como disponibilidad parcial.'
+}.items():
+    UI[language]['help_body'] += suffix
+
+for language, value in {
+ 'zh':'部分公开来源未返回完整结果，可打开来源核实',
+ 'en':'Some public data is unavailable; open the source to verify',
+ 'ja':'一部の公開情報が取得できません。情報源で確認してください',
+ 'es':'Faltan algunos datos públicos; abre la fuente para comprobar'
+}.items():
+ UI[language]['limited']=value

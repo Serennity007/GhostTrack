@@ -17,6 +17,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 import logging
 import sys
+import time
+from public_data import PublicQueryError, public_target
 
 
 
@@ -25,10 +27,11 @@ from i18n import LANGUAGES, UI, localize, platform_name
 
 
 class App:
-    BG, PANEL, CARD = '#0b1020', '#11192d', '#18233b'
-    FG, MUTED, ACCENT = '#edf3ff', '#a6b5d2', '#5ee0bc'
-    MODES = ['IP 归属地', '本机公网 IP', '号码归属地', '用户名链接', '国内平台']
-    MODE_KEYS = ['ip', 'self', 'phone', 'username', 'domestic']
+    BG, PANEL, CARD = '#070d0b', '#0d1915', '#172b22'
+    FG, MUTED, ACCENT = '#e3f9ee', '#91ac9d', '#a3ff6f'
+    MODES = ['IP 归属地', '本机公网 IP', '号码归属地', '用户名链接', '国内平台',
+             '域名档案', 'DNS 记录', '网站与证书', 'IP 注册网络', 'GitHub 公开资料']
+    MODE_KEYS = ['ip', 'self', 'phone', 'username', 'domestic', 'domain', 'dns', 'website', 'network', 'github']
 
     def __init__(self, root, data_dir=None):
         self.root, self.result = root, {}
@@ -48,6 +51,9 @@ class App:
         self.language = tk.StringVar(value=next(k for k, v in LANGUAGES.items() if v == self.lang))
         self.filter = tk.StringVar()
         self.status = tk.StringVar()
+        self.telemetry = tk.StringVar()
+        self.elapsed = 0.0
+        self.started = None
         self.bindings = []
         # Tk fonts use points while geometry uses pixels. Normalize both to the
         # available monitor so Windows DPI scaling cannot clip the navigation.
@@ -80,8 +86,8 @@ class App:
         style.map('TCombobox', fieldbackground=[('readonly', self.CARD)],
                   foreground=[('readonly', self.FG)], selectbackground=[('readonly', self.CARD)])
         style.configure('Result.Treeview', background=self.PANEL, fieldbackground=self.PANEL,
-                        foreground=self.FG, rowheight=44, borderwidth=0, bordercolor=self.PANEL,
-                        lightcolor=self.PANEL, darkcolor=self.PANEL, font=('Microsoft YaHei UI', 10))
+                        foreground=self.FG, rowheight=36, borderwidth=0, bordercolor=self.PANEL,
+                        lightcolor=self.PANEL, darkcolor=self.PANEL, font=('Cascadia Mono', 10))
         style.configure('Result.Treeview.Heading', background=self.CARD, foreground=self.MUTED,
                         bordercolor=self.PANEL, lightcolor=self.PANEL, darkcolor=self.PANEL,
                         padding=12, font=('Microsoft YaHei UI', 10))
@@ -93,22 +99,25 @@ class App:
         side = tk.Frame(root, bg=self.PANEL, width=int(245 * self.scale))
         side.pack(side='left', fill='y')
         side.pack_propagate(False)
-        self.brand = tk.Label(side, text='GHOST / TRACK', bg=self.PANEL, fg=self.ACCENT,
-                              font=('Segoe UI', 17, 'bold'))
-        self.brand.pack(anchor='w', padx=22, pady=(25, 4))
-        tk.Label(side, text=f'DESKTOP EDITION   /   {VERSION}', bg=self.PANEL,
-                 fg=self.MUTED, font=('Segoe UI', 9)).pack(anchor='w', padx=22, pady=(0, 25))
+        self.brand = tk.Label(side, text='GHOST//TRACK', bg=self.PANEL, fg=self.ACCENT,
+                              font=('Consolas', 17, 'bold'))
+        self.brand.pack(anchor='w', padx=22, pady=(22, 4))
+        tk.Label(side, text=f'PUBLIC INTELLIGENCE / {VERSION}', bg=self.PANEL,
+                 fg=self.MUTED, font=('Consolas', 8)).pack(anchor='w', padx=22, pady=(0, 14))
         self.label(side, 'tools', bg=self.PANEL).pack(anchor='w', padx=22, pady=(0, 12))
         self.nav = []
         for index, key in enumerate(self.MODE_KEYS):
             button = self.button_widget(side, key, lambda n=index: self.select(n))
-            button.pack(fill='x', padx=14, pady=5)
+            button.config(font=('Microsoft YaHei UI', 9), pady=6, anchor='w')
+            button.pack(fill='x', padx=14, pady=2)
             self.nav.append(button)
-        tk.Frame(side, height=1, bg='#28354e').pack(fill='x', padx=22, pady=18)
+        tk.Frame(side, height=1, bg='#284235').pack(fill='x', padx=22, pady=10)
         for key, command in (('history', self.history_dialog), ('settings', self.settings_dialog), ('help', self.help_dialog)):
-            self.button_widget(side, key, command).pack(fill='x', padx=14, pady=4)
+            utility = self.button_widget(side, key, command)
+            utility.config(font=('Microsoft YaHei UI', 9), pady=6)
+            utility.pack(fill='x', padx=14, pady=2)
         footer = tk.Frame(side, bg=self.PANEL)
-        footer.pack(side='bottom', fill='x', padx=22, pady=25)
+        footer.pack(side='bottom', fill='x', padx=22, pady=14)
         self.label(footer, 'privacy', bg=self.PANEL, wraplength=200).pack(anchor='w', pady=8)
         tk.Label(footer, text='Built on HunxByts/GhostTrack', bg=self.PANEL,
                  fg=self.MUTED, font=('Segoe UI', 8)).pack(anchor='w')
@@ -122,6 +131,8 @@ class App:
         language = ttk.Combobox(top, textvariable=self.language, values=list(LANGUAGES),
                                 state='readonly', width=15)
         language.pack(side='right')
+        tk.Label(top, textvariable=self.telemetry, bg=self.BG, fg='#69d9cc',
+                  font=('Consolas', 9)).pack(side='right', padx=18)
         language.bind('<<ComboboxSelected>>', self.change_language)
         self.heading = self.label(main, 'tagline', size=22, color=self.FG, wraplength=730)
         self.heading.grid(row=1, column=0, sticky='w', pady=(14, 18))
@@ -171,8 +182,14 @@ class App:
         results.grid(row=4, column=0, sticky='nsew')
         self.empty = tk.Frame(results, bg=self.PANEL)
         self.empty.pack(fill='both', expand=True)
-        tk.Label(self.empty, text='◎', font=('Segoe UI', 36), bg=self.PANEL,
-                 fg=self.ACCENT).pack(pady=(20, 0))
+        radar = tk.Canvas(self.empty, width=180, height=135, bg=self.PANEL, highlightthickness=0)
+        radar.pack(pady=(16, 0))
+        for radius in (18, 37, 58):
+            radar.create_oval(90-radius, 67-radius, 90+radius, 67+radius, outline='#31573e')
+        radar.create_line(20, 67, 160, 67, fill='#244332')
+        radar.create_line(90, 3, 90, 132, fill='#244332')
+        radar.create_line(90, 67, 128, 25, fill=self.ACCENT, width=2)
+        radar.create_oval(121, 35, 127, 41, fill='#69d9cc', outline='')
         self.empty_title = self.label(self.empty, 'empty', bg=self.PANEL, color=self.FG, size=15)
         self.empty_title.pack(pady=8)
         self.empty_help = self.label(self.empty, 'empty_help', bg=self.PANEL, wraplength=620)
@@ -181,6 +198,8 @@ class App:
                                  style='Result.Treeview', selectmode='browse')
         self.tree.column('key', width=165, stretch=False)
         self.tree.column('value', width=470)
+        self.tree.tag_configure('even', background=self.PANEL)
+        self.tree.tag_configure('odd', background='#10231b')
         self.scroll = ttk.Scrollbar(results, command=self.tree.yview, style='Result.Vertical.TScrollbar')
         self.tree.configure(yscrollcommand=self.scroll.set)
         self.tree.bind('<<TreeviewSelect>>', self.select_result)
@@ -243,6 +262,7 @@ class App:
         self.tree.heading('key', text=UI[self.lang]['field'], anchor='w')
         self.tree.heading('value', text=UI[self.lang]['value'], anchor='w')
         self.status.set(UI[self.lang][self.state])
+        self.update_telemetry()
         self.filter_entry.config(takefocus=True)
         self.select(self.mode)
         if self.result:
@@ -260,8 +280,10 @@ class App:
         self.platform_choice.set(platform_name(self.platform.get(), self.lang))
         self.platform_box.config(values=[platform_name(p, self.lang) for p in ('Auto', *PLATFORMS)])
         for n, button in enumerate(self.nav):
-            button.config(bg='#21473f' if n == index else self.CARD,
+            button.config(text=f'{n+1:02d} / {UI[self.lang][self.MODE_KEYS[n]]}',
+                          bg='#25442b' if n == index else self.CARD,
                           fg=self.ACCENT if n == index else self.FG)
+        self.heading.config(text=f'{index+1:02d} / {UI[self.lang][self.MODE_KEYS[index]]}')
         self.hint.config(text=UI[self.lang]['hint_' + self.MODE_KEYS[index]])
         self.entry.config(state='disabled' if index == 1 or self.busy else 'normal')
         self.region_box.config(state='readonly' if index == 2 else 'disabled')
@@ -277,8 +299,12 @@ class App:
         else:
             self.platform_label.pack_forget()
             self.platform_box.pack_forget()
-            self.region_label.pack(side='left', padx=(0, 8))
-            self.region_box.pack(side='left')
+            if index == 2:
+                self.region_label.pack(side='left', padx=(0, 8))
+                self.region_box.pack(side='left')
+            else:
+                self.region_label.pack_forget()
+                self.region_box.pack_forget()
 
     def choose_platform(self, _=None):
         for name in ('Auto', *PLATFORMS):
@@ -307,6 +333,9 @@ class App:
         self.status.set(UI[self.lang][key])
         self.status_label.config(fg='#f1c781' if key in ('limited', 'failed') else self.ACCENT)
 
+    def update_telemetry(self):
+        self.telemetry.set(f'{len(self.MODES):02d} MODULES / {len(self.result):02d} FIELDS / {self.elapsed:.2f}s')
+
     def start(self):
         if self.busy:
             return
@@ -320,6 +349,8 @@ class App:
         self.cancel_event = threading.Event()
         cancel = self.cancel_event
         self.busy = True
+        self.started = time.monotonic()
+        self.elapsed = 0.0
         self.button.config(state='disabled')
         self.cancel_button.config(state='normal')
         self.entry.config(state='disabled')
@@ -328,6 +359,7 @@ class App:
         self.progress.pack(side='left', padx=12)
         self.progress.start(15)
         self.result = {}
+        self.update_telemetry()
         self.filter.set('')
         self.update_actions()
         self.show_empty('busy', 'empty_help')
@@ -342,6 +374,8 @@ class App:
             except QueryCancelled:
                 pass
             except ProfileInputError as error:
+                self.events.put((job_id, False, error.code, args))
+            except PublicQueryError as error:
                 self.events.put((job_id, False, error.code, args))
             except (ValueError, phonenumbers.NumberParseException):
                 self.events.put((job_id, False, 'input_error', args))
@@ -361,6 +395,7 @@ class App:
                 self.root.after(100, self.poll)
                 return
             self.busy = False
+            self.elapsed = time.monotonic() - self.started if self.started is not None else 0.0
             self.progress.stop()
             self.progress.pack_forget()
             self.button.config(state='normal')
@@ -369,7 +404,8 @@ class App:
             if success:
                 self.result = data
                 self.show_result()
-                limited = data.get('页面状态') and '已读取页面元信息' not in data['页面状态']
+                limited = ((data.get('页面状态') and '已读取页面元信息' not in data['页面状态'])
+                           or data.get('查询状态') == '部分来源不可用')
                 self.set_state('limited' if limited else 'done')
                 if args and not self.store.record(args[0], args[1], args[2], args[4], data):
                     self.status.set(UI[self.lang]['state_warning'])
@@ -378,6 +414,7 @@ class App:
                 self.set_state('failed')
                 self.show_empty('failed', data)
             self.update_actions()
+            self.update_telemetry()
         except queue.Empty:
             pass
         self.root.after(100, self.poll)
@@ -388,6 +425,8 @@ class App:
         self.cancel_event.set()
         self.job_id += 1
         self.busy = False
+        self.elapsed = time.monotonic() - self.started if self.started is not None else 0.0
+        self.update_telemetry()
         self.progress.stop()
         self.progress.pack_forget()
         self.button.config(state='normal')
@@ -399,7 +438,7 @@ class App:
     def update_actions(self):
         for button in self.action_buttons:
             button.config(state='normal' if self.result else 'disabled')
-        self.action_buttons[2].config(state='normal' if self.result.get('主页链接') else 'disabled')
+        self.action_buttons[2].config(state='normal' if self.result.get('主页链接') or self.result.get('来源链接') else 'disabled')
 
     def show_empty(self, title, help_key):
         self.set_detail('')
@@ -423,7 +462,7 @@ class App:
         needle = self.filter.get().casefold().strip()
         for key, value in self.localized_result().items():
             if not needle or needle in f'{key} {value}'.casefold():
-                self.tree.insert('', 'end', values=(key, value))
+                self.tree.insert('', 'end', values=(key, value), tags=('even' if len(self.tree.get_children()) % 2 == 0 else 'odd',))
 
     def select_result(self, _=None):
         selected = self.tree.selection()
@@ -457,13 +496,15 @@ class App:
         return 'break'
 
     def open_profile(self):
-        url = self.result.get('主页链接')
+        url = self.result.get('主页链接') or self.result.get('来源链接')
         if not url:
             self.status.set(UI[self.lang]['no_profile'])
             return
         try:
-            if detect_platform(url):
-                webbrowser.open(url)
+            if url.startswith('http://') and any(host in url for host in ('v.douyin.com/', 'xhslink.com/')):
+                url = 'https://' + url.split('://', 1)[1]
+            public_target(url)
+            webbrowser.open(url)
         except (ValueError, TypeError):
             self.status.set(UI[self.lang]['unsupported_platform'])
 
@@ -508,8 +549,11 @@ class App:
             self.result = dict(item['result'])
             self.filter.set('')
             self.show_result()
-            limited = self.result.get('页面状态') and '已读取页面元信息' not in self.result['页面状态']
+            limited = ((self.result.get('页面状态') and '已读取页面元信息' not in self.result['页面状态'])
+                       or self.result.get('查询状态') == '部分来源不可用')
             self.set_state('limited' if limited else 'done')
+            self.elapsed = 0.0
+            self.update_telemetry()
             self.update_actions()
             window.destroy()
         def clear():

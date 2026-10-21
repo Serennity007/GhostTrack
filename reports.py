@@ -25,12 +25,12 @@ def write_report(path, data, headings=('Field', 'Value')):
         document = '''<!doctype html><html><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GhostTrack report</title><style>
-body{background:#0b1020;color:#edf3ff;font:16px system-ui,sans-serif;margin:40px auto;padding:0 24px;max-width:1000px}
-h1{color:#5ee0bc}small{color:#a6b5d2}table{border-collapse:collapse;width:100%;margin:32px 0}
-th,td{text-align:left;vertical-align:top;border-bottom:1px solid #28354e;padding:16px;overflow-wrap:anywhere}
-th{width:24%;color:#a6b5d2}tr:nth-child(odd){background:#11192d}
+body{background:#070d0b;color:#e3f9ee;font:16px system-ui,sans-serif;margin:40px auto;padding:0 24px;max-width:1000px}
+h1{color:#a3ff6f;font-family:monospace}small{color:#91ac9d}table{border-collapse:collapse;width:100%;margin:32px 0}
+th,td{text-align:left;vertical-align:top;border-bottom:1px solid #284235;padding:16px;overflow-wrap:anywhere}
+th{width:24%;color:#91ac9d}tr:nth-child(odd){background:#0d1915}
 @media print{body{background:white;color:black}h1,th{color:black}}
-</style></head><body><h1>GHOST / TRACK</h1><small>Desktop report · VERSION</small><table>ROWS</table></body></html>'''
+</style></head><body><h1>GHOST//TRACK</h1><small>Desktop report · VERSION</small><table>ROWS</table></body></html>'''
         path.write_text(document.replace('VERSION', VERSION).replace('ROWS', rows), encoding='utf-8')
     else:
         path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
