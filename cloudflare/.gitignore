@@ -1,0 +1,6 @@
+worker.mjs
+.wrangler/
+dist/
+.dev.vars
+.env*
+node_modules/

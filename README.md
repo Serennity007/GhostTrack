@@ -120,6 +120,8 @@ $env:ANDROID_HOME = 'path to Android SDK'
 
 Build scripts run the Python tests. The Android build also runs Lint and verifies the signed APK. Preserve its signing backup outside Git for future updates. Follow the [Windows](docs/windows.md#run-and-build-from-source) and [Android](docs/android.md#build-from-source) guides for prerequisites, output paths, and signing details. A [Windows Actions workflow example](docs/windows-workflow.example.yml) is supplied as a template; it is not an active hosted release workflow.
 
+To publish Atlas directly to your own Cloudflare account with a `workers.dev` URL, follow the [Cloudflare deployment guide](cloudflare/README.md). The same self-contained Worker bundle is used by Sites and direct Cloudflare deployment; account authorization is required before publishing to your account.
+
 ## Documentation and participation
 
 English is the primary language for the repository home, technical guides, changelog, and contribution templates. Localized project introductions are available in [简体中文](README.zh-CN.md), [日本語](README.ja.md), [Español](README.es.md), and [Français](README.fr.md). French is a documentation language; it is not currently an interface language.
