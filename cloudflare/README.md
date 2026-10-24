@@ -7,13 +7,13 @@ From the repository root, with Node.js installed:
 ```powershell
 node cloudflare/build.mjs
 npx --yes wrangler@4.152.0 deploy --config cloudflare/wrangler.jsonc --dry-run
-npx --yes wrangler@4.152.0 login --scopes account:read user:read workers:write
+npx --yes wrangler@4.152.0 login --device --scopes account:read user:read workers:write workers_scripts:write
 npx --yes wrangler@4.152.0 deploy --config cloudflare/wrangler.jsonc
 ```
 
 Complete login and authorization yourself in Cloudflare's browser page. Do not paste API tokens into an issue, chat, or configuration file. Wrangler manages its local credentials outside the checkout. If several accounts are returned, choose the intended account before publishing. If `ghosttrack-atlas` already exists in that account, verify it is this project before updating it, or change `name` in the config.
 
-The requested application permissions are `account:read`, `user:read`, and `workers:write`. Wrangler also automatically adds `offline_access` so it can refresh its local login. Review that additional scope on Cloudflare's authorization page; do not approve it if you do not want persistent CLI login.
+The requested application permissions are `account:read`, `user:read`, `workers:write`, and `workers_scripts:write`. The scripts permission is required for deployment history, Worker uploads, and the account's Workers subdomain; `workers:write` alone does not grant access to those endpoints. Wrangler also automatically adds `offline_access` so it can refresh its local login. Review all scopes on Cloudflare's authorization page. The device flow avoids local callback and browser CSRF issues; approve the one-time code yourself and never share credentials.
 
 Use the exact URL returned by a successful deployment, not a guessed account subdomain. Verify anonymous page access, `/api/meta`, a real DNS/RDAP query, and report export before replacing existing links. Browser-local favorites and snapshots do not transfer automatically between the Sites URL and the new Workers origin.
 
