@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md) · [English](README.md) · [日本語](README.ja.md) · **Español** · [Français](README.fr.md)
 
-**Windows 1.9.0 incorpora Atlas:** observaciones de estado, explicación de campos, comparación de capturas, cola por lotes, favoritos, informes con ocultación de datos, estado de fuentes y actualizaciones. Abre «Atlas ↗» desde el escritorio. [Versión web](https://ghosttrack-atlas.1392452425a.workers.dev) · [Guía en inglés](docs/atlas.md). HTTPS/TLS directo, teléfonos y perfiles chinos requieren el motor local.
+**Windows 1.9.0 incorpora Atlas:** observaciones de estado, explicación de campos, comparación de capturas, cola por lotes, favoritos, informes con ocultación de datos, estado de fuentes y actualizaciones. Abre «Atlas ↗» desde el escritorio. [Versión web](https://ghosttrack-atlas.1392452425a.workers.dev) · [Demo alternativa](https://ghosttrack-atlas.orangefawn9.chatgpt.site) · [Guía en inglés](docs/atlas.md). HTTPS/TLS directo, teléfonos y perfiles chinos requieren el motor local.
 
 **Un espacio de trabajo OSINT multiplataforma para investigar información pública desde Windows y Android.**
 

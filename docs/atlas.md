@@ -4,7 +4,7 @@
 
 Atlas is the browser workspace introduced with Windows **1.9.0**. It adds health observations, field explanations, snapshot comparison, a paced domain queue, browser-local favorites, redaction previews, source status, and release checks. It reuses the desktop query engine locally; the hosted adapter supports a smaller set of public-source queries.
 
-**[Open the public hosted workbench](https://ghosttrack-atlas.1392452425a.workers.dev)**. No separate desktop installation is required for the hosted tools. The primary public deployment runs in the project owner's Cloudflare Workers account. The [previous Sites deployment](https://ghosttrack-atlas.orangefawn9.chatgpt.site) remains available as an alternate; saved browser data is separate on each origin.
+**[Open the public hosted workbench](https://ghosttrack-atlas.1392452425a.workers.dev)**. No separate desktop installation is required for the hosted tools. The primary public deployment runs in the project owner's Cloudflare Workers account. The [previous Sites deployment](https://ghosttrack-atlas.orangefawn9.chatgpt.site) remains available as an alternate; saved browser data is separate on each origin. If a social-media short link fails to load, open a deployment URL directly or try the alternate above. Availability can differ by network.
 
 ![Atlas on Cloudflare with a real domain query](screenshots/atlas-cloudflare-en.jpg)
 

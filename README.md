@@ -8,7 +8,7 @@ Investigate a domain, inspect its DNS and TLS, review network registration, and 
 
 [Download](#download) · [Screenshots](#screenshots) · [Features](docs/FEATURES.md) · [Windows guide](docs/windows.md) · [Android guide](docs/android.md) · [Changelog](CHANGELOG.md)
 
-**New in Windows 1.9.0: Atlas.** [Open the hosted workbench](https://ghosttrack-atlas.1392452425a.workers.dev), or select **Atlas ↗** in the Windows application for the full local engine. Interpret query evidence, check domain health, compare saved snapshots, run paced domain batches, save favorites, preview redaction, export reports, inspect source status, and check releases. [Atlas guide and runtime limits](docs/atlas.md).
+**New in Windows 1.9.0: Atlas.** [Open the hosted workbench](https://ghosttrack-atlas.1392452425a.workers.dev) · [Alternate demo](https://ghosttrack-atlas.orangefawn9.chatgpt.site), or select **Atlas ↗** in the Windows application for the full local engine. Interpret query evidence, check domain health, compare saved snapshots, run paced domain batches, save favorites, preview redaction, export reports, inspect source status, and check releases. [Atlas guide and runtime limits](docs/atlas.md).
 
 - **One domain, three sources.** Query RDAP, eight DNS record types, and HTTPS/TLS in parallel. Each source keeps its own status, so partial results remain useful.
 - **A workspace for the whole result.** Use the Windows two-column console or native Android interface to filter fields, inspect long values, copy evidence, and export reports with query context.
