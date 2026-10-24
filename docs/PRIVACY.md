@@ -2,7 +2,7 @@
 
 [Project home](../README.md) · [Feature catalogue](FEATURES.md) · [Windows guide](windows.md) · [Android guide](android.md)
 
-This document describes the current application code and the published Windows 1.8.0 / Android 1.6.0 behavior. GhostTrack sends public lookup requests from your device to the providers below. The project has no query relay server or application login, and the query tools do not ask for account credentials or API tokens.
+This document describes the current application code and the published Windows 1.9.0 / Android 1.6.0 behavior. GhostTrack sends public lookup requests from your device to the providers below. The project has no query relay server or application login, and the query tools do not ask for account credentials or API tokens.
 
 ## Where a query goes
 
@@ -26,6 +26,20 @@ A remote provider can see the request, its timing, and your connection address, 
 Chinese profile hosts are Douyin, Xiaohongshu, Kuaishou, Bilibili, Weibo, Zhihu, and Douban. The application permits only the listed official hosts for supported profile short links. On Windows, a browser you open through **Open source** uses its own cookies, account session, and settings; GhostTrack does not import that browser session.
 
 ## Windows local data
+
+### Atlas browser workspace · 1.9.0
+
+The local Atlas service binds to `127.0.0.1` only and checks Host, Origin and a per-process request token. It reuses the public query engine without exposing desktop history or the authorized archive. It records no query database or request log. Closing the desktop stops its owned local service.
+
+Atlas results and queued reports remain in page memory unless explicitly saved or exported. Browser localStorage key `ghosttrack.atlas.v1` stores the language preference, manually saved snapshots and favorites. Up to 50 snapshots and 50 favorites share an approximately 1.9-million-character budget. This storage is unencrypted and scoped to the exact browser origin, including port. Local and hosted origins have separate saved data.
+
+The privacy page can remove Atlas's browser data after confirmation; downloaded reports, clipboard contents, desktop history and archive records are independent. Export opens a redaction preview; automatic masking does not recognize all personal data. Copy actions copy the original values.
+
+The hosted adapter additionally contacts `data.iana.org` for the official RDAP domain bootstrap and approved registry hosts. It queries only fixed-provider destinations and does not fetch arbitrary user-entered website URLs. It exposes HTTPS/TLS runtime limits instead of claiming a verified certificate. Source queries still reveal the target and connection address to the provider. Hosting infrastructure may process operational request metadata under its own policies; this application adds no analytics or query database.
+
+An update check contacts the repository's public GitHub releases API only after the user requests it. Snapshot imports are parsed as bounded data, not executed. Full behavior is documented in the [Atlas guide](atlas.md).
+
+### Classic desktop settings, history and archive
 
 The default directory is `%LOCALAPPDATA%\GhostTrackDesk`. You can override it with `GHOSTTRACK_DATA_DIR`.
 

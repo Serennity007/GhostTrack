@@ -8,13 +8,23 @@ Investigate a domain, inspect its DNS and TLS, review network registration, and 
 
 [Download](#download) · [Screenshots](#screenshots) · [Features](docs/FEATURES.md) · [Windows guide](docs/windows.md) · [Android guide](docs/android.md) · [Changelog](CHANGELOG.md)
 
+**New in Windows 1.9.0: Atlas.** [Open the hosted workbench](https://ghosttrack-atlas.orangefawn9.chatgpt.site), or select **Atlas ↗** in the Windows application for the full local engine. Interpret query evidence, check domain health, compare saved snapshots, run paced domain batches, save favorites, preview redaction, export reports, inspect source status, and check releases. [Atlas guide and runtime limits](docs/atlas.md).
+
 - **One domain, three sources.** Query RDAP, eight DNS record types, and HTTPS/TLS in parallel. Each source keeps its own status, so partial results remain useful.
 - **A workspace for the whole result.** Use the Windows two-column console or native Android interface to filter fields, inspect long values, copy evidence, and export reports with query context.
 - **Desktop and mobile, ready to run.** Twelve Windows tools and eleven Android modules share the query engine. Release packages include Python; the interface supports English, Simplified Chinese, Japanese, and Spanish.
 
 ## Screenshots
 
-### Windows · v1.8.0
+### Atlas · v1.9.0
+
+![Atlas local workbench, English, real python.org query with source evidence and health observations](docs/screenshots/atlas-workbench-en.jpg)
+
+![Atlas report export with redaction controls and a preview of actual results](docs/screenshots/atlas-redaction-en.jpg)
+
+The hosted version supports seven public-data tools. Address-pinned HTTPS/TLS, offline phone metadata and Chinese public-profile queries require the local engine; hosted limits are shown explicitly. Browser snapshots and favorites are saved only when you request it.
+
+### Classic Windows console · v1.8.0 reference
 
 ![GhostTrack Windows console in English showing a real python.org domain overview](docs/screenshots/windows-overview-en.jpg)
 
@@ -33,8 +43,9 @@ These are captures of the released applications using public example data. See t
 
 | Platform | Release package | Requirements |
 | --- | --- | --- |
-| Windows · **1.8.0** | [Portable ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [Release notes and checksums](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | Windows 10/11, x64 |
+| Windows · **1.9.0** | [Portable ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.9.0/GhostTrack-v1.9.0-Windows-x64.zip) · [Release notes and checksums](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.9.0) | Windows 10/11, x64 |
 | Android · **1.6.0** | [Universal APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Release notes, checksums and signature](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Android 7.0+, ARM64 / ARMv7 / x86_64 |
+| Atlas web · **1.9.0** | [Open workbench](https://ghosttrack-atlas.orangefawn9.chatgpt.site) · [Guide](docs/atlas.md) | Modern browser; see hosted capability limits |
 
 **Windows:** extract the entire ZIP, then run `GhostTrack/GhostTrack.exe`. Keep the executable with its bundled files. No separate Python installation is needed.
 
@@ -116,6 +127,7 @@ English is the primary language for the repository home, technical guides, chang
 | Need | Start here |
 | --- | --- |
 | All tools, fields and source limits | [Feature catalogue](docs/FEATURES.md) |
+| Health checks, snapshots, batch queues, favorites and redaction | [Atlas guide](docs/atlas.md) |
 | Installation, controls, export and troubleshooting | [Windows guide](docs/windows.md) · [Android guide](docs/android.md) |
 | Storage, providers and permissions | [Privacy and data handling](docs/PRIVACY.md) |
 | Release history | [English changelog](CHANGELOG.md) · [中文更新记录](CHANGELOG.zh-CN.md) |

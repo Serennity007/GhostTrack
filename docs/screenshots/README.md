@@ -2,10 +2,13 @@
 
 [Project home](../../README.md) · [Windows guide](../windows.md) · [Android guide](../android.md)
 
-These images are actual application captures, not rendered mockups. English captures were made on 21 October 2026 using the published packages and the public example `python.org`. Query fields, addresses, timings, and source availability can change.
+These images are actual application captures, not rendered mockups. Classic desktop/mobile captures were made on 21 October 2026; Atlas captures were made on 24 October 2026, using public examples. Query fields, addresses, timings, and source availability can change.
 
 | Image | Application | View |
 | --- | --- | --- |
+| [atlas-workbench-en.jpg](atlas-workbench-en.jpg) | Atlas 1.9.0, local engine, English | Real python.org sources, fields and health observations |
+| [atlas-redaction-en.jpg](atlas-redaction-en.jpg) | Atlas 1.9.0, English | Export controls and redacted JSON preview of actual query data |
+| [atlas-mobile-en.jpg](atlas-mobile-en.jpg) | Atlas 1.9.0, 390-pixel browser viewport | Responsive mobile web layout; not the native Android APK |
 | [windows-overview-en.jpg](windows-overview-en.jpg) | Windows 1.8.0, English | Domain overview, source status, results table and selected-value detail |
 | [android-overview-en.png](android-overview-en.png) | Android 1.6.0, English | Native module selection and domain query |
 | [android-results-en.png](android-results-en.png) | Android 1.6.0, English | Real query results filtered to HTTPS, with copy/export controls |

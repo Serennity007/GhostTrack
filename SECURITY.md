@@ -22,7 +22,7 @@ Inaccurate public-provider data, missing profile fields, access restrictions and
 
 ## Releases and updates
 
-Start by checking the latest release for the affected platform: [Windows v1.8.0](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) or [Android v1.6.0](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0). The platform version numbers can differ. Older packages remain historical downloads; there is no separate maintenance commitment for every past release.
+Start by checking the latest release for the affected platform: [Windows v1.9.0](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.9.0) or [Android v1.6.0](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0). The platform version numbers can differ. Older packages remain historical downloads; there is no separate maintenance commitment for every past release.
 
 Download packages and SHA256 files from this repository's [Releases](https://github.com/Serennity007/GhostTrack/releases). Android updates must use the project's existing release signing certificate. A checksum verifies that a file matches the published asset; it does not replace checking the download source.
 

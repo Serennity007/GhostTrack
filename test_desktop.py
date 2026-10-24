@@ -46,6 +46,47 @@ class DesktopTests(unittest.TestCase):
             self.assertIsInstance(localize(True, lang), str)
             self.assertEqual(localize(1.25, lang), 1.25)
 
+    def test_atlas_reuses_owned_service_and_closes_it_with_desktop(self):
+        from unittest.mock import MagicMock
+        import threading
+        root = tk.Tk()
+        root.withdraw()
+        service = MagicMock()
+        service.origin = 'http://127.0.0.1:8765'
+        service.lock = threading.Lock()
+        event = threading.Event()
+        service.active = {'test': event}
+        try:
+            app = App(root, data_dir=self.state_dir.name)
+            with patch('desktop.start_console', return_value=service) as start, patch('desktop.webbrowser.open') as open_page:
+                app.open_atlas()
+                app.open_atlas()
+                start.assert_called_once_with(port=8765, open_browser=False)
+                self.assertEqual(open_page.call_count, 2)
+                open_page.assert_called_with(service.origin)
+                app.close()
+            service.shutdown.assert_called_once()
+            service.server_close.assert_called_once()
+            self.assertTrue(event.is_set())
+        finally:
+            try:
+                root.destroy()
+            except tk.TclError:
+                pass
+
+    def test_atlas_port_conflict_does_not_open_an_unknown_service(self):
+        root = tk.Tk()
+        root.withdraw()
+        try:
+            app = App(root, data_dir=self.state_dir.name)
+            with patch('desktop.start_console', side_effect=OSError()), patch('desktop.webbrowser.open') as open_page, patch('desktop.messagebox.showerror') as error:
+                app.open_atlas()
+                open_page.assert_not_called()
+                error.assert_called_once()
+                self.assertIsNone(app.atlas_server)
+        finally:
+            root.destroy()
+
     def test_language_switch(self):
         root = tk.Tk()
         root.withdraw()

@@ -20,6 +20,7 @@ import logging
 import sys
 import time
 from public_data import PublicQueryError, public_target
+from web_console import start_console
 
 
 
@@ -41,6 +42,7 @@ class App:
         self.events = queue.Queue()
         self.lang, self.mode, self.busy = self.store.settings['language'], 10, False
         self.job_id, self.closed = 0, False
+        self.atlas_server = None
         self.cancel_event = threading.Event()
         self.network_slots = threading.BoundedSemaphore(2)
         self.context = None
@@ -141,6 +143,7 @@ class App:
         language = ttk.Combobox(top, textvariable=self.language, values=list(LANGUAGES),
                                 state='readonly', width=15)
         language.pack(side='right')
+        self.button_widget(top, 'atlas', self.open_atlas).pack(side='right', padx=px(10))
         tk.Label(top, text='PUBLIC SOURCES  /  LOCAL WORKSPACE', bg=self.BG, fg=self.MUTED,
                   font=('Consolas', 8)).pack(side='right', padx=px(16))
         language.bind('<<ComboboxSelected>>', self.change_language)
@@ -867,12 +870,26 @@ class App:
         self.cancel()
         messagebox.showerror('GhostTrack', UI[self.lang]['network_error'], parent=self.root)
 
+    def open_atlas(self):
+        try:
+            if self.atlas_server is None:
+                self.atlas_server = start_console(port=8765, open_browser=False)
+            webbrowser.open(self.atlas_server.origin)
+        except OSError:
+            messagebox.showerror('GhostTrack Atlas', UI[self.lang]['atlas_failed'], parent=self.root)
+
     def close(self):
         self.closed = True
         self.cancel_event.set()
         self.job_id += 1
         self.store.settings.update(language=self.lang, region=self.region.get())
         self.store.save()
+        if self.atlas_server is not None:
+            with self.atlas_server.lock:
+                for event in self.atlas_server.active.values():
+                    event.set()
+            self.atlas_server.shutdown()
+            self.atlas_server.server_close()
         self.root.destroy()
 
     def export(self):

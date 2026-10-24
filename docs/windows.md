@@ -2,13 +2,13 @@
 
 [English home](../README.md) · [中文使用说明](../README_WINDOWS.md) · [Android guide](android.md) · [Changelog](../CHANGELOG.md)
 
-GhostTrack Console for Windows provides 12 tools in a desktop workbench: public-data queries, report export, and a local archive of account associations you supply. The current Windows release is **1.8.0**. The interface supports English, Simplified Chinese, Japanese, and Spanish; French is available in the repository documentation.
+GhostTrack Console for Windows provides 12 tools in a desktop workbench: public-data queries, report export, and a local archive of account associations you supply. The current Windows release is **1.9.0**. The interface supports English, Simplified Chinese, Japanese, and Spanish; French is available in the repository documentation.
 
-![GhostTrack 1.8.0 Windows workbench in English](screenshots/windows-overview-en.jpg)
+![Atlas 1.9.0 local workbench in English](screenshots/atlas-workbench-en.jpg)
 
 ## Install
 
-1. Download [GhostTrack-v1.8.0-Windows-x64.zip](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) and its [SHA256 file](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/SHA256SUMS-v1.8.0.txt).
+1. Download [GhostTrack-v1.9.0-Windows-x64.zip](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.9.0/GhostTrack-v1.9.0-Windows-x64.zip) and its [SHA256 file](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.9.0/SHA256SUMS-v1.9.0.txt).
 2. Extract the **entire ZIP** to a folder you can write to.
 3. Open `GhostTrack/GhostTrack.exe`.
 
@@ -17,13 +17,19 @@ Use Windows 10 or 11 x64. You do not need Python, administrator access, or an ap
 Check the ZIP before extracting it:
 
 ```powershell
-Get-FileHash .\GhostTrack-v1.8.0-Windows-x64.zip -Algorithm SHA256
-Get-Content .\SHA256SUMS-v1.8.0.txt
+Get-FileHash .\GhostTrack-v1.9.0-Windows-x64.zip -Algorithm SHA256
+Get-Content .\SHA256SUMS-v1.9.0.txt
 ```
 
 Compare the complete hash values. A checksum confirms that your download matches the release asset.
 
 ## First query
+
+### Atlas workflows in 1.9.0
+
+Select **Atlas ↗** at the top of the desktop window to open the local browser workspace. It adds evidence-based health observations, field explanations, saved snapshot comparison, a sequential domain queue, favorites, redaction previews, source status and release checks. Keep the desktop running. [Full Atlas guide](atlas.md).
+
+Atlas snapshots and favorites are explicit browser-local saves, separate from desktop history and the authorized archive. Hosted mode has a smaller query set and explicitly marks unsupported direct HTTPS/TLS checks.
 
 Choose **Domain overview**, enter `python.org`, and select **Query**. The application requests RDAP, DNS, and HTTPS data in parallel. Each source has its own fields and status; you can keep the other results if one source fails.
 
@@ -140,9 +146,9 @@ python -m venv .venv
 `requirements-build.txt` includes the shared dependencies and pinned PyInstaller tools. The build script runs the test suite, generates the icon and Windows version resource, bundles the application, and writes:
 
 ```text
-dist/v1.8.0/GhostTrack/
-dist/GhostTrack-v1.8.0-Windows-x64.zip
-dist/SHA256SUMS-v1.8.0.txt
+dist/v1.9.0/GhostTrack/
+dist/GhostTrack-v1.9.0-Windows-x64.zip
+dist/SHA256SUMS-v1.9.0.txt
 ```
 
 Versioned output folders allow a new build while an older version remains open. [`docs/windows-workflow.example.yml`](windows-workflow.example.yml) is a workflow template; this repository does not currently enable a GitHub Actions release workflow.

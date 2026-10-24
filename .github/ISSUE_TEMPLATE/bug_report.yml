@@ -23,7 +23,7 @@ body:
     attributes:
       label: Application version or commit
       description: Use the version displayed by the app, or the commit SHA for a source build.
-      placeholder: Windows 1.8.0 / Android 1.6.0 / commit SHA
+      placeholder: Windows 1.9.0 / Android 1.6.0 / commit SHA
     validations:
       required: true
   - type: input

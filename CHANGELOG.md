@@ -4,7 +4,17 @@
 
 Windows and Android have separate release versions. Entries below identify the platform when a release applies to only one of them.
 
-## Unreleased · repository and Android build
+## 1.9.0 · Windows / Atlas web
+
+- Add Atlas, a browser workbench launched from the Windows application with its own loopback-only public-query service. Preserve the existing 12 desktop tools and archive.
+- Add source-backed health observations and field explanations; compare saved snapshots without treating failed sources as deleted data or TTL countdown as a record change.
+- Add a paced, deduplicated 50-domain queue with pause/resume/cancel, bounded 429 retries and batch export; add explicit browser-local snapshots and favorites.
+- Add redaction previews for targets, IPs, recognized phone formats and URL parameters, with JSON/CSV/HTML export. Add selected-query source status and on-demand release checks.
+- Add Chinese, English, Japanese and Spanish browser controls and responsive layouts. Hosted mode supports seven tools; pinned HTTPS/TLS, offline phone metadata and Chinese profiles use the local engine.
+- Keep Android's native release at 1.6.0. The source-packaging fixes below remain included in current source.
+- Validate 91 Python tests, 13 JavaScript tests, real public-source queries, browser workflows and the packaged Windows engine. [Validation notes](docs/validation-1.9.0.md).
+
+## Repository and Android build maintenance
 
 - Make English the primary repository language. Preserve the Chinese introduction and changelog; add complete English platform guides, a feature catalogue, privacy notes, maintenance instructions, and real English Windows/Android screenshots.
 - Add contribution, support, and security policies, bug/feature forms, and a pull request template.

@@ -34,20 +34,32 @@ VarFileInfo([VarStruct('Translation',[1033,1200])])])''', encoding='utf-8')
                     '--distpath', str(root / 'dist' / f'v{VERSION}'),
                     '--workpath', str(root / 'build' / f'pyinstaller-v{VERSION}'),
                     '--windowed', '--name', 'GhostTrack', '--icon', 'assets/ghosttrack.ico',
-                    '--version-file', str(resource), '--add-data', 'assets;assets',
+                    '--version-file', str(resource), '--add-data', 'assets;assets', '--add-data', 'web;web',
                     '--collect-all', 'phonenumbers', '--copy-metadata', 'phonenumbers',
                     '--copy-metadata', 'requests', 'desktop.py'], cwd=root, check=True)
-    distribution = root / 'dist' / f'v{VERSION}' / 'GhostTrack'
-    for filename in ('README_WINDOWS.md', 'CHANGELOG.md', 'UPSTREAM_README.md'):
+    package_distribution(root)
+
+
+def package_distribution(root, version=VERSION):
+    """Bundle a built executable with the linked documentation and checksums."""
+    root = Path(root)
+    distribution = root / 'dist' / f'v{version}' / 'GhostTrack'
+    if not (distribution / 'GhostTrack.exe').is_file():
+        raise FileNotFoundError('Build the Windows executable before packaging.')
+    for filename in ('README.md', 'README.zh-CN.md', 'README.en.md', 'README.ja.md', 'README.es.md', 'README.fr.md',
+                     'README_WINDOWS.md', 'README_ANDROID.md', 'CHANGELOG.md', 'CHANGELOG.zh-CN.md', 'UPSTREAM_README.md',
+                     'CONTRIBUTING.md', 'SECURITY.md', 'SUPPORT.md'):
         shutil.copy2(root / filename, distribution / filename)
-    archive = root / 'dist' / f'GhostTrack-v{VERSION}-Windows-x64.zip'
+    shutil.copytree(root / 'docs', distribution / 'docs', dirs_exist_ok=True)
+    archive = root / 'dist' / f'GhostTrack-v{version}-Windows-x64.zip'
     with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as bundle:
         for file in sorted(distribution.rglob('*')):
             if file.is_file():
                 bundle.write(file, file.relative_to(distribution.parent))
     checksum = hashlib.sha256(archive.read_bytes()).hexdigest()
-    (root / 'dist' / f'SHA256SUMS-v{VERSION}.txt').write_text(f'{checksum}  {archive.name}\n', encoding='ascii')
+    (root / 'dist' / f'SHA256SUMS-v{version}.txt').write_text(f'{checksum}  {archive.name}\n', encoding='ascii')
     print(f'Built {archive.name} ({archive.stat().st_size:,} bytes)')
+    return archive
 
 
 if __name__ == '__main__':

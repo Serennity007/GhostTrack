@@ -2,6 +2,8 @@
 
 [简体中文](README.zh-CN.md) · [English](README.md) · [日本語](README.ja.md) · **Español** · [Français](README.fr.md)
 
+**Windows 1.9.0 incorpora Atlas:** observaciones de estado, explicación de campos, comparación de capturas, cola por lotes, favoritos, informes con ocultación de datos, estado de fuentes y actualizaciones. Abre «Atlas ↗» desde el escritorio. [Versión web](https://ghosttrack-atlas.orangefawn9.chatgpt.site) · [Guía en inglés](docs/atlas.md). HTTPS/TLS directo, teléfonos y perfiles chinos requieren el motor local.
+
 **Un espacio de trabajo OSINT multiplataforma para investigar información pública desde Windows y Android.**
 
 Reúne registros de dominios, DNS, certificados TLS, registros de IP / ASN y perfiles públicos en una sola consola. GhostTrack conecta doce herramientas de Windows y once módulos de Android a un motor de consulta común, con resultados que puedes filtrar, copiar y exportar.
@@ -16,7 +18,7 @@ Reúne registros de dominios, DNS, certificados TLS, registros de IP / ASN y per
 
 | Plataforma | Descarga actual | Instalación |
 |---|---|---|
-| Windows 10/11 x64 · v1.8.0 | [ZIP portátil](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | Extrae todo el archivo y ejecuta `GhostTrack/GhostTrack.exe` |
+| Windows 10/11 x64 · v1.9.0 | [ZIP portátil](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.9.0/GhostTrack-v1.9.0-Windows-x64.zip) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.9.0) | Extrae todo el archivo y ejecuta `GhostTrack/GhostTrack.exe` |
 | Android 7.0 o posterior · v1.6.0 | [APK universal](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Versión y SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Abre el APK desde el gestor de archivos del teléfono |
 
 Windows no requiere instalar Python. Mantén el ejecutable junto a todas sus dependencias. El APK incluye ARM64, ARMv7 y x86_64; el primer inicio extrae el entorno incorporado. Autoriza la instalación solo a la aplicación que utilices para abrir el APK. Para actualizar, utiliza APK de este repositorio firmados con el mismo certificado.

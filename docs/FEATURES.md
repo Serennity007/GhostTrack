@@ -2,11 +2,11 @@
 
 [Project home](../README.md) · [Windows guide](windows.md) · [Android guide](android.md) · [Privacy and data flow](PRIVACY.md)
 
-GhostTrack organizes public resource lookups into structured results with query context and report export. The published Windows **1.8.0** edition has **12 tools**; Android **1.6.0** has **11**. The local authorized account archive is Windows-only.
+GhostTrack organizes public resource lookups into structured results with query context and report export. The published Windows **1.9.0** edition has **12 tools**; Android **1.6.0** has **11**. The local authorized account archive is Windows-only.
 
 ## Platform support
 
-| Capability | Windows 1.8.0 | Android 1.6.0 |
+| Capability | Windows 1.9.0 | Android 1.6.0 |
 | --- | --- | --- |
 | Public-data tools listed below | 11 | 11 |
 | Local authorized account archive | Yes, tool 12 | No |
@@ -20,6 +20,23 @@ GhostTrack organizes public resource lookups into structured results with query 
 | Saved preferences | Language, phone region, history choice | Language and selected tool |
 
 Repository documentation also includes French. The application interface currently offers the four languages in the table.
+
+## Atlas workflows · Windows 1.9.0 and web
+
+The Windows **Atlas ↗** entry opens a browser workspace backed by the same local query engine. The hosted workbench supports seven tools and explicitly marks direct HTTPS/TLS, phone metadata and Chinese-profile queries as local-only.
+
+| Workflow | Behavior |
+| --- | --- |
+| Health observations | Evidence and next steps for DNS, certificate lifetime, HTTP status, redirects, registration expiry and header review; unavailable sources stay unknown |
+| Field explanations | Context beside returned values; source, time and inference limits remain visible |
+| Snapshot comparison | Added, removed and changed fields; only successful matching sources are compared; TTL/order noise can be ignored |
+| Batch queue | Up to 50 deduplicated domains, one at a time, paced requests, pause/resume/cancel, bounded 429 retries and report export |
+| Favorites and snapshots | Explicit browser-local saves, up to 50 each, within a bounded storage budget; no automatic query history |
+| Redaction preview | Independent target/IP/phone/query-parameter masking on a copy before JSON/CSV/HTML export; manual review required |
+| Source status | States from the selected query, not global uptime; retry produces a new observation |
+| Updates | On-demand stable GitHub release metadata and official links; no automatic download or execution |
+
+See the [Atlas guide](atlas.md) for exact limits, privacy and validation commands. The Android 1.6.0 native interface is unchanged.
 
 ## Public-data tools
 

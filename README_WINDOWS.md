@@ -1,10 +1,16 @@
-# GhostTrack Console 1.8.0 使用说明
+# GhostTrack Console 1.9.0 使用说明
 
 [中文项目主页](README.zh-CN.md) · [English guide](docs/windows.md) · [Android 使用说明](README_ANDROID.md) · [中文更新记录](CHANGELOG.zh-CN.md)
 
 ## 安装与启动
 
-下载 [GhostTrack-v1.8.0-Windows-x64.zip](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip)，完整解压，运行 `GhostTrack/GhostTrack.exe`。Windows 10/11 x64，无需 Python、管理员权限或账号登录。不要单独复制 EXE，`_internal` 和 `assets` 是运行依赖。
+下载 [GhostTrack-v1.9.0-Windows-x64.zip](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.9.0/GhostTrack-v1.9.0-Windows-x64.zip)，完整解压，运行 `GhostTrack/GhostTrack.exe`。Windows 10/11 x64，无需 Python、管理员权限或账号登录。不要单独复制 EXE，`_internal` 和 `assets` 是运行依赖。
+
+## Atlas 新工作流
+
+点击窗口顶部 **Atlas ↗**，浏览器会打开本机 `http://127.0.0.1:8765`。保持桌面程序运行，即可使用健康检查、字段解释、手动快照、两次查询对比、最多50个域名的批量队列、收藏、脱敏导出、来源状态和 GitHub 更新检查。浏览器数据与桌面历史/授权档案独立，不自动保存查询。快照和收藏需要主动保存；来源失败不代表记录删除。
+
+完整说明见 [Atlas guide](docs/atlas.md)。[在线研究版](https://ghosttrack-atlas.orangefawn9.chatgpt.site) 不提供地址绑定 HTTPS/TLS、离线号码及国内主页查询；这些模块使用本地版完成。当前 Android 仍为1.6.0；本次不改动其原生界面。
 
 ## 工作台布局
 
@@ -87,7 +93,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe build_windows.py
 ```
 
-输出 `dist/v1.8.0/GhostTrack/`、`dist/GhostTrack-v1.8.0-Windows-x64.zip`、`dist/SHA256SUMS-v1.8.0.txt`。用 PowerShell `Get-FileHash` 对照 SHA256 校验文件。
+输出 `dist/v1.9.0/GhostTrack/`、`dist/GhostTrack-v1.9.0-Windows-x64.zip`、`dist/SHA256SUMS-v1.9.0.txt`。用 PowerShell `Get-FileHash` 对照 SHA256 校验文件。
 
 ## Languages
 

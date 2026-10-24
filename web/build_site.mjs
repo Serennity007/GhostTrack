@@ -1,0 +1,32 @@
+// Embed the browser assets and fixed-provider adapter in the Sites Worker starter.
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { resolve, isAbsolute, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const destination = process.argv[2];
+if (!destination || !isAbsolute(destination)) throw new Error('Pass the absolute, initialized Sites checkout.');
+const manifest = JSON.parse(await readFile(join(destination, '.openai/hosting.json'), 'utf8'));
+if (!manifest.project_id || manifest.static) throw new Error('Expected registered Worker Site manifest.');
+const source = fileURLToPath(new URL('.', import.meta.url));
+const files = { '/': ['index.html', 'text/html; charset=utf-8'], '/style.css': ['style.css', 'text/css; charset=utf-8'],
+  '/app.mjs': ['app.mjs', 'text/javascript; charset=utf-8'], '/core.mjs': ['core.mjs', 'text/javascript; charset=utf-8'], '/lang.mjs': ['lang.mjs', 'text/javascript; charset=utf-8'] };
+const assets = {};
+for (const [path, [file, type]] of Object.entries(files)) assets[path] = { body: await readFile(join(source, file), 'utf8'), type };
+const core = await readFile(join(source, 'core.mjs'), 'utf8');
+const adapter = (await readFile(join(source, 'cloud.mjs'), 'utf8')).replace(/^import[^\n]+\n/, '');
+const worker = core + '\n' + adapter + '\nconst ASSETS = ' + JSON.stringify(assets) + ';\nexport default { async fetch(request, env, ctx) { return handle(request, ASSETS); } };\n';
+await mkdir(join(destination, 'worker'), { recursive: true });
+await writeFile(join(destination, 'worker/index.js'), worker, 'utf8');
+await mkdir(join(destination, 'scripts'), { recursive: true });
+await writeFile(join(destination, 'scripts/build-portable.mjs'), `import {mkdir,copyFile} from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
+import {resolve,join} from 'node:path';
+const root=fileURLToPath(new URL('..',import.meta.url));
+const out=resolve(root,'dist');
+await mkdir(join(out,'server'),{recursive:true});
+await mkdir(join(out,'.openai'),{recursive:true});
+await copyFile(join(root,'worker/index.js'),join(out,'server/index.js'));
+await copyFile(join(root,'.openai/hosting.json'),join(out,'.openai/hosting.json'));
+console.log('Built embedded Atlas Worker');
+`, 'utf8');
+await writeFile(join(destination, 'README.md'), `# GhostTrack Atlas hosted workbench\n\nPublished source snapshot of [Serennity007/GhostTrack](https://github.com/Serennity007/GhostTrack). Extended from HunxByts/GhostTrack; no new project-wide license is declared here.\n\nThe self-contained Worker includes its browser assets. No runtime dependencies, account credentials or persisted query database. Browser snapshots and favorites are explicit local saves. Provider requests disclose the target to the corresponding public service.\n\nBuild: \`node scripts/build-portable.mjs\`, then \`node scripts/validate-artifact.mjs\`.\n\nHosted mode supports seven public-data tools. Pinned arbitrary-target HTTPS, raw TLS certificates, offline phone metadata and Chinese-profile requests require the local Python engine. The hosted adapter reports these limits explicitly and never fetches arbitrary user-entered website URLs. Rate limits are best-effort per Worker isolate, not a global quota guarantee.\n`, 'utf8');
+console.log('Prepared Atlas Site source:', resolve(destination));

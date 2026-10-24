@@ -311,3 +311,17 @@ for language, value in {
     'es': '\n\nArchivo autorizado: usa "Guardar en archivo" en un resultado para registrar asociaciones teléfono-perfil propias o públicas (con fuente y fecha). El módulo 12 busca en este archivo local; gestiona o exporta desde la barra lateral.',
 }.items():
     UI[language]['help_body'] += value
+
+ATLAS_UI = {
+    'atlas': ['Atlas ↗', 'Atlas ↗', 'Atlas ↗', 'Atlas ↗'],
+    'atlas_failed': [
+        '无法启动 Atlas 本地工作台。请先关闭其他占用 8765 端口的 Atlas 实例，再重试。',
+        'Could not start the local Atlas workbench. Close another Atlas instance using port 8765 and retry.',
+        'Atlasを起動できません。8765番ポートを使用している別のAtlasを閉じて再試行してください。',
+        'No se pudo iniciar Atlas local. Cierra otra instancia que use el puerto 8765 y reintenta.',
+    ],
+}
+for key, values in ATLAS_UI.items():
+    KEYS.append(key)
+    for language, text in zip(('zh', 'en', 'ja', 'es'), values):
+        UI[language][key] = text

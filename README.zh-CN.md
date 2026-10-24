@@ -2,6 +2,8 @@
 
 **简体中文** · [English](README.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
 
+**Windows 1.9.0 新增 Atlas 网页工作台**：在桌面顶部点击「Atlas ↗」，即可使用健康检查、字段解释、快照对比、批量队列、收藏、脱敏报告、来源状态及更新检查。[在线体验](https://ghosttrack-atlas.orangefawn9.chatgpt.site) · [完整说明（英语）](docs/atlas.md)。在线版的安全直连 HTTPS/TLS、号码及国内主页模块不可用，会明确标注；本地版提供完整查询。
+
 **Windows / Android 跨平台 OSINT 公开信息研究工作台。**
 
 在桌面与手机上，把分散的公开信息整理成结构化结果。GhostTrack Console 将域名注册、DNS、TLS 证书、IP/ASN 网络信息、GitHub 与国内公开主页查询集中到同一套工作台，Windows 集成 12 个工具，Android 提供 11 个查询模块。
@@ -16,7 +18,7 @@
 
 | 平台 | 当前下载 | 安装方法 |
 |---|---|---|
-| Windows 10/11 x64 · v1.8.0 | [便携 ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.8.0/GhostTrack-v1.8.0-Windows-x64.zip) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.8.0) | 完整解压，运行 `GhostTrack/GhostTrack.exe` |
+| Windows 10/11 x64 · v1.9.0 | [便携 ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.9.0/GhostTrack-v1.9.0-Windows-x64.zip) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.9.0) | 完整解压，运行 `GhostTrack/GhostTrack.exe` |
 | Android 7.0+ · v1.6.0 | [通用 APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [发布说明与 SHA256](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | 在手机文件管理器中打开 APK 安装 |
 
 Windows 无需安装 Python；请保留 EXE 所在文件夹及其依赖，不要单独移动 EXE。Android 包支持 ARM64、ARMv7 和 x86_64，首次启动会解压内置运行环境；只给实际用于打开 APK 的应用授予安装来源权限。后续更新请使用本仓库以同一证书签名的 APK。
