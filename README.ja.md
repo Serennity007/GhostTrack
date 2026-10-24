@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md) · [English](README.md) · **日本語** · [Español](README.es.md) · [Français](README.fr.md)
 
-**Windows 1.9.0: Atlas ワークベンチ。** デスクトップの「Atlas ↗」から、状態チェック、項目解説、スナップショット比較、一括キュー、お気に入り、秘匿レポート、情報源状態、更新確認を利用できます。[オンライン版](https://ghosttrack-atlas.orangefawn9.chatgpt.site) · [英語ガイド](docs/atlas.md)。HTTPS/TLS直接取得・電話情報・中国のプロフィールはローカル版が必要です。
+**Windows 1.9.0: Atlas ワークベンチ。** デスクトップの「Atlas ↗」から、状態チェック、項目解説、スナップショット比較、一括キュー、お気に入り、秘匿レポート、情報源状態、更新確認を利用できます。[オンライン版](https://ghosttrack-atlas.1392452425a.workers.dev) · [英語ガイド](docs/atlas.md)。HTTPS/TLS直接取得・電話情報・中国のプロフィールはローカル版が必要です。
 
 **Windows と Android で使える、公開情報調査のための OSINT ワークベンチ。**
 

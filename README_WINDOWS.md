@@ -10,7 +10,7 @@
 
 点击窗口顶部 **Atlas ↗**，浏览器会打开本机 `http://127.0.0.1:8765`。保持桌面程序运行，即可使用健康检查、字段解释、手动快照、两次查询对比、最多50个域名的批量队列、收藏、脱敏导出、来源状态和 GitHub 更新检查。浏览器数据与桌面历史/授权档案独立，不自动保存查询。快照和收藏需要主动保存；来源失败不代表记录删除。
 
-完整说明见 [Atlas guide](docs/atlas.md)。[在线研究版](https://ghosttrack-atlas.orangefawn9.chatgpt.site) 不提供地址绑定 HTTPS/TLS、离线号码及国内主页查询；这些模块使用本地版完成。当前 Android 仍为1.6.0；本次不改动其原生界面。
+完整说明见 [Atlas guide](docs/atlas.md)。[在线研究版](https://ghosttrack-atlas.1392452425a.workers.dev) 不提供地址绑定 HTTPS/TLS、离线号码及国内主页查询；这些模块使用本地版完成。当前 Android 仍为1.6.0；本次不改动其原生界面。
 
 ## 工作台布局
 

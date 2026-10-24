@@ -8,7 +8,7 @@ Investigate a domain, inspect its DNS and TLS, review network registration, and 
 
 [Download](#download) · [Screenshots](#screenshots) · [Features](docs/FEATURES.md) · [Windows guide](docs/windows.md) · [Android guide](docs/android.md) · [Changelog](CHANGELOG.md)
 
-**New in Windows 1.9.0: Atlas.** [Open the hosted workbench](https://ghosttrack-atlas.orangefawn9.chatgpt.site), or select **Atlas ↗** in the Windows application for the full local engine. Interpret query evidence, check domain health, compare saved snapshots, run paced domain batches, save favorites, preview redaction, export reports, inspect source status, and check releases. [Atlas guide and runtime limits](docs/atlas.md).
+**New in Windows 1.9.0: Atlas.** [Open the hosted workbench](https://ghosttrack-atlas.1392452425a.workers.dev), or select **Atlas ↗** in the Windows application for the full local engine. Interpret query evidence, check domain health, compare saved snapshots, run paced domain batches, save favorites, preview redaction, export reports, inspect source status, and check releases. [Atlas guide and runtime limits](docs/atlas.md).
 
 - **One domain, three sources.** Query RDAP, eight DNS record types, and HTTPS/TLS in parallel. Each source keeps its own status, so partial results remain useful.
 - **A workspace for the whole result.** Use the Windows two-column console or native Android interface to filter fields, inspect long values, copy evidence, and export reports with query context.
@@ -45,7 +45,7 @@ These are captures of the released applications using public example data. See t
 | --- | --- | --- |
 | Windows · **1.9.0** | [Portable ZIP](https://github.com/Serennity007/GhostTrack/releases/download/windows-v1.9.0/GhostTrack-v1.9.0-Windows-x64.zip) · [Release notes and checksums](https://github.com/Serennity007/GhostTrack/releases/tag/windows-v1.9.0) | Windows 10/11, x64 |
 | Android · **1.6.0** | [Universal APK](https://github.com/Serennity007/GhostTrack/releases/download/android-v1.6.0/GhostTrack-v1.6.0-Android-universal.apk) · [Release notes, checksums and signature](https://github.com/Serennity007/GhostTrack/releases/tag/android-v1.6.0) | Android 7.0+, ARM64 / ARMv7 / x86_64 |
-| Atlas web · **1.9.0** | [Open workbench](https://ghosttrack-atlas.orangefawn9.chatgpt.site) · [Guide](docs/atlas.md) | Modern browser; see hosted capability limits |
+| Atlas web · **1.9.0** | [Open workbench](https://ghosttrack-atlas.1392452425a.workers.dev) · [Guide](docs/atlas.md) | Modern browser; see hosted capability limits |
 
 **Windows:** extract the entire ZIP, then run `GhostTrack/GhostTrack.exe`. Keep the executable with its bundled files. No separate Python installation is needed.
 

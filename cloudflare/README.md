@@ -1,5 +1,9 @@
 # Deploy Atlas to your Cloudflare account
 
+**[Open the live Cloudflare deployment](https://ghosttrack-atlas.1392452425a.workers.dev)** · Atlas 1.9.0 · published 24 October 2026. The initial production deployment was published through the Cloudflare dashboard. Anonymous page access, all browser assets, metadata, a real `example.com` RDAP/DNS lookup, and a redacted JSON report download were verified. The HTTPS source correctly remains marked as a hosted runtime limit.
+
+![Live Cloudflare workbench](../docs/screenshots/atlas-cloudflare-en.jpg)
+
 This publishes the same hosted Atlas adapter directly to Cloudflare Workers, with a `workers.dev` URL. No database, API key, or application secret is needed at runtime. Your Cloudflare account authorization is required to create the Worker.
 
 From the repository root, with Node.js installed:
@@ -7,13 +11,13 @@ From the repository root, with Node.js installed:
 ```powershell
 node cloudflare/build.mjs
 npx --yes wrangler@4.152.0 deploy --config cloudflare/wrangler.jsonc --dry-run
-npx --yes wrangler@4.152.0 login --device --scopes account:read user:read workers:write workers_scripts:write
+npx --yes wrangler@4.152.0 login --scopes account:read user:read workers:write workers_scripts:write
 npx --yes wrangler@4.152.0 deploy --config cloudflare/wrangler.jsonc
 ```
 
 Complete login and authorization yourself in Cloudflare's browser page. Do not paste API tokens into an issue, chat, or configuration file. Wrangler manages its local credentials outside the checkout. If several accounts are returned, choose the intended account before publishing. If `ghosttrack-atlas` already exists in that account, verify it is this project before updating it, or change `name` in the config.
 
-The requested application permissions are `account:read`, `user:read`, `workers:write`, and `workers_scripts:write`. The scripts permission is required for deployment history, Worker uploads, and the account's Workers subdomain; `workers:write` alone does not grant access to those endpoints. Wrangler also automatically adds `offline_access` so it can refresh its local login. Review all scopes on Cloudflare's authorization page. The device flow avoids local callback and browser CSRF issues; approve the one-time code yourself and never share credentials.
+The requested application permissions are `account:read`, `user:read`, `workers:write`, and `workers_scripts:write`. The scripts permission is required for deployment history, Worker uploads, and the account's Workers subdomain; `workers:write` alone does not grant access to those endpoints. Wrangler also automatically adds `offline_access` so it can refresh its local login. Review all scopes on Cloudflare's authorization page. If browser callbacks fail, Wrangler also supports `login --device` with the same scopes; complete that request before its device code expires. A successful browser page alone does not prove that Wrangler saved the grant: check `whoami --json` for `workers_scripts:write` before deploying. Approve authentication yourself and never share credentials.
 
 Use the exact URL returned by a successful deployment, not a guessed account subdomain. Verify anonymous page access, `/api/meta`, a real DNS/RDAP query, and report export before replacing existing links. Browser-local favorites and snapshots do not transfer automatically between the Sites URL and the new Workers origin.
 

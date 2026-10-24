@@ -2,7 +2,7 @@
 
 **简体中文** · [English](README.md) · [日本語](README.ja.md) · [Español](README.es.md) · [Français](README.fr.md)
 
-**Windows 1.9.0 新增 Atlas 网页工作台**：在桌面顶部点击「Atlas ↗」，即可使用健康检查、字段解释、快照对比、批量队列、收藏、脱敏报告、来源状态及更新检查。[在线体验](https://ghosttrack-atlas.orangefawn9.chatgpt.site) · [完整说明（英语）](docs/atlas.md)。在线版的安全直连 HTTPS/TLS、号码及国内主页模块不可用，会明确标注；本地版提供完整查询。
+**Windows 1.9.0 新增 Atlas 网页工作台**：在桌面顶部点击「Atlas ↗」，即可使用健康检查、字段解释、快照对比、批量队列、收藏、脱敏报告、来源状态及更新检查。[在线体验](https://ghosttrack-atlas.1392452425a.workers.dev) · [完整说明（英语）](docs/atlas.md)。在线版的安全直连 HTTPS/TLS、号码及国内主页模块不可用，会明确标注；本地版提供完整查询。
 
 **Windows / Android 跨平台 OSINT 公开信息研究工作台。**
 

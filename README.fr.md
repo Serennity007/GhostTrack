@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md) · [English](README.md) · [日本語](README.ja.md) · [Español](README.es.md) · **Français**
 
-**Windows 1.9.0 ajoute Atlas :** observations de santé, explication des champs, comparaison de captures, file de requêtes, favoris, rapports expurgés, état des sources et mises à jour. Ouvrez « Atlas ↗ » depuis le bureau. [Version web](https://ghosttrack-atlas.orangefawn9.chatgpt.site) · [Guide en anglais](docs/atlas.md). Les requêtes HTTPS/TLS directes, les téléphones et les profils chinois nécessitent le moteur local.
+**Windows 1.9.0 ajoute Atlas :** observations de santé, explication des champs, comparaison de captures, file de requêtes, favoris, rapports expurgés, état des sources et mises à jour. Ouvrez « Atlas ↗ » depuis le bureau. [Version web](https://ghosttrack-atlas.1392452425a.workers.dev) · [Guide en anglais](docs/atlas.md). Les requêtes HTTPS/TLS directes, les téléphones et les profils chinois nécessitent le moteur local.
 
 **Un espace de travail OSINT multiplateforme pour explorer les informations publiques sur Windows et Android.**
 
